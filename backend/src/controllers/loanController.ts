@@ -29,7 +29,7 @@ export const createLoan = async (req: Request, res: Response) => {
 
     const interestRate = 0.03; // 3% flat
 
-    const loan = await prisma.loan.create({
+    const loan: any = await prisma.loan.create({
       data: {
         userId,
         amount: parseFloat(amount),
@@ -66,7 +66,7 @@ export const getUserLoans = async (req: Request, res: Response) => {
     const { userId } = req.params;
 
     const loans = await prisma.loan.findMany({
-      where: { userId },
+      where: { userId: userId as string },
       orderBy: { createdAt: 'desc' }
     });
 
@@ -97,8 +97,6 @@ export const getAllLoans = async (req: Request, res: Response) => {
   }
 };
 
-import stripe from '../utils/stripe.js';
-
 export const updateLoanStatus = async (req: Request, res: Response) => {
   try {
     const { loanId } = req.params;
@@ -109,8 +107,8 @@ export const updateLoanStatus = async (req: Request, res: Response) => {
     }
 
     // 1. Get the loan and user data
-    const loan = await prisma.loan.findUnique({
-      where: { id: loanId },
+    const loan: any = await prisma.loan.findUnique({
+      where: { id: loanId as string },
       include: { 
         user: { 
           include: { wallet: true } 
@@ -188,7 +186,7 @@ export const updateLoanStatus = async (req: Request, res: Response) => {
 
     // 3. Update loan status in DB
     const updatedLoan = await prisma.loan.update({
-      where: { id: loanId },
+      where: { id: loanId as string },
       data: { status }
     });
 
@@ -218,8 +216,8 @@ export const repayLoan = async (req: Request, res: Response) => {
       return res.status(400).json({ message: 'User ID et montant du paiement sont requis.' });
     }
 
-    const loan = await prisma.loan.findUnique({
-      where: { id: loanId },
+    const loan: any = await prisma.loan.findUnique({
+      where: { id: loanId as string },
       include: { user: { include: { wallet: true } } }
     });
 
@@ -244,7 +242,7 @@ export const repayLoan = async (req: Request, res: Response) => {
 
     // Deduct from wallet
     await prisma.wallet.update({
-      where: { userId },
+      where: { userId: userId as string },
       data: { balance: { decrement: amountToRepay } }
     });
 
@@ -253,7 +251,7 @@ export const repayLoan = async (req: Request, res: Response) => {
 
     // Update loan status and amountRepaid
     const updatedLoan = await prisma.loan.update({
-      where: { id: loanId },
+      where: { id: loanId as string },
       data: { 
         amountRepaid: newAmountRepaid,
         status: isFullyPaid ? 'PAID_BACK' : 'APPROVED'

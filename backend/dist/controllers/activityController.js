@@ -24,7 +24,7 @@ export const getNotifications = async (req, res) => {
     try {
         const { userId } = req.params;
         const notifications = await prisma.notification.findMany({
-            where: { userId },
+            where: { userId: userId },
             orderBy: { createdAt: 'desc' },
             take: 20 // Limit to last 20
         });
@@ -39,7 +39,7 @@ export const markNotificationsRead = async (req, res) => {
     try {
         const { userId } = req.params;
         await prisma.notification.updateMany({
-            where: { userId, read: false },
+            where: { userId: userId, read: false },
             data: { read: true }
         });
         res.status(200).json({ message: 'Notifications marquées comme lues.' });

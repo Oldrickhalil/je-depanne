@@ -5,8 +5,8 @@ export const getTransactions = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
 
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
+    const user: any = await prisma.user.findUnique({
+      where: { id: userId as string },
       include: { wallet: true }
     });
 
@@ -31,7 +31,7 @@ export const getNotifications = async (req: Request, res: Response) => {
     const { userId } = req.params;
 
     const notifications = await prisma.notification.findMany({
-      where: { userId },
+      where: { userId: userId as string },
       orderBy: { createdAt: 'desc' },
       take: 20 // Limit to last 20
     });
@@ -48,7 +48,7 @@ export const markNotificationsRead = async (req: Request, res: Response) => {
     const { userId } = req.params;
 
     await prisma.notification.updateMany({
-      where: { userId, read: false },
+      where: { userId: userId as string, read: false },
       data: { read: true }
     });
 

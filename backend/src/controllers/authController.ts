@@ -87,7 +87,7 @@ export const verifyKyc = async (req: Request, res: Response) => {
     }
 
     const user = await prisma.user.update({
-      where: { id: userId },
+      where: { id: userId as string },
       data: {
         kycVerified: true, // Auto-validation pour le flux démo
         address,
@@ -131,14 +131,14 @@ export const updateKycStatus = async (req: Request, res: Response) => {
     const { kycVerified } = req.body;
 
     const user = await prisma.user.update({
-      where: { id: userId },
+      where: { id: userId as string },
       data: { kycVerified }
     });
 
     // Create notification
     await prisma.notification.create({
       data: {
-        userId,
+        userId: userId as string,
         title: kycVerified ? 'Identité Vérifiée' : 'Identité Rejetée',
         message: kycVerified ? 'Votre identité a été validée avec succès. Vous pouvez maintenant profiter de toutes les fonctionnalités.' : 'Votre document d\'identité n\'a pas pu être validé. Veuillez soumettre à nouveau.',
         type: kycVerified ? 'SUCCESS' : 'ERROR'
@@ -156,7 +156,7 @@ export const updateInstallationStatus = async (req: Request, res: Response) => {
     const { userId } = req.body;
     
     const user = await prisma.user.update({
-      where: { id: userId },
+      where: { id: userId as string },
       data: { isInstalled: true }
     });
 
@@ -175,7 +175,7 @@ export const updateProfile = async (req: Request, res: Response) => {
     const { firstName, lastName, phone, address } = req.body;
 
     const user = await prisma.user.update({
-      where: { id: userId },
+      where: { id: userId as string },
       data: {
         firstName,
         lastName,
@@ -197,7 +197,7 @@ export const updateSettings = async (req: Request, res: Response) => {
     const { notifPush, notifEmail, notifSms, notifMarketing } = req.body;
 
     const user = await prisma.user.update({
-      where: { id: userId },
+      where: { id: userId as string },
       data: {
         notifPush,
         notifEmail,
@@ -218,7 +218,7 @@ export const getUserStatus = async (req: Request, res: Response) => {
     const { userId } = req.params;
 
     const user = await prisma.user.findUnique({
-      where: { id: userId },
+      where: { id: userId as string },
       include: {
         wallet: true,
       }

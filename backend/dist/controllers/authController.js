@@ -118,7 +118,7 @@ export const updateKycStatus = async (req, res) => {
         // Create notification
         await prisma.notification.create({
             data: {
-                userId,
+                userId: userId,
                 title: kycVerified ? 'Identité Vérifiée' : 'Identité Rejetée',
                 message: kycVerified ? 'Votre identité a été validée avec succès. Vous pouvez maintenant profiter de toutes les fonctionnalités.' : 'Votre document d\'identité n\'a pas pu être validé. Veuillez soumettre à nouveau.',
                 type: kycVerified ? 'SUCCESS' : 'ERROR'

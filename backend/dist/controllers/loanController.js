@@ -47,7 +47,7 @@ export const getUserLoans = async (req, res) => {
     try {
         const { userId } = req.params;
         const loans = await prisma.loan.findMany({
-            where: { userId },
+            where: { userId: userId },
             orderBy: { createdAt: 'desc' }
         });
         res.status(200).json(loans);
@@ -204,7 +204,7 @@ export const repayLoan = async (req, res) => {
         }
         // Deduct from wallet
         await prisma.wallet.update({
-            where: { userId },
+            where: { userId: userId },
             data: { balance: { decrement: amountToRepay } }
         });
         const newAmountRepaid = loan.amountRepaid + amountToRepay;
