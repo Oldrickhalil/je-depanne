@@ -17,6 +17,14 @@ export default function PWAPage() {
     const ios = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
     setIsIOS(ios);
 
+    // Detect standalone mode (PWA installed and launched from homescreen)
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone === true;
+    
+    if (isStandalone && session?.user && !(session.user as any).isInstalled) {
+       // If opened from homescreen but not marked as installed in DB, mark it now automatically
+       markAsInstalled();
+    }
+
     const handler = (e: any) => {
       e.preventDefault();
       setDeferredPrompt(e);
@@ -25,7 +33,7 @@ export default function PWAPage() {
     window.addEventListener("beforeinstallprompt", handler);
 
     return () => window.removeEventListener("beforeinstallprompt", handler);
-  }, []);
+  }, [session]);
 
   const handleInstall = async () => {
     if (deferredPrompt) {
@@ -81,24 +89,30 @@ export default function PWAPage() {
               </p>
               <ol className="space-y-4">
                 <li className="flex items-center gap-3 text-sm text-gray-400">
-                  <span className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-xs font-bold text-white">1</span>
+                  <span className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-xs font-bold text-white shrink-0">1</span>
                   <span>Appuyez sur le bouton <Share className="w-4 h-4 inline mx-1 text-blue-400" /> Partager en bas de l'écran.</span>
                 </li>
                 <li className="flex items-center gap-3 text-sm text-gray-400">
-                  <span className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-xs font-bold text-white">2</span>
+                  <span className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-xs font-bold text-white shrink-0">2</span>
                   <span>Faites défiler et appuyez sur <PlusSquare className="w-4 h-4 inline mx-1" /> "Sur l'écran d'accueil".</span>
                 </li>
                 <li className="flex items-center gap-3 text-sm text-gray-400">
-                  <span className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-xs font-bold text-white">3</span>
-                  <span>Appuyez sur "Ajouter" en haut à droite.</span>
+                  <span className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-xs font-bold text-primary shrink-0">3</span>
+                  <span className="text-white font-bold">Fermez Safari et ouvrez la nouvelle application depuis votre écran d'accueil pour valider automatiquement !</span>
                 </li>
               </ol>
             </div>
+            
+            <p className="text-center text-[10px] text-gray-500 uppercase tracking-widest font-bold animate-pulse">
+               En attente d'ouverture depuis l'écran d'accueil...
+            </p>
+            
+            {/* Fallback silencieux caché ou discret au cas où la détection plante sur de vieux iOS */}
             <button
               onClick={markAsInstalled}
-              className="w-full py-4 bg-white/10 text-white font-bold rounded-2xl hover:bg-white/20 transition-all"
+              className="w-full py-4 text-gray-600 font-bold text-[10px] uppercase tracking-widest hover:text-white transition-all opacity-50"
             >
-              C'est fait !
+              Je l'ai déjà fait (Forcer)
             </button>
           </div>
         ) : (
