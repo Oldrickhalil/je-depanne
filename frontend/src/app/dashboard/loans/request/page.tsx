@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { Suspense, useState, useEffect } from "react";
 import { 
   Zap, 
   ChevronRight, 
@@ -21,7 +21,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 
 type Step = "simulate" | "infos" | "confirm";
 
-export default function LoanRequestPage() {
+function LoanRequestContent() {
   const { data: session } = useSession();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -403,5 +403,13 @@ export default function LoanRequestPage() {
          <p className="text-[10px] font-black uppercase tracking-[0.3em]">Propulsé par le moteur de décision Je Dépanne</p>
       </div>
     </div>
+  );
+}
+
+export default function LoanRequestPage() {
+  return (
+    <Suspense fallback={<div className="flex justify-center py-20"><Loader2 className="animate-spin text-primary" size={32} /></div>}>
+      <LoanRequestContent />
+    </Suspense>
   );
 }
