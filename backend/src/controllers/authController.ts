@@ -249,3 +249,36 @@ export const getUserStatus = async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Erreur lors de la récupération du statut.' });
   }
 };
+
+export const subscribePush = async (req: Request, res: Response) => {
+  try {
+    const { userId, subscription } = req.body;
+
+    if (!userId || !subscription) {
+      return res.status(400).json({ message: 'Paramètres manquants.' });
+    }
+
+    const { endpoint, keys } = subscription;
+
+    // Check if subscription already exists
+    const existingSub = await prisma.pushSubscription.findUnique({
+      where: { endpoint }
+    });
+
+    if (!existingSub) {
+      await prisma.pushSubscription.create({
+        data: {
+          userId: userId as string,
+          endpoint,
+          p256dh: keys.p256dh,
+          auth: keys.auth
+        }
+      });
+    }
+
+    res.status(201).json({ message: 'Abonnement Push enregistré.' });
+  } catch (error) {
+    console.error('Erreur Push Subscribe:', error);
+    res.status(500).json({ message: 'Erreur lors de la souscription.' });
+  }
+};

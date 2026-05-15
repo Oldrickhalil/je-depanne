@@ -16,6 +16,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import OnboardingChecklist from "@/components/dashboard/OnboardingChecklist";
 import OnboardingIntro from "@/components/dashboard/OnboardingIntro";
+import PushNotificationPrompt from "@/components/dashboard/PushNotificationPrompt";
 import { useRouter } from "next/navigation";
 
 export default function DashboardPage() {

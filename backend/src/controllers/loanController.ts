@@ -1,6 +1,7 @@
 import type { Request, Response } from 'express';
 import prisma from '../utils/prisma.js';
 import stripe from '../utils/stripe.js';
+import { sendPushNotification } from '../utils/push.js';
 
 export const createLoan = async (req: Request, res: Response) => {
   try {
@@ -200,6 +201,14 @@ export const updateLoanStatus = async (req: Request, res: Response) => {
       }
     });
 
+    // Send Web Push Notification
+    await sendPushNotification(
+      loan.userId, 
+      status === 'APPROVED' ? 'Prêt Approuvé !' : 'Prêt Refusé', 
+      status === 'APPROVED' ? `Votre compte a été crédité de ${loan.amount}€.` : `Votre demande de prêt a été refusée.`,
+      '/dashboard/loans'
+    );
+
     res.status(200).json(updatedLoan);
   } catch (error: any) {
     console.error('Update Status Error:', error);
@@ -279,6 +288,16 @@ export const repayLoan = async (req: Request, res: Response) => {
         type: 'SUCCESS'
       }
     });
+
+    // Send Web Push Notification
+    await sendPushNotification(
+      userId,
+      isFullyPaid ? 'Prêt Totalement Remboursé' : 'Mensualité Payée',
+      isFullyPaid 
+          ? `Vous avez remboursé la totalité de votre prêt. Merci !`
+          : `Votre paiement de ${amountToRepay.toFixed(2)}€ a bien été reçu.`,
+      '/dashboard/schedule'
+    );
 
     res.status(200).json({ message: 'Remboursement réussi.', loan: updatedLoan });
   } catch (error: any) {
