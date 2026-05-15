@@ -1,0 +1,237 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { ArrowRight, ShieldCheck, CheckCircle2, Loader2, Building, ArrowUpRight, CreditCard } from "lucide-react";
+
+export default function WithdrawPage() {
+  const { data: session, update } = useSession();
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [amount, setAmount] = useState("");
+  const [iban, setIban] = useState("");
+  const [bankName, setBankName] = useState("");
+  const [freshStatus, setFreshStatus] = useState<any>(null);
+  const [isFetchingStatus, setIsFetchingStatus] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  
+  const user = session?.user as any;
+  const userId = user?.id;
+
+  useEffect(() => {
+    const fetchStatus = async () => {
+      if (!session) return;
+      if (!userId) {
+         setIsFetchingStatus(false);
+         return;
+      }
+      try {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+        const res = await fetch(`${apiUrl}/api/auth/status/${userId}`);
+        const data = await res.json();
+        if (res.ok) {
+          setFreshStatus(data);
+          if (data.iban) setIban(data.iban);
+          if (data.bankName) setBankName(data.bankName);
+        }
+      } catch (err) {
+        console.error("Erreur récupération statut:", err);
+      } finally {
+        setIsFetchingStatus(false);
+      }
+    };
+    fetchStatus();
+  }, [session, userId]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    const withdrawAmount = parseFloat(amount);
+    if (!withdrawAmount || withdrawAmount <= 0) {
+       setError("Veuillez saisir un montant valide.");
+       setLoading(false);
+       return;
+    }
+    
+    if (freshStatus && withdrawAmount > freshStatus.balance) {
+       setError("Fonds insuffisants sur votre solde disponible.");
+       setLoading(false);
+       return;
+    }
+
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+      const res = await fetch(`${apiUrl}/api/stripe/withdraw`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: user?.id,
+          amount: withdrawAmount,
+          iban,
+          bankName
+        }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        // Force session update to reflect new balance (handled by freshStatus usually, but good practice)
+        await update(); 
+        
+        setSuccess(true);
+        setTimeout(() => {
+          router.push("/dashboard");
+        }, 3000);
+      } else {
+        setError(data.message || "Une erreur est survenue lors du retrait.");
+      }
+    } catch (error) {
+      console.error("Withdraw error:", error);
+      setError("Impossible de contacter le serveur.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (isFetchingStatus) {
+    return (
+      <div className="min-h-[80vh] flex items-center justify-center">
+        <Loader2 className="text-primary animate-spin" size={32} />
+      </div>
+    );
+  }
+
+  if (success) {
+    return (
+      <div className="min-h-[80vh] flex flex-col items-center justify-center p-4">
+        <div className="w-full max-w-md bg-[#111] border border-white/5 rounded-3xl p-10 text-center space-y-6 shadow-2xl relative overflow-hidden">
+          <div className="absolute -top-24 -right-24 w-48 h-48 bg-primary/10 blur-[80px] rounded-full"></div>
+          <div className="w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4 scale-110">
+            <CheckCircle2 className="w-10 h-10 text-primary" />
+          </div>
+          <div>
+            <h2 className="text-3xl font-black uppercase text-white mb-2 tracking-tighter">Retrait Initié</h2>
+            <p className="text-gray-400 text-xs font-bold uppercase tracking-widest leading-relaxed mb-6">
+              Votre transfert de {amount} € vers le compte {bankName} est en cours de traitement par Stripe.
+            </p>
+          </div>
+          <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
+            <div className="h-full bg-primary animate-[loading_3s_ease-in-out]"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-[80vh] flex flex-col items-center justify-center p-4">
+      <div className="w-full max-w-2xl grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+        <div className="space-y-6">
+          <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-6">
+            <ArrowUpRight className="w-8 h-8 text-primary" />
+          </div>
+          <div>
+            <h1 className="text-4xl font-title font-bold tracking-tight text-white mb-4 leading-none uppercase">
+              Retirer <br/> <span className="text-primary">Mes Fonds</span>
+            </h1>
+            <p className="text-gray-400 font-medium text-sm leading-relaxed">
+              Transférez instantanément votre solde disponible vers votre compte bancaire personnel. Les informations saisies seront sauvegardées pour vos prochains retraits.
+            </p>
+          </div>
+
+          <div className="bg-[#161616] p-6 rounded-3xl border border-white/5 space-y-2">
+             <p className="text-[10px] font-black uppercase tracking-widest text-gray-500">Solde Disponible</p>
+             <p className="text-3xl font-black text-white">{freshStatus?.balance?.toFixed(2) || "0.00"} €</p>
+          </div>
+
+          <div className="space-y-4 pt-4">
+            <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-gray-500">
+              <ShieldCheck className="w-5 h-5 text-primary" />
+              <span>Transfert Sécurisé Stripe</span>
+            </div>
+          </div>
+        </div>
+
+        <form onSubmit={handleSubmit} className="bg-[#0c0c0c] border border-white/5 rounded-[2.5rem] p-8 shadow-2xl space-y-6">
+          {error && (
+            <div className="bg-red-500/10 text-red-500 p-4 rounded-xl text-xs font-bold uppercase tracking-widest text-center border border-red-500/20">
+              {error}
+            </div>
+          )}
+
+          <div className="space-y-2">
+            <label className="block text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1">Montant à retirer</label>
+            <div className="relative">
+               <input
+                type="number"
+                min="10"
+                step="0.01"
+                required
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                className="w-full bg-[#111] border border-white/5 rounded-2xl px-4 py-4 text-3xl font-black text-white focus:outline-none focus:border-primary/50 transition-colors"
+                placeholder="0.00"
+              />
+              <span className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-600 font-black">€</span>
+            </div>
+            <p className="text-[9px] text-gray-600 font-black uppercase tracking-widest mt-2 flex justify-between">
+              <span>Min. 10 €</span>
+              <button 
+                 type="button" 
+                 onClick={() => setAmount(freshStatus?.balance?.toString() || "0")}
+                 className="text-primary hover:underline"
+              >
+                 Tout retirer
+              </button>
+            </p>
+          </div>
+
+          <div className="space-y-4 pt-4 border-t border-white/5">
+             <label className="block text-[9px] font-black text-gray-600 uppercase tracking-[0.2em] ml-1">Informations Bancaires (Bénéficiaire)</label>
+             <div className="space-y-3">
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="NOM DE LA BANQUE (EX: BOURSORAMA)"
+                    required
+                    value={bankName}
+                    onChange={(e) => setBankName(e.target.value)}
+                    className="w-full bg-[#111] border border-white/5 rounded-xl py-3.5 px-11 text-[10px] font-bold text-white focus:outline-none focus:border-primary/50 transition-colors placeholder:text-gray-800"
+                  />
+                  <Building className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-700" />
+                </div>
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="IBAN (EX: FR76...)"
+                    required
+                    value={iban}
+                    onChange={(e) => setIban(e.target.value)}
+                    className="w-full bg-[#111] border border-white/5 rounded-xl py-3.5 px-11 text-[10px] font-bold text-white uppercase focus:outline-none focus:border-primary/50 transition-colors placeholder:text-gray-800"
+                  />
+                  <CreditCard className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-700" />
+                </div>
+             </div>
+             <p className="text-[8px] font-black uppercase tracking-widest text-gray-600 text-center">Ces informations seront sauvegardées dans vos paramètres.</p>
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading || !amount || parseFloat(amount) < 10 || parseFloat(amount) > (freshStatus?.balance || 0)}
+            className="w-full py-5 bg-white text-black font-black text-xs uppercase tracking-[0.4em] rounded-[2rem] hover:bg-gray-200 transition-all disabled:opacity-50 flex items-center justify-center gap-3 shadow-xl active:scale-95"
+          >
+            {loading ? <Loader2 className="animate-spin" size={18} /> : (
+              <>
+                Confirmer le Retrait <ArrowRight size={18} />
+              </>
+            )}
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}

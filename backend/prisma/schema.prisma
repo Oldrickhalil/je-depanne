@@ -1,0 +1,123 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String    @id @default(cuid())
+  email            String    @unique
+  password         String
+  firstName        String?
+  lastName         String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  stripeCustomerId String?   @unique
+  
+  // Onboarding Status
+  kycVerified      Boolean   @default(false)
+  hasDeposited     Boolean   @default(false)
+  isInstalled      Boolean   @default(false)
+  creditLimit      Float     @default(0) // Will become 80 after deposit
+
+  // KYC Data
+  address          String?
+  birthDate        String?
+  idType           String?
+  kycRecto         String?   @db.Text
+  kycVerso         String?   @db.Text
+  kycAddressProof  String?   @db.Text
+  phone            String?
+
+  // Settings
+  notifPush        Boolean   @default(true)
+  notifEmail       Boolean   @default(true)
+  notifSms         Boolean   @default(false)
+  notifMarketing   Boolean   @default(false)
+
+  // Bank Info
+  iban             String?
+  bankName         String?
+
+  wallet           Wallet?
+  loans            Loan[]
+  notifications    Notification[]
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  message   String
+  read      Boolean  @default(false)
+  type      String   @default("INFO") // INFO, SUCCESS, WARNING, ERROR
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Wallet {
+  id              String    @id @default(cuid())
+  balance         Float     @default(0)
+  currency        String    @default("EUR")
+  stripeAccountId String?   @unique // Stripe Connect account ID
+  userId          String    @unique
+  user            User      @relation(fields: [userId], references: [id])
+  transactions    Transaction[]
+}
+
+model Loan {
+  id                 String    @id @default(cuid())
+  amount             Float
+  amountRepaid       Float     @default(0)
+  interestRate       Float
+  status             LoanStatus @default(PENDING)
+  termMonths         Int
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  
+  // Informations supplémentaires
+  maritalStatus      String?
+  employmentStatus   String?
+  monthlyIncome      Float?
+  hasExistingCredits Boolean   @default(false)
+  loanPurpose        String?
+
+  userId             String
+  user               User      @relation(fields: [userId], references: [id])
+}
+
+model Transaction {
+  id        String    @id @default(cuid())
+  amount    Float
+  type      TransactionType
+  status    TransactionStatus @default(PENDING)
+  createdAt DateTime  @default(now())
+  walletId  String
+  wallet    Wallet    @relation(fields: [walletId], references: [id])
+}
+
+enum LoanStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  PAID_BACK
+}
+
+enum TransactionType {
+  DEPOSIT
+  WITHDRAWAL
+  LOAN_DISBURSEMENT
+  REPAYMENT
+}
+
+enum TransactionStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}

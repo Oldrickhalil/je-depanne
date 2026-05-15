@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "User" ADD COLUMN     "creditLimit" DOUBLE PRECISION NOT NULL DEFAULT 0,
+ADD COLUMN     "hasDeposited" BOOLEAN NOT NULL DEFAULT false,
+ADD COLUMN     "isInstalled" BOOLEAN NOT NULL DEFAULT false,
+ADD COLUMN     "kycVerified" BOOLEAN NOT NULL DEFAULT false;

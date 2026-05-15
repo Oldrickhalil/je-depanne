@@ -1,0 +1,16 @@
+import { Router } from 'express';
+import { login, register, verifyKyc, updateInstallationStatus, getAllUsers, updateKycStatus, getUserStatus, updateProfile, updateSettings } from '../controllers/authController.js';
+
+const router = Router();
+
+router.post('/register', register);
+router.post('/login', login);
+router.post('/verify-kyc', verifyKyc);
+router.post('/update-installation', updateInstallationStatus);
+router.get('/status/:userId', getUserStatus);
+router.put('/profile/:userId', updateProfile);
+router.put('/settings/:userId', updateSettings);
+router.get('/admin/users', getAllUsers);
+router.patch('/admin/users/:userId/kyc', updateKycStatus);
+
+export default router;
