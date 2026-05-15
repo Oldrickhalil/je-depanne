@@ -15,7 +15,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     { icon: ArrowRightLeft, label: "Transactions", href: "/dashboard/transactions" },
     { icon: CreditCard, label: "Mes Prêts", href: "/dashboard/loans" },
     { icon: PieChart, label: "Analyses", href: "/dashboard/stats" },
-    { icon: User, label: "Mon Compte", href: "/dashboard/profile" },
   ];
 
   return (
@@ -97,9 +96,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     <p className="text-[10px] font-bold tracking-tight">Plan Actif</p>
                     <p className="text-[9px] text-primary font-black uppercase tracking-widest">Membre Élite</p>
                  </div>
-                 <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-gray-800 to-gray-900 border border-white/10 flex items-center justify-center overflow-hidden">
+                 <Link href="/dashboard/profile" className="w-10 h-10 rounded-2xl bg-gradient-to-br from-gray-800 to-gray-900 border border-white/10 flex items-center justify-center overflow-hidden hover:border-primary/50 transition-colors">
                     <User size={20} className="text-gray-400" />
-                 </div>
+                 </Link>
               </div>
            </div>
         </header>

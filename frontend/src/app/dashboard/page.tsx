@@ -152,20 +152,22 @@ export default function DashboardPage() {
                    <Image src="/images/logo-jd-bw.svg" alt="JD" width={50} height={30} className="opacity-90" />
                 </div>
 
-                <div className="flex justify-between items-end">
-                   <div className="space-y-4">
+                <div className="flex flex-col gap-4 mt-auto">
+                   <div className="flex justify-between items-center">
+                      <p className="text-white/40 font-mono text-[10px] md:text-sm tracking-[0.2em] md:tracking-[0.3em] uppercase tracking-tighter">
+                        ID: JD-{(session?.user as any)?.id?.slice(0, 8).toUpperCase() || "XXXXXXX"}
+                      </p>
                       {isActivated && (
-                        <div className="glass px-4 py-2 rounded-2xl flex items-center gap-2 border-green-500/20 bg-green-500/10">
-                           <ShieldCheck size={14} className="text-green-500" />
-                           <span className="text-[10px] font-black tracking-widest uppercase text-green-500">Compte Activé</span>
+                        <div className="glass px-3 py-1.5 rounded-xl flex items-center gap-2 border-green-500/20 bg-green-500/10">
+                           <ShieldCheck size={12} className="text-green-500" />
+                           <span className="text-[9px] font-black tracking-widest uppercase text-green-500">Activé</span>
                         </div>
                       )}
-                      <p className="text-white/40 font-mono text-sm tracking-[0.3em] uppercase tracking-tighter">ID PORTEFEUILLE: JD-{(session?.user as any)?.id?.slice(0, 8).toUpperCase() || "XXXXXXX"}</p>
                    </div>
                    <div className="flex gap-3">
                       <Link 
                         href="/dashboard/deposit"
-                        className="px-6 py-3 bg-primary text-white rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl hover:opacity-90 transition-all active:scale-95"
+                        className="flex-1 text-center py-4 bg-primary text-white rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl hover:opacity-90 transition-all active:scale-95"
                       >
                          Déposer
                       </Link>
@@ -175,7 +177,7 @@ export default function DashboardPage() {
                             else if (!hasObtainedCredit) setShowActivationModal({show: true, action: "no_credit"});
                             else router.push("/dashboard/withdraw");
                          }}
-                         className="px-6 py-3 bg-white text-black rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl hover:bg-gray-200 transition-all active:scale-95"
+                         className="flex-1 py-4 bg-white text-black rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl hover:bg-gray-200 transition-all active:scale-95"
                       >
                          Retirer
                       </button>

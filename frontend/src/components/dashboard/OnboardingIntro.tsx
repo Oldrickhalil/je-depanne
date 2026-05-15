@@ -80,7 +80,7 @@ export default function OnboardingIntro() {
   const StepIcon = steps[currentStep].icon;
 
   return (
-    <div className="fixed inset-0 z-[100] bg-[#0a0a0a] flex flex-col items-center justify-center p-6 text-white font-sans">
+    <div className="fixed inset-0 z-[999] h-[100dvh] w-screen bg-[#0a0a0a] flex flex-col items-center justify-center p-6 text-white font-sans overflow-hidden">
       {/* Background Glows */}
       <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/20 blur-[120px] rounded-full"></div>
       <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-primary/10 blur-[120px] rounded-full"></div>
