@@ -121,6 +121,7 @@ export default function DashboardPage() {
       {showIntro && <OnboardingIntro />}
       
       <OnboardingChecklist freshStatus={freshStatus} />
+      <PushNotificationPrompt />
       
       {/* Focused Header */}
       <section className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
