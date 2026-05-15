@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Bell, Check, Info, ShieldCheck, XCircle, ArrowLeft } from "lucide-react";
+import { Bell, CheckCircle2, Info, ShieldCheck, XCircle, ArrowLeft } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 
