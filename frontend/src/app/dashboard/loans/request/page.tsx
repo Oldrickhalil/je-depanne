@@ -17,13 +17,12 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 type Step = "simulate" | "infos" | "confirm";
 
 function LoanRequestContent() {
   const { data: session } = useSession();
-  const searchParams = useSearchParams();
   const router = useRouter();
   const [step, setStep] = useState<Step>("simulate");
   const [amount, setAmount] = useState(150);
@@ -43,9 +42,11 @@ function LoanRequestContent() {
   });
 
   useEffect(() => {
-    const stepParam = searchParams.get("step");
-    if (stepParam === "confirm") setStep("confirm");
-  }, [searchParams]);
+    if (typeof window !== "undefined") {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get("step") === "confirm") setStep("confirm");
+    }
+  }, []);
 
   useEffect(() => {
     const rate = 0.03;
