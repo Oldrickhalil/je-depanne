@@ -35,6 +35,7 @@ const handler = NextAuth({
               kycVerified: data.user.kycVerified,
               hasDeposited: data.user.hasDeposited,
               isInstalled: data.user.isInstalled,
+              hasPin: data.user.hasPin,
               creditLimit: data.user.creditLimit
             };
           }
@@ -60,6 +61,7 @@ const handler = NextAuth({
         token.kycVerified = session.user.kycVerified;
         token.hasDeposited = session.user.hasDeposited;
         token.isInstalled = session.user.isInstalled;
+        token.hasPin = session.user.hasPin;
         token.creditLimit = session.user.creditLimit;
         token.name = session.user.name;
       }
@@ -69,6 +71,7 @@ const handler = NextAuth({
         token.kycVerified = (user as any).kycVerified;
         token.hasDeposited = (user as any).hasDeposited;
         token.isInstalled = (user as any).isInstalled;
+        token.hasPin = (user as any).hasPin;
         token.creditLimit = (user as any).creditLimit;
       }
       return token;
@@ -80,6 +83,7 @@ const handler = NextAuth({
         (session.user as any).kycVerified = token.kycVerified;
         (session.user as any).hasDeposited = token.hasDeposited;
         (session.user as any).isInstalled = token.isInstalled;
+        (session.user as any).hasPin = token.hasPin;
         (session.user as any).creditLimit = token.creditLimit;
       }
       return session;

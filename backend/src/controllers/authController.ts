@@ -70,6 +70,7 @@ export const login = async (req: Request, res: Response) => {
         kycVerified: user.kycVerified,
         hasDeposited: user.hasDeposited,
         isInstalled: user.isInstalled,
+        hasPin: !!(user as any).pinCode,
         creditLimit: user.creditLimit
       }
     });
