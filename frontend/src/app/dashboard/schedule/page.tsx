@@ -79,7 +79,7 @@ export default function SchedulePage() {
     setRepaying(loanId);
     setError(null);
     setConfirmModal(null);
-    setShowPinModal(false);
+    setShowPinModal(false); // Force close immediately
 
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
@@ -121,7 +121,7 @@ export default function SchedulePage() {
       
       {/* Success Modal */}
       {successModal?.show && (
-         <div className="fixed inset-0 z-[150] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+         <div className="fixed inset-0 z-[150] bg-background/90 backdrop-blur-xl flex items-center justify-center p-4 h-[100dvh] w-screen">
             <div className="bg-card border border-card-border rounded-[2.5rem] w-full max-w-md p-10 space-y-6 relative shadow-2xl animate-in zoom-in-95 duration-500 text-center overflow-hidden">
                <div className="absolute -top-24 -right-24 w-48 h-48 bg-green-500/10 blur-[80px] rounded-full"></div>
                
@@ -139,7 +139,7 @@ export default function SchedulePage() {
 
                <button 
                  onClick={() => setSuccessModal(null)}
-                 className="w-full mt-6 py-4 bg-white text-black font-black rounded-2xl hover:bg-gray-200 transition-all uppercase text-[10px] tracking-widest shadow-xl"
+                 className="w-full mt-6 py-4 bg-primary text-white font-black rounded-2xl hover:bg-primary/90 transition-all uppercase text-[10px] tracking-widest shadow-xl"
                >
                  Fermer
                </button>
