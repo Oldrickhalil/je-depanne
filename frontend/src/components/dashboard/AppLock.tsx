@@ -18,58 +18,71 @@ export default function AppLock({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (!hasPin || pathname.includes("/login") || pathname.includes("/register")) return;
 
+    const lockKey = `jd_unlocked_at_${(session?.user as any)?.id}`;
+    
+    const lockApp = () => {
+      setIsLocked(true);
+    };
+
     const checkLock = () => {
-      // Don't check if already locked to prevent unnecessary renders
-      if (isLocked) return;
-      
-      const unlockedAt = sessionStorage.getItem("jd_unlocked_at");
+      const unlockedAt = localStorage.getItem(lockKey);
       if (!unlockedAt) {
-        setIsLocked(true);
+        lockApp();
       } else {
-        // Lock after 1 minute of inactivity
+        // Lock strictly after 60 seconds of inactivity
         const timePassed = Date.now() - parseInt(unlockedAt);
-        if (timePassed > 60 * 1000) {
-          setIsLocked(true);
+        if (timePassed > 60000) {
+          lockApp();
         }
       }
     };
 
+    // Initial check
     checkLock();
 
-    // Periodic check every 5 seconds
-    const interval = setInterval(checkLock, 5000);
+    // Periodic check every 2 seconds
+    const interval = setInterval(checkLock, 2000);
 
-    // Throttle activity updates to avoid writing to storage constantly
+    // Throttle activity updates
     let lastUpdate = Date.now();
     const updateActivity = () => {
       const now = Date.now();
-      if (!isLocked && now - lastUpdate > 2000) {
-        sessionStorage.setItem("jd_unlocked_at", now.toString());
-        lastUpdate = now;
+      // Only update if we are not currently locked
+      if (now - lastUpdate > 2000) {
+        // Check if there's a lock screen element in the DOM to avoid stale closures
+        const isLockScreenVisible = document.getElementById("jd-lock-screen");
+        if (!isLockScreenVisible) {
+           localStorage.setItem(lockKey, now.toString());
+           lastUpdate = now;
+        }
       }
     };
 
-    // iOS and PWA reliable background detection
     const handleVisibilityChange = () => {
       if (document.visibilityState === "visible") {
         checkLock();
       } else {
-        // App is going to background, save the exact exit time
-        if (!isLocked) sessionStorage.setItem("jd_unlocked_at", Date.now().toString());
+        const isLockScreenVisible = document.getElementById("jd-lock-screen");
+        if (!isLockScreenVisible) {
+          localStorage.setItem(lockKey, Date.now().toString());
+        }
       }
     };
 
+    // Attach highly aggressive listeners
     document.addEventListener("visibilitychange", handleVisibilityChange);
-    document.addEventListener("touchstart", updateActivity, { passive: true });
-    document.addEventListener("click", updateActivity, { passive: true });
+    window.addEventListener("focus", checkLock);
+    
+    const events = ["touchstart", "click", "scroll", "keydown"];
+    events.forEach(e => document.addEventListener(e, updateActivity, { passive: true }));
 
     return () => {
       clearInterval(interval);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
-      document.removeEventListener("touchstart", updateActivity);
-      document.removeEventListener("click", updateActivity);
+      window.removeEventListener("focus", checkLock);
+      events.forEach(e => document.removeEventListener(e, updateActivity));
     };
-  }, [hasPin, pathname, isLocked]);
+  }, [hasPin, pathname, session]);
 
   const verifyPin = async () => {
     if (pin.length < 4) return;
@@ -87,13 +100,12 @@ export default function AppLock({ children }: { children: React.ReactNode }) {
       });
 
       if (res.ok) {
-        sessionStorage.setItem("jd_unlocked_at", Date.now().toString());
+        localStorage.setItem(`jd_unlocked_at_${userId}`, Date.now().toString());
         setIsLocked(false);
         setPin("");
       } else {
         setError(true);
         setPin("");
-        // Vibrate if supported
         if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
       }
     } catch (err) {
