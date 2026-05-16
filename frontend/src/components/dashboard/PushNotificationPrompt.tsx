@@ -29,12 +29,9 @@ export default function PushNotificationPrompt() {
     if (typeof window !== "undefined" && "serviceWorker" in navigator && "PushManager" in window) {
       setIsSupported(true);
       
-      // Check if already subscribed or denied
+      // Check if already subscribed or denied. Reappear every time if not granted.
       if (Notification.permission === "default") {
-         const dismissed = localStorage.getItem("jd_push_dismissed");
-         if (!dismissed) {
-            setShowPrompt(true);
-         }
+         setShowPrompt(true);
       }
     }
   }, []);
@@ -50,35 +47,39 @@ export default function PushNotificationPrompt() {
           applicationServerKey: urlBase64ToUint8Array(publicVapidKey),
         });
 
+        // Convert to JSON to get keys as strings correctly
+        const subJson = subscription.toJSON();
+
         const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
         const userId = (session?.user as any)?.id;
 
         const res = await fetch(`${apiUrl}/api/auth/push-subscribe`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ userId, subscription }),
+          body: JSON.stringify({ userId, subscription: subJson }),
         });
 
         if (res.ok) {
           addToast("Notifications activées avec succès !", "SUCCESS");
           setShowPrompt(false);
         } else {
-          throw new Error("Erreur serveur");
+          const errData = await res.json();
+          throw new Error(errData.message || "Erreur serveur");
         }
       } else {
         addToast("Permission refusée par le navigateur.", "WARNING");
         setShowPrompt(false);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Erreur lors de l'abonnement push:", error);
-      addToast("Impossible d'activer les notifications.", "ERROR");
+      addToast(`Échec: ${error.message}`, "ERROR");
     } finally {
       setLoading(false);
     }
   };
 
   const dismiss = () => {
-    localStorage.setItem("jd_push_dismissed", "true");
+    // We don't save to localStorage anymore, so it comes back next session
     setShowPrompt(false);
   };
 
