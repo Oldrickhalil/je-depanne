@@ -55,6 +55,14 @@ export const createLoan = async (req: Request, res: Response) => {
       }
     });
 
+    // Send Web Push Notification
+    await sendPushNotification(
+      userId,
+      'Demande Reçue',
+      `Votre demande de prêt de ${amount}€ est en cours d'analyse.`,
+      '/dashboard/loans'
+    );
+
     res.status(201).json(loan);
   } catch (error: any) {
     console.error('Create Loan Error:', error);

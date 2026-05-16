@@ -13,6 +13,10 @@ export const metadata: Metadata = {
   title: "Je Dépanne | Service instantané",
   description: "La plateforme qui vous aide dans les moments difficiles. Obtenez un dépannage instantané sur votre compte personnel.",
   manifest: "/manifest.json",
+  icons: {
+    icon: "/images/app_icon.svg",
+    apple: "/images/app_icon.svg",
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",

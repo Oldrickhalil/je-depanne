@@ -1,6 +1,7 @@
 import type { Request, Response } from 'express';
 import stripe from '../utils/stripe.js';
 import prisma from '../utils/prisma.js';
+import { sendPushNotification } from '../utils/push.js';
 
 export const createStripeAccount = async (req: Request, res: Response) => {
   try {
@@ -142,6 +143,14 @@ export const withdraw = async (req: Request, res: Response) => {
       }
     });
 
+    // Send Web Push Notification
+    await sendPushNotification(
+      userId,
+      'Retrait initié',
+      `Votre retrait de ${withdrawAmount}€ est en cours.`,
+      '/dashboard/transactions'
+    );
+
     // Note: Here you would call stripe.payouts.create() or similar to actually move money to the user's bank account
 
     res.status(200).json({
@@ -230,6 +239,14 @@ export const handleDeposit = async (req: Request, res: Response) => {
         type: 'SUCCESS'
       }
     });
+
+    // Send Web Push Notification
+    await sendPushNotification(
+      userId,
+      'Compte crédité',
+      BONUS_AMOUNT > 0 ? `Dépôt de ${amount}€ reçu + 80€ de bonus offert !` : `Votre dépôt de ${amount}€ a été validé.`,
+      '/dashboard'
+    );
 
     res.status(200).json({ 
       message: BONUS_AMOUNT > 0 

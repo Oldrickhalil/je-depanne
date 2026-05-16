@@ -2,6 +2,7 @@ import type { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import prisma from '../utils/prisma.js';
+import { sendPushNotification } from '../utils/push.js';
 
 export const register = async (req: Request, res: Response) => {
   try {
@@ -144,6 +145,14 @@ export const updateKycStatus = async (req: Request, res: Response) => {
         type: kycVerified ? 'SUCCESS' : 'ERROR'
       }
     });
+
+    // Send Web Push Notification
+    await sendPushNotification(
+      userId as string,
+      kycVerified ? 'Identité Vérifiée' : 'Identité Rejetée',
+      kycVerified ? 'Votre compte est désormais actif.' : 'Votre document d\'identité a été rejeté.',
+      '/dashboard/profile'
+    );
 
     res.status(200).json(user);
   } catch (error) {
