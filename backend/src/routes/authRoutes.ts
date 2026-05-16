@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { login, register, verifyKyc, updateInstallationStatus, getAllUsers, updateKycStatus, getUserStatus, updateProfile, updateSettings, subscribePush } from '../controllers/authController.js';
+import { login, register, verifyKyc, updateInstallationStatus, getAllUsers, updateKycStatus, getUserStatus, updateProfile, updateSettings, subscribePush, setPin, verifyPin } from '../controllers/authController.js';
 
 const router = Router();
 
@@ -8,6 +8,8 @@ router.post('/login', login);
 router.post('/verify-kyc', verifyKyc);
 router.post('/update-installation', updateInstallationStatus);
 router.post('/push-subscribe', subscribePush);
+router.post('/set-pin', setPin);
+router.post('/verify-pin', verifyPin);
 router.get('/status/:userId', getUserStatus);
 router.put('/profile/:userId', updateProfile);
 router.put('/settings/:userId', updateSettings);

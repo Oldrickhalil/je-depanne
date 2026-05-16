@@ -1,6 +1,6 @@
 "use client";
 
-import { Smartphone, ShieldCheck, Wallet, ArrowRight } from "lucide-react";
+import { Smartphone, ShieldCheck, Wallet, ArrowRight, KeyRound } from "lucide-react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 
@@ -14,8 +14,20 @@ export default function OnboardingChecklist({ freshStatus }: { freshStatus?: any
   const kycVerified = freshStatus ? freshStatus.kycVerified : user.kycVerified;
   const hasDeposited = freshStatus ? freshStatus.hasDeposited : user.hasDeposited;
   const isInstalled = freshStatus ? freshStatus.isInstalled : user.isInstalled;
+  const hasPin = freshStatus ? freshStatus.hasPin : user.hasPin;
 
   const steps = [
+    {
+      id: "pin",
+      completed: hasPin,
+      href: "/dashboard/onboarding/pin",
+      label: "Code PIN",
+      desc: "Verrouillez l'accès",
+      icon: KeyRound,
+      color: "text-amber-500",
+      bg: "bg-amber-500/10",
+      border: "border-amber-500/20"
+    },
     {
       id: "kyc",
       completed: kycVerified,
@@ -45,9 +57,9 @@ export default function OnboardingChecklist({ freshStatus }: { freshStatus?: any
       label: "Installer l'App",
       desc: "Accès rapide",
       icon: Smartphone,
-      color: "text-amber-500",
-      bg: "bg-amber-500/10",
-      border: "border-amber-500/20"
+      color: "text-primary",
+      bg: "bg-primary/10",
+      border: "border-primary/20"
     }
   ];
 

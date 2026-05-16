@@ -17,6 +17,7 @@ import { useState, useEffect } from "react";
 import OnboardingChecklist from "@/components/dashboard/OnboardingChecklist";
 import OnboardingIntro from "@/components/dashboard/OnboardingIntro";
 import PushNotificationPrompt from "@/components/dashboard/PushNotificationPrompt";
+import PinNotificationPrompt from "@/components/dashboard/PinNotificationPrompt";
 import { useRouter } from "next/navigation";
 
 export default function DashboardPage() {
@@ -44,7 +45,7 @@ export default function DashboardPage() {
 
         // Mettre à jour la session si discordance (onboarding fini par exemple)
         const user = session?.user as any;
-        if (data.kycVerified !== user.kycVerified || data.hasDeposited !== user.hasDeposited || data.isInstalled !== user.isInstalled) {
+        if (data.kycVerified !== user.kycVerified || data.hasDeposited !== user.hasDeposited || data.isInstalled !== user.isInstalled || data.hasPin !== user.hasPin) {
            await updateSession({
              ...session,
              user: {
@@ -52,6 +53,7 @@ export default function DashboardPage() {
                kycVerified: data.kycVerified,
                hasDeposited: data.hasDeposited,
                isInstalled: data.isInstalled,
+               hasPin: data.hasPin,
                creditLimit: data.creditLimit
              }
            });
@@ -96,7 +98,7 @@ export default function DashboardPage() {
 
   const activeLoan = loans.length > 0 ? loans[0] : null;
   const hasObtainedCredit = loans.some(l => l.status === 'APPROVED' || l.status === 'PAID_BACK');
-  const isActivated = freshStatus ? (freshStatus.kycVerified && freshStatus.hasDeposited && freshStatus.isInstalled) : false;
+  const isActivated = freshStatus ? (freshStatus.kycVerified && freshStatus.hasDeposited && freshStatus.isInstalled && freshStatus.hasPin) : false;
 
   const getStatusDisplay = (status: string) => {
     switch (status) {
@@ -122,6 +124,7 @@ export default function DashboardPage() {
       
       <OnboardingChecklist freshStatus={freshStatus} />
       <PushNotificationPrompt />
+      <PinNotificationPrompt hasPin={freshStatus?.hasPin} />
       
       {/* Focused Header */}
       <section className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">

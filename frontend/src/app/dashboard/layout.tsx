@@ -6,6 +6,7 @@ import { CreditCard, PieChart, User, Settings, Plus, LayoutGrid, LogOut, ArrowRi
 import Image from "next/image";
 import { signOut } from "next-auth/react";
 import NotificationsMenu from "@/components/dashboard/NotificationsMenu";
+import AppLock from "@/components/dashboard/AppLock";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -18,7 +19,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   ];
 
   return (
-    <div className="flex h-screen bg-background text-foreground overflow-hidden font-sans selection:bg-primary/30">
+    <AppLock>
+      <div className="flex h-screen bg-background text-foreground overflow-hidden font-sans selection:bg-primary/30">
       {/* Desktop Sidebar - Hidden on pure mobile apps, but kept for responsive */}
       <aside className="hidden md:flex flex-col w-24 lg:w-64 bg-card border-r border-card-border p-6 transition-all duration-300">
         <div className="mb-12 flex justify-center lg:justify-start">
@@ -119,6 +121,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </Link>
         </nav>
       </div>
-    </div>
+      </div>
+    </AppLock>
   );
 }

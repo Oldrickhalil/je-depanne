@@ -241,6 +241,7 @@ export const getUserStatus = async (req: Request, res: Response) => {
       kycVerified: user.kycVerified,
       hasDeposited: user.hasDeposited,
       isInstalled: user.isInstalled,
+      hasPin: !!(user as any).pinCode,
       creditLimit: user.creditLimit,
       balance: user.wallet?.balance || 0,
       firstName: user.firstName,
@@ -289,5 +290,53 @@ export const subscribePush = async (req: Request, res: Response) => {
   } catch (error) {
     console.error('Erreur Push Subscribe:', error);
     res.status(500).json({ message: 'Erreur lors de la souscription.' });
+  }
+};
+
+export const setPin = async (req: Request, res: Response) => {
+  try {
+    const { userId, pinCode } = req.body;
+    if (!userId || !pinCode || pinCode.length < 4) {
+      return res.status(400).json({ message: 'Code PIN invalide.' });
+    }
+
+    const hashedPin = await bcrypt.hash(pinCode, 10);
+    
+    await prisma.user.update({
+      where: { id: userId as string },
+      data: { pinCode: hashedPin } as any
+    });
+
+    res.status(200).json({ message: 'Code PIN configuré avec succès.' });
+  } catch (error) {
+    console.error('Erreur Set PIN:', error);
+    res.status(500).json({ message: 'Erreur serveur.' });
+  }
+};
+
+export const verifyPin = async (req: Request, res: Response) => {
+  try {
+    const { userId, pinCode } = req.body;
+    if (!userId || !pinCode) {
+      return res.status(400).json({ message: 'Code PIN manquant.' });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId as string }
+    });
+
+    if (!user || !(user as any).pinCode) {
+      return res.status(400).json({ message: 'Aucun code PIN configuré.' });
+    }
+
+    const isMatch = await bcrypt.compare(pinCode, (user as any).pinCode);
+    if (isMatch) {
+      res.status(200).json({ success: true });
+    } else {
+      res.status(401).json({ success: false, message: 'Code PIN incorrect.' });
+    }
+  } catch (error) {
+    console.error('Erreur Verify PIN:', error);
+    res.status(500).json({ message: 'Erreur serveur.' });
   }
 };
