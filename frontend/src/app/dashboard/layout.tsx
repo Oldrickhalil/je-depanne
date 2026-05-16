@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { CreditCard, PieChart, User, Settings, Plus, LayoutGrid, LogOut, ArrowRightLeft } from "lucide-react";
+import { CreditCard, PieChart, User, Settings, Plus, LayoutGrid, LogOut, ArrowRightLeft, Search } from "lucide-react";
 import Image from "next/image";
 import { signOut } from "next-auth/react";
 import NotificationsMenu from "@/components/dashboard/NotificationsMenu";
@@ -18,13 +18,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   ];
 
   return (
-    <div className="flex h-screen bg-[#070707] text-white overflow-hidden font-sans selection:bg-primary/30">
-      {/* Desktop Sidebar - More minimalist, like 'Fundraising Fintech' */}
-      <aside className="hidden md:flex flex-col w-24 lg:w-64 bg-[#0a0a0a] border-r border-white/5 p-6 transition-all duration-300">
+    <div className="flex h-screen bg-background text-foreground overflow-hidden font-sans selection:bg-primary/30">
+      {/* Desktop Sidebar - Hidden on pure mobile apps, but kept for responsive */}
+      <aside className="hidden md:flex flex-col w-24 lg:w-64 bg-card border-r border-card-border p-6 transition-all duration-300">
         <div className="mb-12 flex justify-center lg:justify-start">
           <Link href="/dashboard" className="relative group">
             <div className="absolute -inset-2 bg-primary/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            <Image src="/images/logo-jd-color.svg" alt="Je Dépanne" width={80} height={40} className="relative z-10" />
+            <Image src="/images/app_icon.svg" alt="Je Dépanne" width={40} height={40} className="relative z-10" />
           </Link>
         </div>
 
@@ -39,7 +39,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 className={`flex items-center justify-center lg:justify-start gap-4 px-4 py-4 rounded-[1.25rem] transition-all duration-300 group ${
                   isActive 
                     ? "bg-primary text-white glow-primary shadow-lg shadow-primary/20" 
-                    : "text-gray-500 hover:text-white hover:bg-white/5"
+                    : "text-muted-text hover:text-foreground hover:bg-black/5 dark:hover:bg-white/5"
                 }`}
               >
                 <Icon size={20} className={`${isActive ? "scale-110" : "group-hover:scale-110"} transition-transform`} />
@@ -50,61 +50,43 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             );
           })}
         </nav>
-
-        <div className="mt-auto space-y-4">
-          <Link
-            href="/dashboard/settings"
-            className="flex items-center justify-center lg:justify-start gap-4 px-4 py-4 rounded-[1.25rem] text-gray-500 hover:text-white hover:bg-white/5 transition-all font-bold tracking-tight uppercase text-[10px]"
-          >
-            <Settings size={20} />
-            <span className="hidden lg:block">Paramètres</span>
-          </Link>
-          <button
-            onClick={() => signOut({ callbackUrl: "/login" })}
-            className="flex items-center justify-center lg:justify-start gap-4 px-4 py-4 w-full rounded-[1.25rem] text-red-500/60 hover:text-red-500 hover:bg-red-500/5 transition-all font-bold tracking-tight uppercase text-[10px]"
-          >
-            <LogOut size={20} />
-            <span className="hidden lg:block">Déconnexion</span>
-          </button>
-        </div>
       </aside>
 
       {/* Main Content Area */}
-      <main className="flex-1 relative flex flex-col h-full overflow-hidden">
-        {/* Top Header - Like 'Application Layout Banking' */}
-        <header className="flex items-center justify-between p-6 md:px-10 border-b border-white/5 bg-[#070707]/80 backdrop-blur-md z-20">
-           <h2 className="font-title text-sm font-bold uppercase tracking-[0.2em] text-gray-400 hidden md:block">
-              Expérience <span className="text-white">Premium</span>
-           </h2>
-           <div className="flex items-center gap-4 ml-auto">
-              <button 
-                onClick={() => signOut({ callbackUrl: "/login" })}
-                className="md:hidden w-10 h-10 rounded-full glass flex items-center justify-center text-red-500 hover:bg-red-500/10 transition-colors"
-              >
-                 <LogOut size={18} />
-              </button>
+      <main className="flex-1 relative flex flex-col h-full overflow-hidden bg-background">
+        {/* Revolut Style Header */}
+        <header className="flex items-center justify-between p-4 md:p-6 md:px-10 border-b border-card-border bg-background/90 backdrop-blur-xl z-20 gap-3">
+           {/* Profile (Left) */}
+           <Link href="/dashboard/profile" className="w-10 h-10 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center overflow-hidden shrink-0 hover:bg-primary/20 transition-colors">
+              <User size={20} className="text-primary" />
+           </Link>
+
+           {/* Search Bar (Center) */}
+           <div className="flex-1 relative max-w-md">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                 <Search size={16} className="text-muted-text" />
+              </div>
+              <input 
+                 type="text" 
+                 placeholder="Rechercher..." 
+                 className="w-full pl-10 pr-4 py-2.5 bg-card border border-card-border rounded-[1rem] text-[11px] font-bold uppercase tracking-widest text-foreground placeholder-muted-text focus:outline-none focus:border-primary/50 transition-colors shadow-sm"
+              />
+           </div>
+
+           {/* Actions (Right) */}
+           <div className="flex items-center gap-2 shrink-0">
               <NotificationsMenu />
               <Link 
                 href="/dashboard/deposit"
-                className="w-10 h-10 rounded-full glass flex items-center justify-center hover:bg-white/10 transition-colors relative"
+                className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white hover:opacity-90 transition-opacity shadow-lg shadow-primary/20"
               >
-                 <div className="absolute top-2.5 right-2.5 w-2 h-2 bg-primary rounded-full border-2 border-[#070707]"></div>
-                 <Plus size={18} />
+                 <Plus size={20} />
               </Link>
-              <div className="flex items-center gap-3 pl-4 border-l border-white/10">
-                 <div className="hidden sm:block text-right">
-                    <p className="text-[10px] font-bold tracking-tight">Plan Actif</p>
-                    <p className="text-[9px] text-primary font-black uppercase tracking-widest">Membre Élite</p>
-                 </div>
-                 <Link href="/dashboard/profile" className="w-10 h-10 rounded-2xl bg-gradient-to-br from-gray-800 to-gray-900 border border-white/10 flex items-center justify-center overflow-hidden hover:border-primary/50 transition-colors">
-                    <User size={20} className="text-gray-400" />
-                 </Link>
-              </div>
            </div>
         </header>
 
         <div className="flex-1 overflow-y-auto custom-scrollbar">
-          <div className="p-6 md:p-10 pb-32 md:pb-10 max-w-7xl mx-auto w-full">
+          <div className="p-4 md:p-10 pb-32 md:pb-10 max-w-7xl mx-auto w-full">
             {children}
           </div>
         </div>

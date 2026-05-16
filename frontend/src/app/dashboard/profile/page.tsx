@@ -1,13 +1,16 @@
 "use client";
 
-import { useSession } from "next-auth/react";
-import { User, Mail, ShieldCheck, ArrowLeft, Camera, Edit3, Smartphone, MapPin, Key, Loader2, Wallet } from "lucide-react";
+import { useSession, signOut } from "next-auth/react";
+import { User, Mail, ShieldCheck, ArrowLeft, Camera, Edit3, Smartphone, MapPin, Key, Loader2, Wallet, LogOut, Moon, Sun, Monitor } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { useTheme } from "next-themes";
 
 export default function ProfilePage() {
   const { data: session, update: updateSession } = useSession();
   const userId = (session?.user as any)?.id;
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
   
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -27,6 +30,7 @@ export default function ProfilePage() {
   });
 
   useEffect(() => {
+    setMounted(true);
     const fetchProfile = async () => {
       if (!userId) return;
       try {
@@ -292,6 +296,53 @@ export default function ProfilePage() {
                   </div>
                </div>
             </div>
+
+            {/* PREFERENCES & LOGOUT */}
+            <div className="bg-card border border-card-border rounded-[2.5rem] p-8 space-y-8">
+               <div className="flex items-center gap-3 border-b border-card-border pb-4">
+                  <Monitor size={18} className="text-primary" />
+                  <h3 className="font-title font-bold text-lg tracking-widest uppercase text-foreground">Préférences</h3>
+               </div>
+               
+               <div className="space-y-4">
+                  {mounted && (
+                    <div className="flex items-center justify-between p-4 bg-background border border-card-border rounded-2xl">
+                       <div className="flex items-center gap-3">
+                          {theme === 'dark' ? <Moon size={20} className="text-muted-text" /> : <Sun size={20} className="text-amber-500" />}
+                          <div>
+                             <p className="text-sm font-bold text-foreground uppercase tracking-tight">Thème de l'application</p>
+                             <p className="text-[10px] text-muted-text uppercase tracking-widest mt-1">
+                                {theme === 'dark' ? 'Mode Sombre Activé' : 'Mode Clair Activé'}
+                             </p>
+                          </div>
+                       </div>
+                       <button 
+                         onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                         className="px-4 py-2 bg-primary/10 text-primary text-[9px] font-black uppercase tracking-widest rounded-xl hover:bg-primary hover:text-white transition-colors"
+                       >
+                          Changer
+                       </button>
+                    </div>
+                  )}
+
+                  <div className="flex items-center justify-between p-4 bg-red-500/5 border border-red-500/10 rounded-2xl">
+                     <div className="flex items-center gap-3">
+                        <LogOut size={20} className="text-red-500" />
+                        <div>
+                           <p className="text-sm font-bold text-red-500 uppercase tracking-tight">Déconnexion</p>
+                           <p className="text-[10px] text-red-500/70 uppercase tracking-widest mt-1">Fermer la session sur cet appareil</p>
+                        </div>
+                     </div>
+                     <button 
+                       onClick={() => signOut({ callbackUrl: "/login" })}
+                       className="px-4 py-2 bg-red-500 text-white text-[9px] font-black uppercase tracking-widest rounded-xl hover:bg-red-600 transition-colors shadow-lg shadow-red-500/20"
+                     >
+                        Quitter
+                     </button>
+                  </div>
+               </div>
+            </div>
+
          </div>
       </div>
     </div>
