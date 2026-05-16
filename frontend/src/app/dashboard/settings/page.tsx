@@ -175,6 +175,39 @@ export default function SettingsPage() {
                </div>
             </div>
 
+            {/* Security Section */}
+            <div className="bg-card border border-card-border rounded-[2.5rem] p-8 space-y-8">
+               <div className="space-y-1 border-b border-card-border pb-6">
+                  <h3 className="font-title font-bold text-lg tracking-widest uppercase">Sécurité</h3>
+                  <p className="text-[10px] text-muted-text font-bold uppercase tracking-widest">Protégez votre compte</p>
+               </div>
+               
+               <div className="space-y-6">
+                  <div className="flex items-center justify-between">
+                     <div>
+                        <p className="text-sm font-bold text-foreground uppercase tracking-tight">Mot de passe</p>
+                        <p className="text-[10px] text-muted-text uppercase tracking-widest mt-1">Dernière modification il y a 30 jours</p>
+                     </div>
+                     <button className="px-4 py-2 bg-white/5 text-foreground text-[9px] font-black uppercase tracking-widest rounded-xl hover:bg-white/10 transition-colors">
+                        Modifier
+                     </button>
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                     <div>
+                        <p className="text-sm font-bold text-foreground uppercase tracking-tight flex items-center gap-2">
+                           Authentification Double Facteur
+                           <span className="px-2 py-0.5 bg-amber-500/10 text-amber-500 text-[8px] rounded-full">Recommandé</span>
+                        </p>
+                        <p className="text-[10px] text-muted-text uppercase tracking-widest mt-1">Sécurisez l'accès à vos fonds</p>
+                     </div>
+                     <button className="px-4 py-2 bg-primary/10 text-primary text-[9px] font-black uppercase tracking-widest rounded-xl hover:bg-primary hover:text-white transition-colors">
+                        Activer
+                     </button>
+                  </div>
+               </div>
+            </div>
+
             {/* App Preferences */}
             <div className="bg-card border border-card-border rounded-[2.5rem] p-8 space-y-8">
                <div className="space-y-1 border-b border-card-border pb-6">
