@@ -79,6 +79,7 @@ export default function SchedulePage() {
     setRepaying(loanId);
     setError(null);
     setConfirmModal(null);
+    setShowPinModal(false);
 
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
