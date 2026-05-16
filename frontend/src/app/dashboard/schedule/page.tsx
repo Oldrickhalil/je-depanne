@@ -16,6 +16,8 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/ToastProvider";
 
+import PinVerificationModal from "@/components/dashboard/PinVerificationModal";
+
 type Loan = {
   id: string;
   amount: number;
@@ -36,6 +38,7 @@ export default function SchedulePage() {
   const [error, setError] = useState<string | null>(null);
   
   const [successModal, setSuccessModal] = useState<{show: boolean, message: string} | null>(null);
+  const [showPinModal, setShowPinModal] = useState(false);
 
   const [confirmModal, setConfirmModal] = useState<{ 
     show: boolean, 
@@ -313,7 +316,10 @@ export default function SchedulePage() {
                    Annuler
                  </button>
                  <button 
-                   onClick={executeRepayment}
+                   onClick={() => {
+                     setConfirmModal(null);
+                     setShowPinModal(true);
+                   }}
                    className="flex-1 py-4 bg-primary text-white font-black rounded-2xl hover:bg-primary/90 transition-all uppercase text-[10px] tracking-widest shadow-lg shadow-primary/20"
                  >
                    Confirmer
@@ -322,6 +328,14 @@ export default function SchedulePage() {
             </div>
          </div>
       )}
+
+      <PinVerificationModal 
+         isOpen={showPinModal} 
+         onClose={() => setShowPinModal(false)} 
+         onSuccess={executeRepayment} 
+         title="Validation requise"
+         description="Saisissez votre code PIN pour valider ce remboursement"
+      />
     </div>
   );
 }

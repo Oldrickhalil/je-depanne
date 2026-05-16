@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { ArrowRight, ShieldCheck, CheckCircle2, Loader2, Building, ArrowUpRight, CreditCard } from "lucide-react";
+import PinVerificationModal from "@/components/dashboard/PinVerificationModal";
 
 export default function WithdrawPage() {
   const { data: session, update } = useSession();
@@ -16,6 +17,8 @@ export default function WithdrawPage() {
   const [freshStatus, setFreshStatus] = useState<any>(null);
   const [isFetchingStatus, setIsFetchingStatus] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  
+  const [showPinModal, setShowPinModal] = useState(false);
   
   const user = session?.user as any;
   const userId = user?.id;
@@ -45,23 +48,30 @@ export default function WithdrawPage() {
     fetchStatus();
   }, [session, userId]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     setError(null);
 
     const withdrawAmount = parseFloat(amount);
     if (!withdrawAmount || withdrawAmount <= 0) {
        setError("Veuillez saisir un montant valide.");
-       setLoading(false);
        return;
     }
     
     if (freshStatus && withdrawAmount > freshStatus.balance) {
        setError("Fonds insuffisants sur votre solde disponible.");
-       setLoading(false);
        return;
     }
+
+    setShowPinModal(true);
+  };
+
+  const executeWithdrawal = async () => {
+    setLoading(true);
+    setError(null);
+    setShowPinModal(false);
+
+    const withdrawAmount = parseFloat(amount);
 
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
@@ -79,7 +89,6 @@ export default function WithdrawPage() {
       const data = await res.json();
 
       if (res.ok) {
-        // Force session update to reflect new balance (handled by freshStatus usually, but good practice)
         await update(); 
         
         setSuccess(true);
@@ -129,6 +138,13 @@ export default function WithdrawPage() {
 
   return (
     <div className="min-h-[80vh] flex flex-col items-center justify-center p-4">
+      <PinVerificationModal 
+         isOpen={showPinModal} 
+         onClose={() => setShowPinModal(false)} 
+         onSuccess={executeWithdrawal} 
+         title="Validation du Retrait"
+         description={`Saisissez votre code PIN pour valider le transfert de ${amount} €`}
+      />
       <div className="w-full max-w-2xl grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
         <div className="space-y-6">
           <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-6">

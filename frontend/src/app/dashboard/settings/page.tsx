@@ -5,11 +5,16 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { Loader2 } from "lucide-react";
+import PinVerificationModal from "@/components/dashboard/PinVerificationModal";
+import { useToast } from "@/components/ui/ToastProvider";
 
 export default function SettingsPage() {
   const { data: session } = useSession();
+  const { addToast } = useToast();
   const userId = (session?.user as any)?.id;
   const [loading, setLoading] = useState(true);
+  const [showPinModal, setShowPinModal] = useState(false);
+  const [pendingAction, setPendingAction] = useState<string | null>(null);
 
   // Mock states for toggles, will be updated by fetch
   const [notifications, setNotifications] = useState({
@@ -75,7 +80,7 @@ export default function SettingsPage() {
       {/* Header */}
       <section className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div className="space-y-1">
-          <Link href="/dashboard" className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.3em] text-muted-text hover:text-foreground transition-colors mb-4">
+          <Link href="/dashboard/profile" className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.3em] text-muted-text hover:text-foreground transition-colors mb-4">
              <ArrowLeft size={12} /> Tableau de Bord
           </Link>
           <h1 className="text-4xl font-title font-bold tight-tracking uppercase leading-none">
@@ -188,7 +193,13 @@ export default function SettingsPage() {
                         <p className="text-sm font-bold text-foreground uppercase tracking-tight">Mot de passe</p>
                         <p className="text-[10px] text-muted-text uppercase tracking-widest mt-1">Dernière modification il y a 30 jours</p>
                      </div>
-                     <button className="px-4 py-2 bg-white/5 text-foreground text-[9px] font-black uppercase tracking-widest rounded-xl hover:bg-white/10 transition-colors">
+                     <button 
+                       onClick={() => {
+                         setPendingAction("password");
+                         setShowPinModal(true);
+                       }}
+                       className="px-4 py-2 bg-white/5 text-foreground text-[9px] font-black uppercase tracking-widest rounded-xl hover:bg-white/10 transition-colors"
+                     >
                         Modifier
                      </button>
                   </div>
@@ -201,7 +212,13 @@ export default function SettingsPage() {
                         </p>
                         <p className="text-[10px] text-muted-text uppercase tracking-widest mt-1">Sécurisez l'accès à vos fonds</p>
                      </div>
-                     <button className="px-4 py-2 bg-primary/10 text-primary text-[9px] font-black uppercase tracking-widest rounded-xl hover:bg-primary hover:text-white transition-colors">
+                     <button 
+                       onClick={() => {
+                         setPendingAction("2fa");
+                         setShowPinModal(true);
+                       }}
+                       className="px-4 py-2 bg-primary/10 text-primary text-[9px] font-black uppercase tracking-widest rounded-xl hover:bg-primary hover:text-white transition-colors"
+                     >
                         Activer
                      </button>
                   </div>
@@ -254,13 +271,28 @@ export default function SettingsPage() {
                <p className="text-[10px] text-muted-text uppercase tracking-widest leading-relaxed">
                   La suppression de votre compte est définitive. Assurez-vous d'avoir remboursé tous vos prêts en cours avant d'initier cette procédure.
                </p>
-               <button className="px-6 py-3 bg-red-500/10 text-red-500 text-[9px] font-black uppercase tracking-widest rounded-xl hover:bg-red-500 hover:text-foreground transition-colors">
+               <button className="px-6 py-3 bg-red-500/10 text-red-500 text-[9px] font-black uppercase tracking-widest rounded-xl hover:bg-red-500 hover:text-white transition-colors">
                   Supprimer mon compte
                </button>
             </div>
 
          </div>
       </div>
+      
+      <PinVerificationModal 
+         isOpen={showPinModal} 
+         onClose={() => setShowPinModal(false)} 
+         onSuccess={() => {
+           setShowPinModal(false);
+           if (pendingAction === 'password') {
+             addToast("Validation réussie. Redirection vers la modification de mot de passe.", "SUCCESS");
+           } else if (pendingAction === '2fa') {
+             addToast("Validation réussie. Configuration 2FA en cours.", "SUCCESS");
+           }
+         }} 
+         title="Action Sensible"
+         description="Saisissez votre code PIN pour valider vos modifications de sécurité"
+      />
     </div>
   );
 }
