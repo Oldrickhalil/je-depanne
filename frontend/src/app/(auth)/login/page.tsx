@@ -42,7 +42,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#0a0a0a] flex flex-col items-center justify-center p-6 selection:bg-primary/30">
+    <div className="relative min-h-screen bg-background flex flex-col items-center justify-center p-6 selection:bg-primary/30">
       {/* Background Decor */}
       <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-primary/10 blur-[100px] rounded-full"></div>
       
@@ -51,10 +51,10 @@ export default function LoginPage() {
           <Link href="/">
              <Image src="/images/logo-jd-color.svg" alt="JD" width={100} height={60} className="mb-4" />
           </Link>
-          <h1 className="text-4xl font-title font-black tight-tracking uppercase text-white">
+          <h1 className="text-4xl font-title font-black tight-tracking uppercase text-foreground">
             Bon <span className="text-primary">Retour</span>
           </h1>
-          <p className="text-gray-500 text-[12px] font-medium tracking-[0.0em]">Accédez à votre espace personnel</p>
+          <p className="text-muted-text text-[12px] font-medium tracking-[0.0em]">Accédez à votre espace personnel</p>
         </div>
 
         {error && (
@@ -70,31 +70,31 @@ export default function LoginPage() {
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="space-y-4">
             <div className="relative group">
-               <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-primary transition-colors" size={18} />
+               <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-text group-focus-within:text-primary transition-colors" size={18} />
                <input
                 type="email"
                 required
                 placeholder="Adresse e-mail"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="w-full bg-[#111] border border-white/5 rounded-2xl py-4 pl-12 pr-6 text-[12px] font-medium tracking-wider text-white focus:outline-none focus:border-primary/50 transition-all placeholder:text-gray-700"
+                className="w-full bg-card border border-card-border rounded-2xl py-4 pl-12 pr-6 text-[12px] font-medium tracking-wider text-foreground focus:outline-none focus:border-primary/50 transition-all placeholder:text-gray-700"
               />
             </div>
             
             <div className="relative group">
-               <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-primary transition-colors" size={18} />
+               <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-text group-focus-within:text-primary transition-colors" size={18} />
                <input
                 type={showPassword ? "text" : "password"}
                 required
                 placeholder="Mot de passe"
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                className="w-full bg-[#111] border border-white/5 rounded-2xl py-4 pl-12 pr-12 text-[12px] font-medium tracking-wider text-white focus:outline-none focus:border-primary/50 transition-all placeholder:text-gray-700"
+                className="w-full bg-card border border-card-border rounded-2xl py-4 pl-12 pr-12 text-[12px] font-medium tracking-wider text-foreground focus:outline-none focus:border-primary/50 transition-all placeholder:text-gray-700"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-600 hover:text-white transition-colors"
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-text hover:text-foreground transition-colors"
               >
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
@@ -104,7 +104,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-5 bg-primary text-white font-black text-xs uppercase tracking-[0.0em] rounded-2xl hover:bg-primary/80 transition-all flex items-center justify-center gap-3 shadow-xl active:scale-95 disabled:opacity-50"
+            className="w-full py-5 bg-primary text-foreground font-black text-xs uppercase tracking-[0.0em] rounded-2xl hover:bg-primary/80 transition-all flex items-center justify-center gap-3 shadow-xl active:scale-95 disabled:opacity-50"
           >
             {loading ? <Loader2 className="animate-spin" size={18} /> : (
               <>
@@ -115,14 +115,14 @@ export default function LoginPage() {
         </form>
 
         <div className="relative flex items-center py-2">
-          <div className="flex-grow border-t border-white/10"></div>
-          <span className="flex-shrink-0 mx-4 text-gray-600 text-[9px] font-black uppercase tracking-widest">OU</span>
-          <div className="flex-grow border-t border-white/10"></div>
+          <div className="flex-grow border-t border-card-border"></div>
+          <span className="flex-shrink-0 mx-4 text-muted-text text-[9px] font-black uppercase tracking-widest">OU</span>
+          <div className="flex-grow border-t border-card-border"></div>
         </div>
 
         <button
           onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
-          className="w-full py-4 bg-[#111] border border-white/5 text-white font-black text-xs uppercase tracking-[0.02em] rounded-2xl hover:bg-white/5 hover:border-white/20 transition-all flex items-center justify-center gap-3"
+          className="w-full py-4 bg-card border border-card-border text-foreground font-black text-xs uppercase tracking-[0.02em] rounded-2xl hover:bg-white/5 hover:border-white/20 transition-all flex items-center justify-center gap-3"
         >
           <svg viewBox="0 0 24 24" width="18" height="18" xmlns="http://www.w3.org/2000/svg">
             <g transform="matrix(1, 0, 0, 1, 27.009001, -39.238998)">
@@ -136,7 +136,7 @@ export default function LoginPage() {
         </button>
 
         <div className="flex flex-col items-center gap-4 text-[10px] font-bold uppercase tracking-widest">
-           <p className="text-gray-600">Pas encore de compte ?</p>
+           <p className="text-muted-text">Pas encore de compte ?</p>
            <Link href="/register" className="text-primary hover:underline underline-offset-4">
               Créer un accès premium
            </Link>

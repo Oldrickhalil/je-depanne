@@ -52,10 +52,10 @@ export function ToastProvider({ children }: { children: ReactNode }) {
           <div
             key={toast.id}
             className={`pointer-events-auto flex items-start gap-3 p-4 rounded-2xl border shadow-2xl animate-in slide-in-from-right-8 fade-in duration-300 min-w-[280px] max-w-sm ${
-              toast.type === 'SUCCESS' ? 'bg-[#0a0a0a] border-green-500/20 shadow-green-500/10' :
-              toast.type === 'ERROR' ? 'bg-[#0a0a0a] border-red-500/20 shadow-red-500/10' :
-              toast.type === 'WARNING' ? 'bg-[#0a0a0a] border-amber-500/20 shadow-amber-500/10' :
-              'bg-[#0a0a0a] border-primary/20 shadow-primary/10'
+              toast.type === 'SUCCESS' ? 'bg-background border-green-500/20 shadow-green-500/10' :
+              toast.type === 'ERROR' ? 'bg-background border-red-500/20 shadow-red-500/10' :
+              toast.type === 'WARNING' ? 'bg-background border-amber-500/20 shadow-amber-500/10' :
+              'bg-background border-primary/20 shadow-primary/10'
             }`}
           >
             <div className={`mt-0.5 shrink-0 ${
@@ -71,14 +71,14 @@ export function ToastProvider({ children }: { children: ReactNode }) {
             </div>
             
             <div className="flex-1">
-              <p className="text-[11px] font-bold uppercase tracking-widest text-white leading-relaxed">
+              <p className="text-[11px] font-bold uppercase tracking-widest text-foreground leading-relaxed">
                 {toast.message}
               </p>
             </div>
             
             <button 
               onClick={() => removeToast(toast.id)}
-              className="text-gray-500 hover:text-white transition-colors shrink-0"
+              className="text-muted-text hover:text-foreground transition-colors shrink-0"
             >
               <X size={16} />
             </button>

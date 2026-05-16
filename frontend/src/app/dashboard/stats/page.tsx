@@ -86,25 +86,25 @@ export default function StatsPage() {
       {/* Header */}
       <section className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div className="space-y-1">
-          <Link href="/dashboard" className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.3em] text-gray-500 hover:text-white transition-colors mb-4">
+          <Link href="/dashboard" className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.3em] text-muted-text hover:text-foreground transition-colors mb-4">
              <ArrowLeft size={12} /> Tableau de Bord
           </Link>
           <h1 className="text-4xl font-title font-bold tight-tracking uppercase leading-none">
             Analyses <span className="text-primary">& Stats</span>
           </h1>
-          <p className="text-gray-500 font-bold uppercase tracking-[0.2em] text-[9px] flex items-center gap-2">
+          <p className="text-muted-text font-bold uppercase tracking-[0.2em] text-[9px] flex items-center gap-2">
             Vue détaillée de votre activité financière
           </p>
         </div>
         
-        <button className="px-6 py-3 bg-white/5 border border-white/10 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl hover:bg-white/10 transition-all flex items-center gap-2">
+        <button className="px-6 py-3 bg-white/5 border border-card-border text-foreground rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl hover:bg-white/10 transition-all flex items-center gap-2">
           <Download size={14} /> Exporter (PDF)
         </button>
       </section>
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-         <div className="bg-[#0c0c0c] border border-white/5 p-8 rounded-[2.5rem] relative overflow-hidden group">
+         <div className="bg-card border border-card-border p-8 rounded-[2.5rem] relative overflow-hidden group">
             <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
                <TrendingUp size={80} className="text-primary" />
             </div>
@@ -113,19 +113,19 @@ export default function StatsPage() {
                   <Activity size={24} />
                </div>
                <div>
-                  <p className="text-[10px] font-black uppercase tracking-widest text-gray-500">Total Emprunté</p>
-                  <p className="text-4xl font-black tracking-tighter text-white mt-1">{totalBorrowed.toFixed(2)} €</p>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-text">Total Emprunté</p>
+                  <p className="text-4xl font-black tracking-tighter text-foreground mt-1">{totalBorrowed.toFixed(2)} €</p>
                </div>
                <div className="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
                   <div className="h-full bg-primary w-full rounded-full" style={{ width: `${Math.min((totalBorrowed / 10000) * 100, 100)}%` }}></div>
                </div>
-               <p className="text-[9px] font-bold text-gray-500 uppercase tracking-widest">
+               <p className="text-[9px] font-bold text-muted-text uppercase tracking-widest">
                   {activeLoansCount} prêt(s) en cours • {repaidLoansCount} terminé(s)
                </p>
             </div>
          </div>
 
-         <div className="bg-[#0c0c0c] border border-white/5 p-8 rounded-[2.5rem] relative overflow-hidden group">
+         <div className="bg-card border border-card-border p-8 rounded-[2.5rem] relative overflow-hidden group">
             <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
                <BarChart3 size={80} className="text-blue-500" />
             </div>
@@ -134,8 +134,8 @@ export default function StatsPage() {
                   <BarChart3 size={24} />
                </div>
                <div>
-                  <p className="text-[10px] font-black uppercase tracking-widest text-gray-500">Taux de Remboursement</p>
-                  <p className="text-4xl font-black tracking-tighter text-white mt-1">{repaymentRate}%</p>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-text">Taux de Remboursement</p>
+                  <p className="text-4xl font-black tracking-tighter text-foreground mt-1">{repaymentRate}%</p>
                </div>
                <div className="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
                   <div className="h-full bg-blue-500 rounded-full" style={{ width: `${repaymentRate}%` }}></div>
@@ -146,15 +146,15 @@ export default function StatsPage() {
 
          <div className="bg-primary p-8 rounded-[2.5rem] relative overflow-hidden group shadow-lg shadow-primary/20 flex flex-col justify-between">
             <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:scale-110 transition-transform duration-700 pointer-events-none">
-               <Zap size={80} className="text-white" />
+               <Zap size={80} className="text-foreground" />
             </div>
             <div className="space-y-4 relative z-10">
-               <div className="w-12 h-12 rounded-2xl bg-white/20 text-white flex items-center justify-center backdrop-blur-sm">
+               <div className="w-12 h-12 rounded-2xl bg-white/20 text-foreground flex items-center justify-center backdrop-blur-sm">
                   <PieChart size={24} />
                </div>
                <div>
-                  <p className="text-[10px] font-black uppercase tracking-widest text-white/70">Total Remboursé</p>
-                  <p className="text-4xl font-black tracking-tighter text-white mt-1">{totalRepaid.toFixed(2)} <span className="text-xl opacity-70">€</span></p>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-foreground/70">Total Remboursé</p>
+                  <p className="text-4xl font-black tracking-tighter text-foreground mt-1">{totalRepaid.toFixed(2)} <span className="text-xl opacity-70">€</span></p>
                </div>
             </div>
             <Link 
@@ -167,17 +167,17 @@ export default function StatsPage() {
       </div>
 
       {/* Chart Section (Mockup) */}
-      <div className="bg-[#111] border border-white/5 rounded-[3rem] p-8 md:p-12 relative overflow-hidden">
+      <div className="bg-card border border-card-border rounded-[3rem] p-8 md:p-12 relative overflow-hidden">
          <div className="absolute -top-24 -left-24 w-64 h-64 bg-primary/10 blur-[100px] rounded-full"></div>
          <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
             <div className="space-y-1">
-               <h3 className="text-2xl font-black uppercase tracking-tighter text-white">Activité Mensuelle</h3>
-               <p className="text-[10px] font-bold uppercase tracking-widest text-gray-500">Dépenses vs Remboursements (6 derniers mois)</p>
+               <h3 className="text-2xl font-black uppercase tracking-tighter text-foreground">Activité Mensuelle</h3>
+               <p className="text-[10px] font-bold uppercase tracking-widest text-muted-text">Dépenses vs Remboursements (6 derniers mois)</p>
             </div>
-            <div className="flex gap-2 p-1 bg-white/5 rounded-2xl border border-white/5">
-               <button className="px-4 py-2 bg-[#161616] text-white rounded-xl text-[9px] font-black uppercase tracking-widest shadow-sm">6 Mois</button>
-               <button className="px-4 py-2 text-gray-500 hover:text-white rounded-xl text-[9px] font-black uppercase tracking-widest transition-colors">1 An</button>
-               <button className="px-4 py-2 text-gray-500 hover:text-white rounded-xl text-[9px] font-black uppercase tracking-widest transition-colors">Tout</button>
+            <div className="flex gap-2 p-1 bg-white/5 rounded-2xl border border-card-border">
+               <button className="px-4 py-2 bg-background text-foreground rounded-xl text-[9px] font-black uppercase tracking-widest shadow-sm">6 Mois</button>
+               <button className="px-4 py-2 text-muted-text hover:text-foreground rounded-xl text-[9px] font-black uppercase tracking-widest transition-colors">1 An</button>
+               <button className="px-4 py-2 text-muted-text hover:text-foreground rounded-xl text-[9px] font-black uppercase tracking-widest transition-colors">Tout</button>
             </div>
          </div>
 
@@ -186,8 +186,8 @@ export default function StatsPage() {
             {/* Lignes de repère */}
             <div className="absolute inset-0 flex flex-col justify-between pointer-events-none pb-8">
                {[100, 75, 50, 25, 0].map(val => (
-                  <div key={val} className="w-full border-b border-white/5 relative">
-                     <span className="absolute -top-2 -left-8 text-[8px] font-bold text-gray-600">{val}%</span>
+                  <div key={val} className="w-full border-b border-card-border relative">
+                     <span className="absolute -top-2 -left-8 text-[8px] font-bold text-muted-text">{val}%</span>
                   </div>
                ))}
             </div>
@@ -200,16 +200,16 @@ export default function StatsPage() {
                         className="w-1/3 max-w-[20px] bg-white/10 rounded-t-sm group-hover:bg-white/20 transition-all relative"
                         style={{ height: `${data.val1}%` }}
                      >
-                        <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-[8px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity">{data.rawEmprunts}€</div>
+                        <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-foreground text-[8px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity">{data.rawEmprunts}€</div>
                      </div>
                      <div 
                         className="w-1/3 max-w-[20px] bg-primary rounded-t-sm shadow-[0_0_15px_rgba(81,32,179,0.5)] group-hover:brightness-125 transition-all relative"
                         style={{ height: `${data.val2}%` }}
                      >
-                         <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-primary text-white text-[8px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-20">{data.rawRemboursements}€</div>
+                         <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-primary text-foreground text-[8px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-20">{data.rawRemboursements}€</div>
                      </div>
                   </div>
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500">{data.month}</span>
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-muted-text">{data.month}</span>
                </div>
             ))}
          </div>
@@ -217,11 +217,11 @@ export default function StatsPage() {
          <div className="flex items-center justify-center gap-8 mt-10">
             <div className="flex items-center gap-2">
                <div className="w-3 h-3 rounded-sm bg-white/10"></div>
-               <span className="text-[9px] font-black uppercase tracking-widest text-gray-400">Emprunts</span>
+               <span className="text-[9px] font-black uppercase tracking-widest text-muted-text">Emprunts</span>
             </div>
             <div className="flex items-center gap-2">
                <div className="w-3 h-3 rounded-sm bg-primary shadow-[0_0_10px_rgba(81,32,179,0.5)]"></div>
-               <span className="text-[9px] font-black uppercase tracking-widest text-gray-400">Remboursements</span>
+               <span className="text-[9px] font-black uppercase tracking-widest text-muted-text">Remboursements</span>
             </div>
          </div>
       </div>

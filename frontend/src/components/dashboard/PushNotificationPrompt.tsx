@@ -92,8 +92,8 @@ export default function PushNotificationPrompt() {
              <BellRing size={20} />
           </div>
           <div className="space-y-1">
-             <h3 className="text-sm font-black text-white uppercase tracking-tight">Activer les alertes</h3>
-             <p className="text-[10px] text-gray-400 font-medium leading-relaxed max-w-sm">
+             <h3 className="text-sm font-black text-foreground uppercase tracking-tight">Activer les alertes</h3>
+             <p className="text-[10px] text-muted-text font-medium leading-relaxed max-w-sm">
                 Soyez alerté instantanément quand vos prêts sont approuvés ou remboursés, même si l'application est fermée.
              </p>
           </div>
@@ -102,13 +102,13 @@ export default function PushNotificationPrompt() {
           <button 
              onClick={subscribeUser}
              disabled={loading}
-             className="px-6 py-3 bg-primary text-white font-black text-[10px] uppercase tracking-widest rounded-2xl hover:bg-primary/90 transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20"
+             className="px-6 py-3 bg-primary text-foreground font-black text-[10px] uppercase tracking-widest rounded-2xl hover:bg-primary/90 transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20"
           >
              {loading ? <Loader2 size={14} className="animate-spin" /> : "Activer"}
           </button>
           <button 
              onClick={dismiss}
-             className="px-3 py-3 text-gray-500 hover:text-white transition-colors flex items-center justify-center rounded-2xl bg-white/5 md:bg-transparent"
+             className="px-3 py-3 text-muted-text hover:text-foreground transition-colors flex items-center justify-center rounded-2xl bg-white/5 md:bg-transparent"
           >
              <X size={16} />
           </button>

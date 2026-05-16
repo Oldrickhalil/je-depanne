@@ -24,7 +24,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <div className="mb-12 flex justify-center lg:justify-start">
           <Link href="/dashboard" className="relative group">
             <div className="absolute -inset-2 bg-primary/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            <Image src="/images/app_icon.svg" alt="Je Dépanne" width={40} height={40} className="relative z-10" />
+            <Image src="/images/logo-jd-color.svg" alt="Je Dépanne" width={80} height={40} className="relative z-10" />
           </Link>
         </div>
 
@@ -76,12 +76,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
            {/* Actions (Right) */}
            <div className="flex items-center gap-2 shrink-0">
               <NotificationsMenu />
-              <Link 
-                href="/dashboard/deposit"
-                className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white hover:opacity-90 transition-opacity shadow-lg shadow-primary/20"
-              >
-                 <Plus size={20} />
-              </Link>
            </div>
         </header>
 
@@ -94,7 +88,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
       {/* ULTRA PREMIUM Glass Bottom Nav - Mobile ONLY */}
       <div className="md:hidden fixed bottom-8 left-1/2 -translate-x-1/2 w-[90%] max-w-[400px] z-50">
-        <nav className="relative glass rounded-[2.5rem] p-2 flex items-center justify-between shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-white/10 overflow-hidden">
+        <nav className="relative glass rounded-[2.5rem] p-2 flex items-center justify-between shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-card-border overflow-hidden">
           {/* Active indicator background effect */}
           <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-primary/5 pointer-events-none"></div>
           
@@ -106,7 +100,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 key={item.href}
                 href={item.href}
                 className={`relative p-4 rounded-3xl transition-all duration-500 group ${
-                  isActive ? "text-primary bg-white/5" : "text-gray-500 hover:text-white"
+                  isActive ? "text-primary bg-white/5" : "text-muted-text hover:text-white"
                 }`}
               >
                 {isActive && (
@@ -119,7 +113,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           
           <Link 
             href="/dashboard/deposit"
-            className="relative ml-1 p-4 bg-primary text-white rounded-[1.8rem] shadow-[0_10px_20px_rgba(225,29,72,0.3)] active:scale-90 transition-all duration-300"
+            className="relative ml-1 p-4 bg-primary text-foreground rounded-[1.8rem] shadow-[0_10px_20px_rgba(225,29,72,0.3)] active:scale-90 transition-all duration-300"
           >
             <Plus size={22} strokeWidth={3} />
           </Link>

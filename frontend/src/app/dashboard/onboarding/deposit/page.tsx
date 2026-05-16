@@ -59,14 +59,14 @@ export default function DepositPage() {
   if (success) {
     return (
       <div className="min-h-[80vh] flex flex-col items-center justify-center p-4">
-        <div className="w-full max-w-md bg-[#111] border border-white/5 rounded-3xl p-10 text-center space-y-6 shadow-2xl relative overflow-hidden">
+        <div className="w-full max-w-md bg-card border border-card-border rounded-3xl p-10 text-center space-y-6 shadow-2xl relative overflow-hidden">
           <div className="absolute -top-24 -right-24 w-48 h-48 bg-green-500/10 blur-[80px] rounded-full"></div>
           <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4 scale-110">
             <CheckCircle2 className="w-10 h-10 text-green-500" />
           </div>
           <div>
-            <h2 className="text-3xl font-bold text-white mb-2">Dépôt réussi !</h2>
-            <p className="text-gray-400 mb-6">
+            <h2 className="text-3xl font-bold text-foreground mb-2">Dépôt réussi !</h2>
+            <p className="text-muted-text mb-6">
               Félicitations ! Votre compte a été alimenté de {amount} €. <br/>
               <span className="text-primary font-bold">Votre limite de crédit est désormais de 80 €.</span>
             </p>
@@ -87,29 +87,29 @@ export default function DepositPage() {
             <Wallet className="w-8 h-8 text-primary" />
           </div>
           <div>
-            <h1 className="text-4xl font-bold tracking-tight text-white mb-4 leading-tight">
+            <h1 className="text-4xl font-bold tracking-tight text-foreground mb-4 leading-tight">
               Alimentez <br/> votre <span className="text-primary">Wallet</span>
             </h1>
-            <p className="text-gray-400 font-medium">
-              Un dépôt de 20 € minimum débloque votre compte et vous offre un bonus de bienvenue de <span className="text-white font-bold">80 €</span> instantanément.
+            <p className="text-muted-text font-medium">
+              Un dépôt de 20 € minimum débloque votre compte et vous offre un bonus de bienvenue de <span className="text-foreground font-bold">80 €</span> instantanément.
             </p>
           </div>
 
           <div className="space-y-4 pt-4">
-            <div className="flex items-center gap-3 text-sm text-gray-400">
+            <div className="flex items-center gap-3 text-sm text-muted-text">
               <ShieldCheck className="w-5 h-5 text-green-500" />
               <span>Paiement sécurisé par Stripe</span>
             </div>
-            <div className="flex items-center gap-3 text-sm text-gray-400">
+            <div className="flex items-center gap-3 text-sm text-muted-text">
               <CheckCircle2 className="w-5 h-5 text-primary" />
               <span>Accès immédiat aux fonds</span>
             </div>
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="bg-[#111] border border-white/5 rounded-3xl p-6 shadow-2xl space-y-5">
+        <form onSubmit={handleSubmit} className="bg-card border border-card-border rounded-3xl p-6 shadow-2xl space-y-5">
           <div>
-            <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2 ml-1">Montant à déposer (€)</label>
+            <label className="block text-xs font-bold text-muted-text uppercase tracking-widest mb-2 ml-1">Montant à déposer (€)</label>
             <div className="relative">
                <input
                 type="number"
@@ -117,21 +117,21 @@ export default function DepositPage() {
                 required
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-2xl font-bold text-white focus:outline-none focus:border-primary/50 transition-colors"
+                className="w-full bg-white/5 border border-card-border rounded-xl px-4 py-3 text-2xl font-bold text-foreground focus:outline-none focus:border-primary/50 transition-colors"
                 placeholder="20"
               />
-              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 font-bold">EUR</span>
+              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-text font-bold">EUR</span>
             </div>
           </div>
 
           <div className="space-y-4">
-             <label className="block text-xs font-bold text-gray-500 uppercase tracking-widest ml-1">Informations de carte</label>
+             <label className="block text-xs font-bold text-muted-text uppercase tracking-widest ml-1">Informations de carte</label>
              <div className="space-y-3">
                 <input
                   type="text"
                   placeholder="Nom sur la carte"
                   required
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary/50 transition-colors"
+                  className="w-full bg-white/5 border border-card-border rounded-xl px-4 py-3 text-foreground focus:outline-none focus:border-primary/50 transition-colors"
                 />
                 <div className="relative">
                   <input
@@ -139,9 +139,9 @@ export default function DepositPage() {
                     placeholder="0000 0000 0000 0000"
                     maxLength={19}
                     required
-                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary/50 transition-colors"
+                    className="w-full bg-white/5 border border-card-border rounded-xl px-4 py-3 text-foreground focus:outline-none focus:border-primary/50 transition-colors"
                   />
-                  <CreditCard className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                  <CreditCard className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-text" />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <input
@@ -149,14 +149,14 @@ export default function DepositPage() {
                     placeholder="MM/YY"
                     maxLength={5}
                     required
-                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary/50 transition-colors"
+                    className="w-full bg-white/5 border border-card-border rounded-xl px-4 py-3 text-foreground focus:outline-none focus:border-primary/50 transition-colors"
                   />
                   <input
                     type="text"
                     placeholder="CVC"
                     maxLength={3}
                     required
-                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary/50 transition-colors"
+                    className="w-full bg-white/5 border border-card-border rounded-xl px-4 py-3 text-foreground focus:outline-none focus:border-primary/50 transition-colors"
                   />
                 </div>
              </div>
@@ -171,7 +171,7 @@ export default function DepositPage() {
             {!loading && <ArrowRight className="w-5 h-5" />}
           </button>
           
-          <p className="text-[10px] text-gray-600 text-center uppercase font-bold tracking-tighter">
+          <p className="text-[10px] text-muted-text text-center uppercase font-bold tracking-tighter">
             En payant, vous acceptez nos conditions générales de crédit.
           </p>
         </form>

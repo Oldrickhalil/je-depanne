@@ -27,18 +27,18 @@
 
 .dark {
   /* DARK MODE */
-  --background: #0a0a0a; 
+  --background: #111111; 
   --foreground: #ffffff; 
   --primary: #5120B3; 
-  --secondary: #121212;
+  --secondary: #18181b;
   --accent: #7c3aed; 
   
-  --card: #141414;
-  --card-border: rgba(255,255,255,0.08); 
-  --muted-text: #a1a1aa; /* Gray-400 for better legibility */
+  --card: #18181b;
+  --card-border: rgba(255,255,255,0.1); 
+  --muted-text: #9ca3af; /* Gray-400 for better legibility */
   
-  --glass-bg: rgba(20, 20, 20, 0.6);
-  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-bg: rgba(24, 24, 27, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.1);
 }
 
 @theme inline {

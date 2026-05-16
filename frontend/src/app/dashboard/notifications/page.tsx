@@ -64,13 +64,13 @@ export default function NotificationsPage() {
       {/* Header */}
       <section className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div className="space-y-1">
-          <Link href="/dashboard" className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.3em] text-gray-500 hover:text-white transition-colors mb-4">
+          <Link href="/dashboard" className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.3em] text-muted-text hover:text-foreground transition-colors mb-4">
              <ArrowLeft size={12} /> Tableau de Bord
           </Link>
           <h1 className="text-4xl font-title font-bold tight-tracking uppercase leading-none">
             Centre de <span className="text-primary">Notifications</span>
           </h1>
-          <p className="text-gray-500 font-bold uppercase tracking-[0.2em] text-[9px] flex items-center gap-2">
+          <p className="text-muted-text font-bold uppercase tracking-[0.2em] text-[9px] flex items-center gap-2">
             Restez informé sur vos demandes et échéances
           </p>
         </div>
@@ -84,29 +84,29 @@ export default function NotificationsPage() {
          ) : notifications.length > 0 ? (
             <div className="grid grid-cols-1 gap-4">
                {notifications.map((notif) => (
-                  <div key={notif.id} className={`p-6 rounded-[2rem] border flex md:items-center items-start gap-5 transition-colors ${notif.read ? 'bg-[#0c0c0c] border-white/5 opacity-80' : 'bg-[#111111] border-primary/20 shadow-lg shadow-primary/5'}`}>
-                     <div className={`w-12 h-12 rounded-2xl shrink-0 flex items-center justify-center ${notif.read ? 'bg-white/5 text-gray-400' : (notif.type === 'SUCCESS' ? 'bg-green-500/20 text-green-500' : notif.type === 'ERROR' ? 'bg-red-500/20 text-red-500' : 'bg-primary/20 text-primary')}`}>
+                  <div key={notif.id} className={`p-6 rounded-[2rem] border flex md:items-center items-start gap-5 transition-colors ${notif.read ? 'bg-card border-card-border opacity-80' : 'bg-card border-primary/20 shadow-lg shadow-primary/5'}`}>
+                     <div className={`w-12 h-12 rounded-2xl shrink-0 flex items-center justify-center ${notif.read ? 'bg-white/5 text-muted-text' : (notif.type === 'SUCCESS' ? 'bg-green-500/20 text-green-500' : notif.type === 'ERROR' ? 'bg-red-500/20 text-red-500' : 'bg-primary/20 text-primary')}`}>
                         {notif.type === 'SUCCESS' ? <CheckCircle2 size={24} /> : notif.type === 'ERROR' ? <XCircle size={24} /> : <Info size={24} />}
                      </div>
                      <div className="space-y-1.5 flex-1">
                         <div className="flex justify-between items-center">
-                           <p className="text-sm font-black text-white uppercase tracking-tight">{notif.title}</p>
+                           <p className="text-sm font-black text-foreground uppercase tracking-tight">{notif.title}</p>
                            {!notif.read && <span className="w-2 h-2 bg-primary rounded-full animate-pulse shrink-0"></span>}
                         </div>
-                        <p className="text-[11px] text-gray-400 leading-relaxed font-medium">{notif.message}</p>
-                        <p className="text-[9px] text-gray-600 font-bold uppercase tracking-widest pt-1">{new Date(notif.createdAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute:'2-digit' })}</p>
+                        <p className="text-[11px] text-muted-text leading-relaxed font-medium">{notif.message}</p>
+                        <p className="text-[9px] text-muted-text font-bold uppercase tracking-widest pt-1">{new Date(notif.createdAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute:'2-digit' })}</p>
                      </div>
                   </div>
                ))}
             </div>
          ) : (
-            <div className="py-20 flex flex-col items-center justify-center text-center space-y-4 bg-[#0c0c0c] border border-white/5 border-dashed rounded-[3rem]">
-               <div className="w-20 h-20 bg-white/5 rounded-3xl flex items-center justify-center text-gray-600">
+            <div className="py-20 flex flex-col items-center justify-center text-center space-y-4 bg-card border border-card-border border-dashed rounded-[3rem]">
+               <div className="w-20 h-20 bg-white/5 rounded-3xl flex items-center justify-center text-muted-text">
                   <Bell size={32} />
                </div>
                <div className="space-y-1">
-                  <p className="text-xs font-black uppercase tracking-widest text-white">Aucune alerte</p>
-                  <p className="text-[10px] uppercase tracking-widest text-gray-500">Vous êtes totalement à jour.</p>
+                  <p className="text-xs font-black uppercase tracking-widest text-foreground">Aucune alerte</p>
+                  <p className="text-[10px] uppercase tracking-widest text-muted-text">Vous êtes totalement à jour.</p>
                </div>
             </div>
          )}

@@ -66,15 +66,15 @@ export default function OnboardingChecklist({ freshStatus }: { freshStatus?: any
             className={`group relative overflow-hidden rounded-[1.5rem] p-5 border ${step.border} ${step.bg} hover:brightness-125 transition-all duration-300 flex items-center justify-between gap-4 shadow-lg`}
           >
             <div className="flex items-center gap-4">
-              <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${step.color} bg-[#070707] shadow-inner shrink-0`}>
+              <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${step.color} bg-background shadow-inner shrink-0`}>
                 <Icon size={18} />
               </div>
               <div>
-                <h3 className="text-xs font-bold text-white uppercase tracking-tight">{step.label}</h3>
+                <h3 className="text-xs font-bold text-foreground uppercase tracking-tight">{step.label}</h3>
                 <p className={`text-[9px] font-black uppercase tracking-widest ${step.color} opacity-80 mt-0.5`}>{step.desc}</p>
               </div>
             </div>
-            <div className={`w-8 h-8 rounded-full bg-[#070707] flex items-center justify-center ${step.color} group-hover:translate-x-1 transition-transform shrink-0`}>
+            <div className={`w-8 h-8 rounded-full bg-background flex items-center justify-center ${step.color} group-hover:translate-x-1 transition-transform shrink-0`}>
               <ArrowRight size={14} />
             </div>
           </Link>

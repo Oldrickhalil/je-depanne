@@ -75,13 +75,13 @@ export default function SettingsPage() {
       {/* Header */}
       <section className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div className="space-y-1">
-          <Link href="/dashboard" className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.3em] text-gray-500 hover:text-white transition-colors mb-4">
+          <Link href="/dashboard" className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.3em] text-muted-text hover:text-foreground transition-colors mb-4">
              <ArrowLeft size={12} /> Tableau de Bord
           </Link>
           <h1 className="text-4xl font-title font-bold tight-tracking uppercase leading-none">
             Paramètres
           </h1>
-          <p className="text-gray-500 font-bold uppercase tracking-[0.2em] text-[9px] flex items-center gap-2">
+          <p className="text-muted-text font-bold uppercase tracking-[0.2em] text-[9px] flex items-center gap-2">
             Préférences de l'application et notifications
           </p>
         </div>
@@ -100,7 +100,7 @@ export default function SettingsPage() {
                <button 
                   key={idx}
                   className={`w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-bold uppercase tracking-widest text-[10px] transition-all ${
-                     item.active ? 'bg-white/10 text-white' : 'text-gray-500 hover:bg-white/5 hover:text-white'
+                     item.active ? 'bg-white/10 text-white' : 'text-muted-text hover:bg-white/5 hover:text-white'
                   }`}
                >
                   <item.icon size={16} className={item.active ? "text-primary" : ""} />
@@ -113,18 +113,18 @@ export default function SettingsPage() {
          <div className="md:col-span-8 space-y-6">
             
             {/* Notifications Section */}
-            <div className="bg-[#0c0c0c] border border-white/5 rounded-[2.5rem] p-8 space-y-8">
-               <div className="space-y-1 border-b border-white/5 pb-6">
+            <div className="bg-card border border-card-border rounded-[2.5rem] p-8 space-y-8">
+               <div className="space-y-1 border-b border-card-border pb-6">
                   <h3 className="font-title font-bold text-lg tracking-widest uppercase">Alertes & Notifications</h3>
-                  <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Gérez comment nous vous contactons</p>
+                  <p className="text-[10px] text-muted-text font-bold uppercase tracking-widest">Gérez comment nous vous contactons</p>
                </div>
                
                <div className="space-y-6">
                   {/* Toggle Item */}
                   <div className="flex items-center justify-between">
                      <div>
-                        <p className="text-sm font-bold text-white uppercase tracking-tight">Notifications Push</p>
-                        <p className="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Alertes sur votre appareil (Requis pour l'app)</p>
+                        <p className="text-sm font-bold text-foreground uppercase tracking-tight">Notifications Push</p>
+                        <p className="text-[10px] text-muted-text uppercase tracking-widest mt-1">Alertes sur votre appareil (Requis pour l'app)</p>
                      </div>
                      <button 
                         onClick={() => toggleNotification('push')}
@@ -136,8 +136,8 @@ export default function SettingsPage() {
 
                   <div className="flex items-center justify-between">
                      <div>
-                        <p className="text-sm font-bold text-white uppercase tracking-tight">Emails Transactionnels</p>
-                        <p className="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Mises à jour de prêts et dépôts</p>
+                        <p className="text-sm font-bold text-foreground uppercase tracking-tight">Emails Transactionnels</p>
+                        <p className="text-[10px] text-muted-text uppercase tracking-widest mt-1">Mises à jour de prêts et dépôts</p>
                      </div>
                      <button 
                         onClick={() => toggleNotification('email')}
@@ -149,8 +149,8 @@ export default function SettingsPage() {
 
                   <div className="flex items-center justify-between">
                      <div>
-                        <p className="text-sm font-bold text-white uppercase tracking-tight">SMS</p>
-                        <p className="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Rappels de remboursement urgents</p>
+                        <p className="text-sm font-bold text-foreground uppercase tracking-tight">SMS</p>
+                        <p className="text-[10px] text-muted-text uppercase tracking-widest mt-1">Rappels de remboursement urgents</p>
                      </div>
                      <button 
                         onClick={() => toggleNotification('sms')}
@@ -162,8 +162,8 @@ export default function SettingsPage() {
 
                   <div className="flex items-center justify-between">
                      <div>
-                        <p className="text-sm font-bold text-white uppercase tracking-tight">Offres Promotionnelles</p>
-                        <p className="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Bonus et nouvelles fonctionnalités</p>
+                        <p className="text-sm font-bold text-foreground uppercase tracking-tight">Offres Promotionnelles</p>
+                        <p className="text-[10px] text-muted-text uppercase tracking-widest mt-1">Bonus et nouvelles fonctionnalités</p>
                      </div>
                      <button 
                         onClick={() => toggleNotification('marketing')}
@@ -176,21 +176,21 @@ export default function SettingsPage() {
             </div>
 
             {/* App Preferences */}
-            <div className="bg-[#0c0c0c] border border-white/5 rounded-[2.5rem] p-8 space-y-8">
-               <div className="space-y-1 border-b border-white/5 pb-6">
+            <div className="bg-card border border-card-border rounded-[2.5rem] p-8 space-y-8">
+               <div className="space-y-1 border-b border-card-border pb-6">
                   <h3 className="font-title font-bold text-lg tracking-widest uppercase">Préférences de l'App</h3>
-                  <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Personnalisez votre expérience</p>
+                  <p className="text-[10px] text-muted-text font-bold uppercase tracking-widest">Personnalisez votre expérience</p>
                </div>
                
                <div className="space-y-4">
-                  <div className="flex items-center justify-between p-4 bg-[#161616] border border-white/5 rounded-2xl">
+                  <div className="flex items-center justify-between p-4 bg-background border border-card-border rounded-2xl">
                      <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-white">
+                        <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-foreground">
                            <Moon size={18} />
                         </div>
                         <div>
-                           <p className="text-sm font-bold text-white uppercase tracking-tight">Thème Sombre</p>
-                           <p className="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Je Dépanne est optimisé pour le mode sombre</p>
+                           <p className="text-sm font-bold text-foreground uppercase tracking-tight">Thème Sombre</p>
+                           <p className="text-[10px] text-muted-text uppercase tracking-widest mt-1">Je Dépanne est optimisé pour le mode sombre</p>
                         </div>
                      </div>
                      <span className="text-[9px] font-black text-primary uppercase tracking-widest bg-primary/10 px-3 py-1.5 rounded-full">
@@ -198,17 +198,17 @@ export default function SettingsPage() {
                      </span>
                   </div>
 
-                  <div className="flex items-center justify-between p-4 bg-[#161616] border border-white/5 rounded-2xl">
+                  <div className="flex items-center justify-between p-4 bg-background border border-card-border rounded-2xl">
                      <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-white">
+                        <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-foreground">
                            <Fingerprint size={18} />
                         </div>
                         <div>
-                           <p className="text-sm font-bold text-white uppercase tracking-tight">Connexion Biométrique</p>
-                           <p className="text-[10px] text-gray-500 uppercase tracking-widest mt-1">FaceID ou TouchID</p>
+                           <p className="text-sm font-bold text-foreground uppercase tracking-tight">Connexion Biométrique</p>
+                           <p className="text-[10px] text-muted-text uppercase tracking-widest mt-1">FaceID ou TouchID</p>
                         </div>
                      </div>
-                     <button className="px-4 py-2 bg-white/5 text-white text-[9px] font-black uppercase tracking-widest rounded-xl hover:bg-white/10 transition-colors">
+                     <button className="px-4 py-2 bg-white/5 text-foreground text-[9px] font-black uppercase tracking-widest rounded-xl hover:bg-white/10 transition-colors">
                         Configurer
                      </button>
                   </div>
@@ -218,10 +218,10 @@ export default function SettingsPage() {
             {/* Danger Zone */}
             <div className="border border-red-500/20 rounded-[2.5rem] p-8 space-y-4">
                <h3 className="text-red-500 font-black uppercase tracking-widest text-xs">Zone de Danger</h3>
-               <p className="text-[10px] text-gray-500 uppercase tracking-widest leading-relaxed">
+               <p className="text-[10px] text-muted-text uppercase tracking-widest leading-relaxed">
                   La suppression de votre compte est définitive. Assurez-vous d'avoir remboursé tous vos prêts en cours avant d'initier cette procédure.
                </p>
-               <button className="px-6 py-3 bg-red-500/10 text-red-500 text-[9px] font-black uppercase tracking-widest rounded-xl hover:bg-red-500 hover:text-white transition-colors">
+               <button className="px-6 py-3 bg-red-500/10 text-red-500 text-[9px] font-black uppercase tracking-widest rounded-xl hover:bg-red-500 hover:text-foreground transition-colors">
                   Supprimer mon compte
                </button>
             </div>

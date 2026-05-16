@@ -80,7 +80,7 @@ export default function OnboardingIntro() {
   const StepIcon = steps[currentStep].icon;
 
   return (
-    <div className="fixed inset-0 z-[999] h-[100dvh] w-screen bg-[#0a0a0a] flex flex-col items-center justify-center p-6 text-white font-sans overflow-hidden">
+    <div className="fixed inset-0 z-[999] h-[100dvh] w-screen bg-background flex flex-col items-center justify-center p-6 text-foreground font-sans overflow-hidden">
       {/* Background Glows */}
       <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/20 blur-[120px] rounded-full"></div>
       <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-primary/10 blur-[120px] rounded-full"></div>
@@ -98,7 +98,7 @@ export default function OnboardingIntro() {
         </div>
 
         <div className="flex flex-col items-center text-center space-y-8">
-           <div className={`w-24 h-24 rounded-[2.5rem] ${steps[currentStep].bg} flex items-center justify-center border border-white/5 animate-bounce-slow`}>
+           <div className={`w-24 h-24 rounded-[2.5rem] ${steps[currentStep].bg} flex items-center justify-center border border-card-border animate-bounce-slow`}>
               <StepIcon className={`w-12 h-12 ${steps[currentStep].color}`} />
            </div>
 
@@ -106,7 +106,7 @@ export default function OnboardingIntro() {
               <h1 className="text-4xl font-black tracking-tighter uppercase leading-[0.9] tight-tracking">
                  {steps[currentStep].title}
               </h1>
-              <p className="text-gray-400 text-lg font-medium leading-relaxed px-4">
+              <p className="text-muted-text text-lg font-medium leading-relaxed px-4">
                  {steps[currentStep].description}
               </p>
            </div>
@@ -123,7 +123,7 @@ export default function OnboardingIntro() {
            
            <button 
              onClick={skip}
-             className="w-full py-4 text-gray-500 font-bold text-xs uppercase tracking-[0.2em] mt-4 hover:text-white transition-colors"
+             className="w-full py-4 text-muted-text font-bold text-xs uppercase tracking-[0.2em] mt-4 hover:text-foreground transition-colors"
            >
               Ignorer pour l'instant
            </button>

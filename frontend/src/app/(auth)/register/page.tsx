@@ -52,18 +52,18 @@ export default function RegisterPage() {
 
   if (success) {
     return (
-      <div className="min-h-screen bg-[#0a0a0a] flex flex-col items-center justify-center p-6 text-center">
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6 text-center">
         <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mb-6 animate-in zoom-in duration-500">
            <CheckCircle2 size={40} className="text-green-500" />
         </div>
-        <h1 className="text-3xl font-black uppercase tracking-tighter text-white mb-2">Compte Créé !</h1>
-        <p className="text-gray-500 text-xs font-bold uppercase tracking-widest">Redirection vers la page de connexion...</p>
+        <h1 className="text-3xl font-black uppercase tracking-tighter text-foreground mb-2">Compte Créé !</h1>
+        <p className="text-muted-text text-xs font-bold uppercase tracking-widest">Redirection vers la page de connexion...</p>
       </div>
     );
   }
 
   return (
-    <div className="relative min-h-screen bg-[#0a0a0a] flex flex-col items-center justify-center p-6 selection:bg-primary/30">
+    <div className="relative min-h-screen bg-background flex flex-col items-center justify-center p-6 selection:bg-primary/30">
       {/* Background Decor */}
       <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-primary/5 blur-[120px] rounded-full"></div>
       
@@ -72,10 +72,10 @@ export default function RegisterPage() {
           <Link href="/">
              <Image src="/images/logo-jd-color.svg" alt="JD" width={80} height={50} className="mb-2" />
           </Link>
-          <h1 className="text-4xl font-title font-black tight-tracking uppercase text-white leading-none">
+          <h1 className="text-4xl font-title font-black tight-tracking uppercase text-foreground leading-none">
             Créer un <span className="text-primary">compte</span>
           </h1>
-          <p className="text-gray-500 text-[14px] font-medium tracking-[0.0em]">Obtenez votre micro crédit en moins de 24h</p>
+          <p className="text-muted-text text-[14px] font-medium tracking-[0.0em]">Obtenez votre micro crédit en moins de 24h</p>
         </div>
 
         {error && (
@@ -91,14 +91,14 @@ export default function RegisterPage() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="relative group">
-               <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-primary transition-colors" size={16} />
+               <User className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-text group-focus-within:text-primary transition-colors" size={16} />
                <input
                 type="text"
                 required
                 placeholder="Prénom"
                 value={formData.firstName}
                 onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                className="w-full bg-[#111] border border-white/5 rounded-2xl py-4 pl-11 pr-4 text-[12px] font-medium tracking-wider text-white focus:outline-none focus:border-primary/50 transition-all placeholder:text-gray-700"
+                className="w-full bg-card border border-card-border rounded-2xl py-4 pl-11 pr-4 text-[12px] font-medium tracking-wider text-foreground focus:outline-none focus:border-primary/50 transition-all placeholder:text-gray-700"
               />
             </div>
             <div className="relative group">
@@ -108,37 +108,37 @@ export default function RegisterPage() {
                 placeholder="Nom"
                 value={formData.lastName}
                 onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                className="w-full bg-[#111] border border-white/5 rounded-2xl py-4 px-6 text-[12px] font-medium tracking-wider text-white focus:outline-none focus:border-primary/50 transition-all placeholder:text-gray-700"
+                className="w-full bg-card border border-card-border rounded-2xl py-4 px-6 text-[12px] font-medium tracking-wider text-foreground focus:outline-none focus:border-primary/50 transition-all placeholder:text-gray-700"
               />
             </div>
           </div>
 
           <div className="relative group">
-             <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-primary transition-colors" size={16} />
+             <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-text group-focus-within:text-primary transition-colors" size={16} />
              <input
               type="email"
               required
               placeholder="Adresse e-mail"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className="w-full bg-[#111] border border-white/5 rounded-2xl py-4 pl-11 pr-6 text-[12px] font-medium tracking-wider text-white focus:outline-none focus:border-primary/50 transition-all placeholder:text-gray-700"
+              className="w-full bg-card border border-card-border rounded-2xl py-4 pl-11 pr-6 text-[12px] font-medium tracking-wider text-foreground focus:outline-none focus:border-primary/50 transition-all placeholder:text-gray-700"
             />
           </div>
           
           <div className="relative group">
-             <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-primary transition-colors" size={16} />
+             <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-text group-focus-within:text-primary transition-colors" size={16} />
              <input
               type={showPassword ? "text" : "password"}
               required
               placeholder="Votre mot de passe"
               value={formData.password}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              className="w-full bg-[#111] border border-white/5 rounded-2xl py-4 pl-11 pr-12 text-[12px] font-medium tracking-wider text-white focus:outline-none focus:border-primary/50 transition-all placeholder:text-gray-700"
+              className="w-full bg-card border border-card-border rounded-2xl py-4 pl-11 pr-12 text-[12px] font-medium tracking-wider text-foreground focus:outline-none focus:border-primary/50 transition-all placeholder:text-gray-700"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-600 hover:text-white transition-colors"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-text hover:text-foreground transition-colors"
             >
               {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
             </button>
@@ -147,7 +147,7 @@ export default function RegisterPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full mt-4 py-5 bg-primary text-white font-black text-xm uppercase tracking-[0.0em] rounded-2xl hover:bg-primary/80 transition-all flex items-center justify-center gap-3 shadow-xl active:scale-95 disabled:opacity-50"
+            className="w-full mt-4 py-5 bg-primary text-foreground font-black text-xm uppercase tracking-[0.0em] rounded-2xl hover:bg-primary/80 transition-all flex items-center justify-center gap-3 shadow-xl active:scale-95 disabled:opacity-50"
           >
             {loading ? <Loader2 className="animate-spin" size={18} /> : (
               <>
@@ -158,14 +158,14 @@ export default function RegisterPage() {
         </form>
 
         <div className="relative flex items-center py-2">
-          <div className="flex-grow border-t border-white/10"></div>
-          <span className="flex-shrink-0 mx-4 text-gray-600 text-[9px] font-black uppercase tracking-widest">OU</span>
-          <div className="flex-grow border-t border-white/10"></div>
+          <div className="flex-grow border-t border-card-border"></div>
+          <span className="flex-shrink-0 mx-4 text-muted-text text-[9px] font-black uppercase tracking-widest">OU</span>
+          <div className="flex-grow border-t border-card-border"></div>
         </div>
 
         <button
           onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
-          className="w-full py-4 bg-[#111] border border-white/5 text-white font-black text-xs uppercase tracking-[0.1em] rounded-2xl hover:bg-white/5 hover:border-white/20 transition-all flex items-center justify-center gap-3"
+          className="w-full py-4 bg-card border border-card-border text-foreground font-black text-xs uppercase tracking-[0.1em] rounded-2xl hover:bg-white/5 hover:border-white/20 transition-all flex items-center justify-center gap-3"
         >
           <svg viewBox="0 0 24 24" width="18" height="18" xmlns="http://www.w3.org/2000/svg">
             <g transform="matrix(1, 0, 0, 1, 27.009001, -39.238998)">
@@ -179,7 +179,7 @@ export default function RegisterPage() {
         </button>
 
         <div className="flex flex-col items-center gap-4 text-xs font-black uppercase tracking-widest">
-           <p className="text-gray-600">Déjà membre ?</p>
+           <p className="text-muted-text">Déjà membre ?</p>
            <Link href="/login" className="text-primary hover:underline underline-offset-4">
               Connectez-vous ici
            </Link>

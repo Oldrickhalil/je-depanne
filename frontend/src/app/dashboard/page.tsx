@@ -109,7 +109,7 @@ export default function DashboardPage() {
       case "PAID_BACK":
         return { label: "Remboursé", color: "text-blue-500", bg: "bg-blue-500/10", icon: CheckCircle2 };
       default:
-        return { label: "Aucun prêt", color: "text-gray-500", bg: "bg-gray-500/10", icon: Info };
+        return { label: "Aucun prêt", color: "text-muted-text", bg: "bg-gray-500/10", icon: Info };
     }
   };
 
@@ -137,15 +137,15 @@ export default function DashboardPage() {
         <div className="xl:col-span-2 relative group">
           <div className="absolute -inset-4 bg-primary/20 blur-[80px] opacity-30 group-hover:opacity-50 transition-opacity duration-1000"></div>
           
-          <div className="relative overflow-hidden rounded-[3rem] border border-white/10 shadow-2xl bg-[#111111]">
+          <div className="relative overflow-hidden rounded-[3rem] border border-card-border shadow-2xl bg-card">
              <div className="absolute inset-0 premium-gradient opacity-90"></div>
              
              <div className="relative p-10 flex flex-col h-72 justify-between">
                 <div className="flex justify-between items-start">
                    <div className="space-y-1">
-                      <p className="text-white/50 text-[10px] font-bold uppercase tracking-[0.1em]">Solde Disponible</p>
+                      <p className="text-foreground/50 text-[10px] font-bold uppercase tracking-[0.1em]">Solde Disponible</p>
                       <div className="flex items-baseline gap-2">
-                         <span className="text-2xl font-light text-white/70">€</span>
+                         <span className="text-2xl font-light text-foreground/70">€</span>
                          <h2 className="text-6xl font-black tracking-tighter">
                             {freshStatus ? freshStatus.balance.toFixed(2) : "0.00"}
                          </h2>
@@ -156,7 +156,7 @@ export default function DashboardPage() {
 
                 <div className="flex flex-col gap-4 mt-auto">
                    <div className="flex justify-between items-center">
-                      <p className="text-white/40 font-mono text-[10px] md:text-sm tracking-[0.2em] md:tracking-[0.3em] uppercase tracking-tighter">
+                      <p className="text-foreground/40 font-mono text-[10px] md:text-sm tracking-[0.2em] md:tracking-[0.3em] uppercase tracking-tighter">
                         ID: JD-{(session?.user as any)?.id?.slice(0, 8).toUpperCase() || "XXXXXXX"}
                       </p>
                       {isActivated && (
@@ -169,7 +169,7 @@ export default function DashboardPage() {
                    <div className="flex gap-3">
                       <Link 
                         href="/dashboard/deposit"
-                        className="flex-1 text-center py-4 bg-primary text-white rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl hover:opacity-90 transition-all active:scale-95"
+                        className="flex-1 text-center py-4 bg-primary text-foreground rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl hover:opacity-90 transition-all active:scale-95"
                       >
                          Déposer
                       </Link>
@@ -190,9 +190,9 @@ export default function DashboardPage() {
         </div>
 
         {/* Loan Status Tracking (Dynamic) */}
-        <div className="dark-card rounded-[3rem] p-8 flex flex-col gap-6 bg-[#0c0c0c] border-white/5">
+        <div className="dark-card rounded-[3rem] p-8 flex flex-col gap-6 bg-card border-card-border">
            <div className="flex justify-between items-center">
-              <h3 className="text-[10px] font-black uppercase tracking-[0.1em] text-gray-500">État de ma demande</h3>
+              <h3 className="text-[10px] font-black uppercase tracking-[0.1em] text-muted-text">État de ma demande</h3>
               <Info size={16} className="text-gray-700" />
            </div>
            
@@ -201,15 +201,15 @@ export default function DashboardPage() {
                 <Loader2 className="animate-spin text-primary" size={32} />
               ) : (
                 <>
-                  <div className={`w-20 h-20 rounded-[2rem] ${status.bg} flex items-center justify-center border border-white/5 relative`}>
+                  <div className={`w-20 h-20 rounded-[2rem] ${status.bg} flex items-center justify-center border border-card-border relative`}>
                     <div className={`absolute inset-0 ${status.bg} blur-xl opacity-50`}></div>
                     <StatusIcon size={32} className={status.color} />
                   </div>
                   <div className="space-y-1">
                     <p className={`text-xs font-black uppercase tracking-widest ${status.color}`}>{status.label}</p>
                     {activeLoan && (
-                        <p className="text-[9px] text-gray-500 font-bold uppercase tracking-widest leading-relaxed">
-                            Demande <span className="text-white">#{activeLoan.id.slice(0, 5).toUpperCase()}</span> • {activeLoan.amount} €
+                        <p className="text-[9px] text-muted-text font-bold uppercase tracking-widest leading-relaxed">
+                            Demande <span className="text-foreground">#{activeLoan.id.slice(0, 5).toUpperCase()}</span> • {activeLoan.amount} €
                         </p>
                     )}
                   </div>
@@ -222,7 +222,7 @@ export default function DashboardPage() {
 
            <button 
               onClick={() => !isActivated ? setShowActivationModal({show: true, action: "demande"}) : router.push("/dashboard/loans/request")}
-              className="w-full py-5 rounded-[1.8rem] bg-white/5 border border-white/5 text-white font-black text-[11px] uppercase tracking-[0.05em] hover:bg-white/10 transition-all flex items-center justify-center gap-3"
+              className="w-full py-5 rounded-[1.8rem] bg-white/5 border border-card-border text-foreground font-black text-[11px] uppercase tracking-[0.05em] hover:bg-white/10 transition-all flex items-center justify-center gap-3"
            >
               <Zap size={16} className="text-primary" fill="currentColor" />
               Nouvelle demande
@@ -236,31 +236,31 @@ export default function DashboardPage() {
            <div className="flex justify-between items-end">
               <div className="space-y-1">
                  <h3 className="font-title font-bold text-lg tracking-wider uppercase">Historique des Prêts</h3>
-                 <p className="text-[9px] text-gray-600 font-bold uppercase tracking-wider">Suivi de vos remboursements</p>
+                 <p className="text-[9px] text-muted-text font-bold uppercase tracking-wider">Suivi de vos remboursements</p>
               </div>
            </div>
 
            <div className="space-y-3">
               {loans.length > 0 ? (
                 loans.slice(0, 3).map((loan) => (
-                    <div key={loan.id} className="group flex items-center justify-between p-6 rounded-[2rem] bg-[#0c0c0c] border border-white/5 hover:border-primary/20 transition-all duration-500">
+                    <div key={loan.id} className="group flex items-center justify-between p-6 rounded-[2rem] bg-card border border-card-border hover:border-primary/20 transition-all duration-500">
                         <div className="flex items-center gap-5">
                             <div className={`w-12 h-12 rounded-2xl ${getStatusDisplay(loan.status).bg} ${getStatusDisplay(loan.status).color} flex items-center justify-center`}>
                                 {loan.status === 'PENDING' ? <Clock size={18} /> : <CheckCircle2 size={18} />}
                             </div>
                             <div>
-                                <p className="text-sm font-black uppercase tracking-tight text-white">Prêt Instantané</p>
-                                <p className="text-[9px] text-gray-500 font-bold uppercase tracking-[0.05em]">{getStatusDisplay(loan.status).label} • {new Date(loan.createdAt).toLocaleDateString('fr-FR')}</p>
+                                <p className="text-sm font-black uppercase tracking-tight text-foreground">Prêt Instantané</p>
+                                <p className="text-[9px] text-muted-text font-bold uppercase tracking-[0.05em]">{getStatusDisplay(loan.status).label} • {new Date(loan.createdAt).toLocaleDateString('fr-FR')}</p>
                             </div>
                         </div>
-                        <p className="text-sm font-black tracking-tighter text-white">
+                        <p className="text-sm font-black tracking-tighter text-foreground">
                             {loan.amount} €
                         </p>
                     </div>
                 ))
               ) : (
-                <div className="flex flex-col items-center justify-center p-12 rounded-[2rem] bg-[#0c0c0c] border border-white/5 border-dashed">
-                   <p className="text-[10px] text-gray-600 font-black uppercase tracking-wider text-center">Aucune demande enregistrée.</p>
+                <div className="flex flex-col items-center justify-center p-12 rounded-[2rem] bg-card border border-card-border border-dashed">
+                   <p className="text-[10px] text-muted-text font-black uppercase tracking-wider text-center">Aucune demande enregistrée.</p>
                 </div>
               )}
               {loans.length > 3 && (
@@ -274,10 +274,10 @@ export default function DashboardPage() {
         <div className="space-y-8">
            <div className="space-y-1">
               <h3 className="font-title font-bold text-lg tracking-wider uppercase">Score de Confiance</h3>
-              <p className="text-[9px] text-gray-600 font-bold uppercase tracking-wider">Capacité d'emprunt</p>
+              <p className="text-[9px] text-muted-text font-bold uppercase tracking-wider">Capacité d'emprunt</p>
            </div>
            
-           <div className="p-10 rounded-[3rem] bg-gradient-to-br from-[#0c0c0c] to-[#070707] border border-white/5 relative overflow-hidden group">
+           <div className="p-10 rounded-[3rem] bg-gradient-to-br from-[#0c0c0c] to-[#070707] border border-card-border relative overflow-hidden group">
               <div className="relative flex flex-col justify-between items-center text-center space-y-6">
                  <div className="w-24 h-24 rounded-full border-4 border-primary/20 flex items-center justify-center relative">
                     <div className="absolute inset-0 border-4 border-primary rounded-full border-t-transparent animate-spin-slow"></div>
@@ -286,17 +286,17 @@ export default function DashboardPage() {
                  
                  <div className="space-y-2">
                     <h4 className="text-2xl font-black tracking-tighter uppercase">Niveau 1</h4>
-                    <p className="text-[10px] text-gray-500 font-medium max-w-[240px] leading-relaxed mx-auto uppercase tracking-widest">
+                    <p className="text-[10px] text-muted-text font-medium max-w-[240px] leading-relaxed mx-auto uppercase tracking-widest">
                        Remboursez vos premiers prêts pour débloquer des montants plus élevés.
                     </p>
                  </div>
 
                  <div className="w-full space-y-3">
-                    <div className="flex justify-between items-end text-[9px] font-black uppercase tracking-widest text-gray-600">
+                    <div className="flex justify-between items-end text-[9px] font-black uppercase tracking-widest text-muted-text">
                        <span>Score Actuel</span>
                        <span className="text-primary">100 / 1000</span>
                     </div>
-                    <div className="w-full bg-white/5 h-2 rounded-full overflow-hidden p-0.5 border border-white/5">
+                    <div className="w-full bg-white/5 h-2 rounded-full overflow-hidden p-0.5 border border-card-border">
                        <div className="bg-primary h-full w-[10%] rounded-full shadow-[0_0_10px_rgba(81,32,179,0.5)]"></div>
                     </div>
                  </div>
@@ -308,10 +308,10 @@ export default function DashboardPage() {
       {/* Activation Modal */}
       {showActivationModal.show && (
         <div className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-[#111] border border-white/10 rounded-[2.5rem] w-full max-w-md p-8 space-y-6 relative shadow-2xl animate-in zoom-in-95 duration-300">
+          <div className="bg-card border border-card-border rounded-[2.5rem] w-full max-w-md p-8 space-y-6 relative shadow-2xl animate-in zoom-in-95 duration-300">
             <button 
                onClick={() => setShowActivationModal({show: false, action: ""})}
-               className="absolute top-6 right-6 text-gray-500 hover:text-white transition-colors"
+               className="absolute top-6 right-6 text-muted-text hover:text-foreground transition-colors"
             >
               <XCircle size={20} />
             </button>
@@ -321,8 +321,8 @@ export default function DashboardPage() {
             </div>
 
             <div className="text-center space-y-2">
-               <h2 className="text-2xl font-black uppercase tracking-tighter text-white">Action bloquée</h2>
-               <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest leading-relaxed">
+               <h2 className="text-2xl font-black uppercase tracking-tighter text-foreground">Action bloquée</h2>
+               <p className="text-[10px] text-muted-text font-bold uppercase tracking-widest leading-relaxed">
                  {showActivationModal.action === "no_credit" 
                    ? "Vous devez avoir obtenu au moins un crédit pour débloquer la fonctionnalité de retrait."
                    : `Vous devez activer votre compte pour ${showActivationModal.action === "retirer" ? "effectuer un retrait" : "faire une demande de prêt"}.`
@@ -330,9 +330,9 @@ export default function DashboardPage() {
                </p>
             </div>
 
-            <div className="bg-[#161616] p-4 rounded-2xl border border-white/5 space-y-2 text-center">
-              <p className="text-[9px] font-black uppercase tracking-widest text-gray-500">Prochaine étape requise</p>
-              <p className="text-sm font-bold text-white uppercase tracking-tight">
+            <div className="bg-background p-4 rounded-2xl border border-card-border space-y-2 text-center">
+              <p className="text-[9px] font-black uppercase tracking-widest text-muted-text">Prochaine étape requise</p>
+              <p className="text-sm font-bold text-foreground uppercase tracking-tight">
                 {showActivationModal.action === "no_credit" 
                   ? "Faire une demande de prêt"
                   : (!freshStatus?.kycVerified ? "Vérifier votre identité" : (!freshStatus?.hasDeposited ? "Effectuer votre premier dépôt" : "Ajouter à l'écran d'accueil"))
@@ -349,7 +349,7 @@ export default function DashboardPage() {
                   router.push(!freshStatus?.kycVerified ? "/dashboard/onboarding/kyc" : (!freshStatus?.hasDeposited ? "/dashboard/onboarding/deposit" : "/dashboard/onboarding/pwa"));
                 }
               }}
-              className="w-full py-4 bg-primary text-white font-black rounded-2xl hover:bg-primary/90 transition-all uppercase text-[10px] tracking-widest shadow-lg shadow-primary/20"
+              className="w-full py-4 bg-primary text-foreground font-black rounded-2xl hover:bg-primary/90 transition-all uppercase text-[10px] tracking-widest shadow-lg shadow-primary/20"
             >
               {showActivationModal.action === "no_credit" ? "Aller à la demande" : "Continuer l'activation"}
             </button>

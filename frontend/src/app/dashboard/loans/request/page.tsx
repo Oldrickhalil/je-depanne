@@ -110,7 +110,7 @@ function LoanRequestContent() {
         {step !== "simulate" && (step !== "confirm") && (
           <button 
             onClick={() => setStep("simulate")}
-            className="w-10 h-10 rounded-full glass flex items-center justify-center text-gray-400 hover:text-white transition-colors"
+            className="w-10 h-10 rounded-full glass flex items-center justify-center text-muted-text hover:text-foreground transition-colors"
           >
             <ArrowLeft size={18} />
           </button>
@@ -119,7 +119,7 @@ function LoanRequestContent() {
           <h1 className="text-3xl font-title font-bold tight-tracking uppercase">
             Demande de <span className="text-primary">Prêt</span>
           </h1>
-          <p className="text-[10px] text-gray-500 font-bold uppercase tracking-[0.2em] mt-1">
+          <p className="text-[10px] text-muted-text font-bold uppercase tracking-[0.2em] mt-1">
             {step === "simulate" && "Étape 1: Simulation"}
             {step === "infos" && "Étape 2: Informations Complémentaires"}
             {step === "confirm" && "Étape 3: Confirmation"}
@@ -137,14 +137,14 @@ function LoanRequestContent() {
         </div>
       )}
 
-      <div className="dark-card rounded-[3rem] p-8 md:p-12 relative overflow-hidden border-white/5">
+      <div className="dark-card rounded-[3rem] p-8 md:p-12 relative overflow-hidden border-card-border">
         <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-3xl rounded-full"></div>
 
         {step === "simulate" && (
           <div className="space-y-10 relative z-10">
             <div className="space-y-6">
               <div className="flex justify-between items-end">
-                <label className="text-[11px] font-black uppercase tracking-[0.25em] text-gray-400">Montant souhaité</label>
+                <label className="text-[11px] font-black uppercase tracking-[0.25em] text-muted-text">Montant souhaité</label>
                 <span className="text-4xl font-black tracking-tighter text-primary uppercase">{amount} €</span>
               </div>
               <input 
@@ -156,15 +156,15 @@ function LoanRequestContent() {
                 onChange={(e) => setAmount(parseInt(e.target.value))}
                 className="w-full h-1.5 bg-white/5 rounded-full appearance-none cursor-pointer accent-primary"
               />
-              <div className="flex justify-between text-[9px] font-bold text-gray-600 uppercase tracking-widest">
+              <div className="flex justify-between text-[9px] font-bold text-muted-text uppercase tracking-widest">
                 <span>100 €</span>
                 <span>Max 10 000 €</span>
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="glass p-6 rounded-[2rem] border-white/5 space-y-2">
-                <div className="flex items-center gap-2 text-gray-500">
+              <div className="glass p-6 rounded-[2rem] border-card-border space-y-2">
+                <div className="flex items-center gap-2 text-muted-text">
                   <Calendar size={14} />
                   <span className="text-[9px] font-bold uppercase tracking-widest">Durée du prêt</span>
                 </div>
@@ -173,7 +173,7 @@ function LoanRequestContent() {
                     <button 
                       key={d}
                       onClick={() => setDuration(d)}
-                      className={`px-4 py-3 rounded-xl font-bold text-[10px] transition-all ${duration === d ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'bg-white/5 text-gray-500 hover:bg-white/10'}`}
+                      className={`px-4 py-3 rounded-xl font-bold text-[10px] transition-all ${duration === d ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'bg-white/5 text-muted-text hover:bg-white/10'}`}
                     >
                       {d >= 12 ? `${d/12} an${d/12 > 1 ? 's' : ''}` : `${d} mois`}
                     </button>
@@ -181,17 +181,17 @@ function LoanRequestContent() {
                 </div>
               </div>
 
-              <div className="glass p-6 rounded-[2rem] border-white/5 space-y-2 bg-primary/5">
+              <div className="glass p-6 rounded-[2rem] border-card-border space-y-2 bg-primary/5">
                 <div className="flex items-center gap-2 text-primary/70">
                   <Zap size={14} fill="currentColor" />
                   <span className="text-[9px] font-bold uppercase tracking-widest">Résumé des frais</span>
                 </div>
                 <div className="space-y-1">
-                   <div className="flex justify-between text-[10px] font-medium text-gray-400 uppercase tracking-tight">
+                   <div className="flex justify-between text-[10px] font-medium text-muted-text uppercase tracking-tight">
                       <span>Intérêts (5%)</span>
-                      <span className="text-white font-bold">{interest.toFixed(2)} €</span>
+                      <span className="text-foreground font-bold">{interest.toFixed(2)} €</span>
                    </div>
-                   <div className="flex justify-between text-sm font-black text-white uppercase tracking-tighter pt-1 border-t border-white/5">
+                   <div className="flex justify-between text-sm font-black text-foreground uppercase tracking-tighter pt-1 border-t border-card-border">
                       <span>Total à rembourser</span>
                       <span className="text-primary">{totalRepayment.toFixed(2)} €</span>
                    </div>
@@ -201,7 +201,7 @@ function LoanRequestContent() {
 
             <button 
               onClick={() => setStep("infos")}
-              className="w-full py-5 rounded-[2rem] bg-primary text-white font-black text-[12px] uppercase tracking-[0.3em] shadow-lg shadow-primary/20 glow-primary active:scale-[0.98] transition-all flex items-center justify-center gap-4"
+              className="w-full py-5 rounded-[2rem] bg-primary text-foreground font-black text-[12px] uppercase tracking-[0.3em] shadow-lg shadow-primary/20 glow-primary active:scale-[0.98] transition-all flex items-center justify-center gap-4"
             >
               Continuer vers ma demande
               <ChevronRight size={18} strokeWidth={3} />
@@ -216,8 +216,8 @@ function LoanRequestContent() {
                  <ShieldCheck size={24} />
               </div>
               <div>
-                 <h3 className="text-xl font-black uppercase tracking-tight text-white">Analyse Rapide</h3>
-                 <p className="text-gray-500 text-[9px] font-black uppercase tracking-[0.2em]">Compte déjà activé, complétez juste ceci</p>
+                 <h3 className="text-xl font-black uppercase tracking-tight text-foreground">Analyse Rapide</h3>
+                 <p className="text-muted-text text-[9px] font-black uppercase tracking-[0.2em]">Compte déjà activé, complétez juste ceci</p>
               </div>
             </div>
 
@@ -225,19 +225,19 @@ function LoanRequestContent() {
               
               {/* Situation Personnelle */}
               <div className="space-y-4">
-                 <div className="flex items-center gap-2 text-gray-400 border-b border-white/5 pb-2">
+                 <div className="flex items-center gap-2 text-muted-text border-b border-card-border pb-2">
                     <Users size={14} />
                     <p className="text-[9px] font-black uppercase tracking-[0.3em]">Situation Personnelle</p>
                  </div>
                  
                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                       <label className="text-[9px] font-black uppercase tracking-widest text-gray-500 pl-2">État Civil</label>
+                       <label className="text-[9px] font-black uppercase tracking-widest text-muted-text pl-2">État Civil</label>
                        <select 
                          name="maritalStatus"
                          value={formData.maritalStatus}
                          onChange={handleInputChange}
-                         className="w-full px-5 py-4 bg-[#121212] border border-[#252525] text-white rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all font-bold uppercase text-[10px] tracking-widest appearance-none cursor-pointer"
+                         className="w-full px-5 py-4 bg-card border border-[#252525] text-foreground rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all font-bold uppercase text-[10px] tracking-widest appearance-none cursor-pointer"
                        >
                          <option value="single">Célibataire</option>
                          <option value="married">Marié(e) / Pacsé(e)</option>
@@ -247,12 +247,12 @@ function LoanRequestContent() {
                     </div>
                     
                     <div className="space-y-2">
-                       <label className="text-[9px] font-black uppercase tracking-widest text-gray-500 pl-2">Motif du prêt</label>
+                       <label className="text-[9px] font-black uppercase tracking-widest text-muted-text pl-2">Motif du prêt</label>
                        <select 
                          name="loanPurpose"
                          value={formData.loanPurpose}
                          onChange={handleInputChange}
-                         className="w-full px-5 py-4 bg-[#121212] border border-[#252525] text-white rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all font-bold uppercase text-[10px] tracking-widest appearance-none cursor-pointer"
+                         className="w-full px-5 py-4 bg-card border border-[#252525] text-foreground rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all font-bold uppercase text-[10px] tracking-widest appearance-none cursor-pointer"
                        >
                          <option value="emergency">Urgence</option>
                          <option value="purchase">Achat / Consommation</option>
@@ -266,19 +266,19 @@ function LoanRequestContent() {
 
               {/* Revenus et Emploi */}
               <div className="space-y-4 pt-2">
-                 <div className="flex items-center gap-2 text-gray-400 border-b border-white/5 pb-2">
+                 <div className="flex items-center gap-2 text-muted-text border-b border-card-border pb-2">
                     <Briefcase size={14} />
                     <p className="text-[9px] font-black uppercase tracking-[0.3em]">Revenus & Emploi</p>
                  </div>
 
                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                       <label className="text-[9px] font-black uppercase tracking-widest text-gray-500 pl-2">Situation Pro.</label>
+                       <label className="text-[9px] font-black uppercase tracking-widest text-muted-text pl-2">Situation Pro.</label>
                        <select 
                          name="employmentStatus"
                          value={formData.employmentStatus}
                          onChange={handleInputChange}
-                         className="w-full px-5 py-4 bg-[#121212] border border-[#252525] text-white rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all font-bold uppercase text-[10px] tracking-widest appearance-none cursor-pointer"
+                         className="w-full px-5 py-4 bg-card border border-[#252525] text-foreground rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all font-bold uppercase text-[10px] tracking-widest appearance-none cursor-pointer"
                        >
                          <option value="employed">Salarié(e)</option>
                          <option value="self_employed">Indépendant(e)</option>
@@ -289,7 +289,7 @@ function LoanRequestContent() {
                     </div>
 
                     <div className="space-y-2">
-                       <label className="text-[9px] font-black uppercase tracking-widest text-gray-500 pl-2">
+                       <label className="text-[9px] font-black uppercase tracking-widest text-muted-text pl-2">
                          {formData.employmentStatus === 'unemployed' || formData.employmentStatus === 'student' ? 'Revenus totaux (Aides, etc.)' : 'Salaire Net Mensuel'}
                        </label>
                        <div className="relative">
@@ -301,9 +301,9 @@ function LoanRequestContent() {
                             placeholder="Ex: 2500"
                             value={formData.monthlyIncome}
                             onChange={handleInputChange}
-                            className="w-full px-5 py-4 bg-[#121212] border border-[#252525] text-white rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder:text-gray-600 font-bold text-[12px] tracking-widest pr-10"
+                            className="w-full px-5 py-4 bg-card border border-[#252525] text-foreground rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder:text-muted-text font-bold text-[12px] tracking-widest pr-10"
                           />
-                          <span className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-500 font-bold">€</span>
+                          <span className="absolute right-5 top-1/2 -translate-y-1/2 text-muted-text font-bold">€</span>
                        </div>
                     </div>
                  </div>
@@ -311,15 +311,15 @@ function LoanRequestContent() {
 
               {/* Endettement */}
               <div className="space-y-4 pt-2">
-                 <div className="flex items-center gap-2 text-gray-400 border-b border-white/5 pb-2">
+                 <div className="flex items-center gap-2 text-muted-text border-b border-card-border pb-2">
                     <CreditCard size={14} />
                     <p className="text-[9px] font-black uppercase tracking-[0.3em]">Endettement Actuel</p>
                  </div>
 
                  <div className="space-y-2">
-                     <label className="text-[9px] font-black uppercase tracking-widest text-gray-500 pl-2">Avez-vous des crédits en cours ?</label>
+                     <label className="text-[9px] font-black uppercase tracking-widest text-muted-text pl-2">Avez-vous des crédits en cours ?</label>
                      <div className="flex gap-4">
-                        <label className="flex-1 flex items-center justify-center gap-3 px-5 py-4 bg-[#121212] border border-[#252525] rounded-2xl cursor-pointer hover:border-primary/50 transition-colors">
+                        <label className="flex-1 flex items-center justify-center gap-3 px-5 py-4 bg-card border border-[#252525] rounded-2xl cursor-pointer hover:border-primary/50 transition-colors">
                            <input 
                               type="radio" 
                               name="hasExistingCredits" 
@@ -328,9 +328,9 @@ function LoanRequestContent() {
                               onChange={handleInputChange}
                               className="accent-primary w-4 h-4"
                            />
-                           <span className="text-[10px] font-bold uppercase tracking-widest text-white">Non, aucun</span>
+                           <span className="text-[10px] font-bold uppercase tracking-widest text-foreground">Non, aucun</span>
                         </label>
-                        <label className="flex-1 flex items-center justify-center gap-3 px-5 py-4 bg-[#121212] border border-[#252525] rounded-2xl cursor-pointer hover:border-primary/50 transition-colors">
+                        <label className="flex-1 flex items-center justify-center gap-3 px-5 py-4 bg-card border border-[#252525] rounded-2xl cursor-pointer hover:border-primary/50 transition-colors">
                            <input 
                               type="radio" 
                               name="hasExistingCredits" 
@@ -339,7 +339,7 @@ function LoanRequestContent() {
                               onChange={handleInputChange}
                               className="accent-primary w-4 h-4"
                            />
-                           <span className="text-[10px] font-bold uppercase tracking-widest text-white">Oui</span>
+                           <span className="text-[10px] font-bold uppercase tracking-widest text-foreground">Oui</span>
                         </label>
                      </div>
                  </div>
@@ -372,26 +372,26 @@ function LoanRequestContent() {
              </div>
              
              <div className="space-y-3">
-                <h3 className="text-3xl font-black tracking-tighter uppercase text-white">Demande Reçue !</h3>
-                <p className="text-gray-400 text-[10px] font-bold max-w-sm mx-auto uppercase tracking-[0.2em] leading-relaxed">
+                <h3 className="text-3xl font-black tracking-tighter uppercase text-foreground">Demande Reçue !</h3>
+                <p className="text-muted-text text-[10px] font-bold max-w-sm mx-auto uppercase tracking-[0.2em] leading-relaxed">
                    Vos informations ont été soumises avec succès. L'analyse instantanée est en cours.
                 </p>
              </div>
 
-             <div className="glass p-6 rounded-[2rem] max-w-xs mx-auto border-white/10 space-y-4">
-                <div className="flex justify-between items-center text-[9px] font-black uppercase tracking-widest text-gray-500">
+             <div className="glass p-6 rounded-[2rem] max-w-xs mx-auto border-card-border space-y-4">
+                <div className="flex justify-between items-center text-[9px] font-black uppercase tracking-widest text-muted-text">
                    <span>Montant Prêt</span>
                    <span className="text-primary font-black text-sm">{amount} €</span>
                 </div>
-                <div className="flex justify-between items-center text-[9px] font-black uppercase tracking-widest text-gray-500">
+                <div className="flex justify-between items-center text-[9px] font-black uppercase tracking-widest text-muted-text">
                    <span>Durée</span>
-                   <span className="text-white font-bold">{duration >= 12 ? `${duration/12} an(s)` : `${duration} mois`}</span>
+                   <span className="text-foreground font-bold">{duration >= 12 ? `${duration/12} an(s)` : `${duration} mois`}</span>
                 </div>
              </div>
 
              <Link 
                href="/dashboard/loans"
-               className="inline-block w-full py-5 rounded-[2rem] bg-primary text-white font-black text-[12px] uppercase tracking-[0.3em] shadow-lg shadow-primary/20 transition-all active:scale-[0.98]"
+               className="inline-block w-full py-5 rounded-[2rem] bg-primary text-foreground font-black text-[12px] uppercase tracking-[0.3em] shadow-lg shadow-primary/20 transition-all active:scale-[0.98]"
              >
                Voir mes prêts
              </Link>
@@ -399,7 +399,7 @@ function LoanRequestContent() {
         )}
       </div>
 
-      <div className="flex items-center justify-center gap-3 text-gray-600">
+      <div className="flex items-center justify-center gap-3 text-muted-text">
          <ShieldCheck size={16} />
          <p className="text-[10px] font-black uppercase tracking-[0.3em]">Propulsé par le moteur de décision Je Dépanne</p>
       </div>
