@@ -17,8 +17,10 @@ export default function PinNotificationPrompt({ hasPin }: { hasPin: boolean }) {
   const [step, setStep] = useState<"create" | "confirm">("create");
 
   useEffect(() => {
-    if (session && !hasPin) {
+    if (session && hasPin === false) {
       setShowPrompt(true);
+    } else if (hasPin === true) {
+      setShowPrompt(false);
     }
   }, [session, hasPin]);
 
@@ -76,7 +78,7 @@ export default function PinNotificationPrompt({ hasPin }: { hasPin: boolean }) {
            </div>
            <button 
               onClick={() => setShowSetup(true)}
-              className="px-6 py-3 bg-amber-500 text-black font-black text-[10px] uppercase tracking-widest rounded-2xl hover:bg-amber-400 transition-all flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 shrink-0"
+              className="px-6 py-3 bg-amber-500 text-white font-black text-[10px] uppercase tracking-widest rounded-2xl hover:bg-amber-400 transition-all flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 shrink-0"
            >
               Configurer
            </button>
@@ -85,9 +87,9 @@ export default function PinNotificationPrompt({ hasPin }: { hasPin: boolean }) {
 
       {/* Setup Modal */}
       {showSetup && (
-        <div className="fixed inset-0 z-[200] bg-black/80 backdrop-blur-md flex flex-col items-center justify-center p-4 animate-in fade-in duration-300">
-           <div className="w-full max-w-sm bg-card border border-card-border rounded-[2.5rem] p-8 space-y-8 relative overflow-hidden shadow-2xl">
-              <div className="absolute top-0 w-full h-2 bg-amber-500"></div>
+        <div className="fixed inset-0 z-[200] bg-background flex flex-col items-center justify-center p-4 animate-in fade-in duration-300 h-[100dvh] w-screen">
+           <div className="w-full h-full max-w-md bg-card border-none md:border md:border-card-border md:h-auto rounded-none md:rounded-[2.5rem] p-8 space-y-8 relative overflow-hidden shadow-none md:shadow-2xl flex flex-col justify-center">
+              <div className="absolute top-0 left-0 w-full h-2 bg-amber-500"></div>
               
               <div className="text-center space-y-4 pt-4">
                  <div className="w-16 h-16 bg-amber-500/10 rounded-full flex items-center justify-center mx-auto text-amber-500">
