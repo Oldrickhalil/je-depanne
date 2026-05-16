@@ -47,7 +47,7 @@ export default function StripeReturnPage() {
              </div>
              <button 
                onClick={() => router.push("/dashboard/loans/request?step=confirm")}
-               className="px-10 py-4 bg-primary text-foreground rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] shadow-lg glow-primary"
+               className="px-10 py-4 bg-primary text-white rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] shadow-lg glow-primary"
              >
                 Continuer la demande
              </button>

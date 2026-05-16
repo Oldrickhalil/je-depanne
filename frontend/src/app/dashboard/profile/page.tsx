@@ -290,7 +290,7 @@ export default function ProfilePage() {
                         </p>
                         <p className="text-[10px] text-muted-text uppercase tracking-widest mt-1">Sécurisez l'accès à vos fonds</p>
                      </div>
-                     <button className="px-4 py-2 bg-primary/20 text-primary text-[9px] font-black uppercase tracking-widest rounded-xl hover:bg-primary hover:text-foreground transition-colors">
+                     <button className="px-4 py-2 bg-primary/20 text-primary text-[9px] font-black uppercase tracking-widest rounded-xl hover:bg-primary hover:text-white transition-colors">
                         Activer
                      </button>
                   </div>
@@ -318,7 +318,7 @@ export default function ProfilePage() {
                        </div>
                        <button 
                          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                         className="px-4 py-2 bg-primary/10 text-primary text-[9px] font-black uppercase tracking-widest rounded-xl hover:bg-primary hover:text-foreground transition-colors"
+                         className="px-4 py-2 bg-primary/10 text-primary text-[9px] font-black uppercase tracking-widest rounded-xl hover:bg-primary hover:text-white transition-colors"
                        >
                           Changer
                        </button>
@@ -335,7 +335,7 @@ export default function ProfilePage() {
                      </div>
                      <button 
                        onClick={() => signOut({ callbackUrl: "/login" })}
-                       className="px-4 py-2 bg-red-500 text-foreground text-[9px] font-black uppercase tracking-widest rounded-xl hover:bg-red-600 transition-colors shadow-lg shadow-red-500/20"
+                       className="px-4 py-2 bg-red-500 text-white text-[9px] font-black uppercase tracking-widest rounded-xl hover:bg-red-600 transition-colors shadow-lg shadow-red-500/20"
                      >
                         Quitter
                      </button>

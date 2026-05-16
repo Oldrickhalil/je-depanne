@@ -104,7 +104,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-5 bg-primary text-foreground font-black text-xs uppercase tracking-[0.0em] rounded-2xl hover:bg-primary/80 transition-all flex items-center justify-center gap-3 shadow-xl active:scale-95 disabled:opacity-50"
+            className="w-full py-5 bg-primary text-white font-black text-xs uppercase tracking-[0.0em] rounded-2xl hover:bg-primary/80 transition-all flex items-center justify-center gap-3 shadow-xl active:scale-95 disabled:opacity-50"
           >
             {loading ? <Loader2 className="animate-spin" size={18} /> : (
               <>

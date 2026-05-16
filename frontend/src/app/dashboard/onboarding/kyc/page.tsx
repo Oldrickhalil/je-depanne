@@ -241,7 +241,7 @@ export default function KYCPage() {
                             {previews.recto ? (
                                 <>
                                     <Image src={previews.recto} alt="Recto" fill className="object-cover" />
-                                    <button type="button" onClick={(e) => { e.stopPropagation(); removeFile('recto'); }} className="absolute top-1 right-1 bg-red-500 text-foreground p-1 rounded-full shadow-lg"><X size={10} /></button>
+                                    <button type="button" onClick={(e) => { e.stopPropagation(); removeFile('recto'); }} className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full shadow-lg"><X size={10} /></button>
                                 </>
                             ) : (
                                 <Camera className="w-5 h-5 text-muted-text" />
@@ -258,7 +258,7 @@ export default function KYCPage() {
                                 {previews.verso ? (
                                     <>
                                         <Image src={previews.verso} alt="Verso" fill className="object-cover" />
-                                        <button type="button" onClick={(e) => { e.stopPropagation(); removeFile('verso'); }} className="absolute top-1 right-1 bg-red-500 text-foreground p-1 rounded-full shadow-lg"><X size={10} /></button>
+                                        <button type="button" onClick={(e) => { e.stopPropagation(); removeFile('verso'); }} className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full shadow-lg"><X size={10} /></button>
                                     </>
                                 ) : (
                                     <Camera className="w-5 h-5 text-muted-text" />
@@ -273,7 +273,7 @@ export default function KYCPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-4 bg-primary text-foreground font-black rounded-2xl hover:opacity-90 transition-all disabled:opacity-50 uppercase text-[10px] tracking-[0.2em] shadow-lg shadow-primary/20"
+              className="w-full py-4 bg-primary text-white font-black rounded-2xl hover:opacity-90 transition-all disabled:opacity-50 uppercase text-[10px] tracking-[0.2em] shadow-lg shadow-primary/20"
             >
               {loading ? "Traitement..." : "Finaliser la vérification"}
             </button>

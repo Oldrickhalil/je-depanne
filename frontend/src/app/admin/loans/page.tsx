@@ -328,7 +328,7 @@ export default function AdminDashboard() {
                            updateKycStatus(selectedKycUser.id, true);
                            setSelectedKycUser(null);
                         }}
-                        className="w-full py-5 bg-green-500 text-foreground font-black rounded-2xl hover:bg-green-600 transition-all uppercase text-xs tracking-widest shadow-lg shadow-green-500/20 flex items-center justify-center gap-2"
+                        className="w-full py-5 bg-green-500 text-white font-black rounded-2xl hover:bg-green-600 transition-all uppercase text-xs tracking-widest shadow-lg shadow-green-500/20 flex items-center justify-center gap-2"
                      >
                         <CheckCircle2 size={20} /> Approuver le dossier
                      </button>
@@ -478,7 +478,7 @@ export default function AdminDashboard() {
                            await updateLoanStatus(selectedLoan.id, 'APPROVED');
                            setSelectedLoan(null);
                         }}
-                        className="flex-1 py-4 bg-green-500 text-foreground font-black rounded-2xl hover:bg-green-600 transition-all uppercase text-xs tracking-widest shadow-lg shadow-green-500/20 flex items-center justify-center gap-2"
+                        className="flex-1 py-4 bg-green-500 text-white font-black rounded-2xl hover:bg-green-600 transition-all uppercase text-xs tracking-widest shadow-lg shadow-green-500/20 flex items-center justify-center gap-2"
                      >
                         <CheckCircle2 size={18} /> Approuver
                      </button>

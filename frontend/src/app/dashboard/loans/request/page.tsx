@@ -201,7 +201,7 @@ function LoanRequestContent() {
 
             <button 
               onClick={() => setStep("infos")}
-              className="w-full py-5 rounded-[2rem] bg-primary text-foreground font-black text-[12px] uppercase tracking-[0.3em] shadow-lg shadow-primary/20 glow-primary active:scale-[0.98] transition-all flex items-center justify-center gap-4"
+              className="w-full py-5 rounded-[2rem] bg-primary text-white font-black text-[12px] uppercase tracking-[0.3em] shadow-lg shadow-primary/20 glow-primary active:scale-[0.98] transition-all flex items-center justify-center gap-4"
             >
               Continuer vers ma demande
               <ChevronRight size={18} strokeWidth={3} />
@@ -237,7 +237,7 @@ function LoanRequestContent() {
                          name="maritalStatus"
                          value={formData.maritalStatus}
                          onChange={handleInputChange}
-                         className="w-full px-5 py-4 bg-card border border-[#252525] text-foreground rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all font-bold uppercase text-[10px] tracking-widest appearance-none cursor-pointer"
+                         className="w-full px-5 py-4 bg-card border border-[#252525] text-white rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all font-bold uppercase text-[10px] tracking-widest appearance-none cursor-pointer"
                        >
                          <option value="single">Célibataire</option>
                          <option value="married">Marié(e) / Pacsé(e)</option>
@@ -252,7 +252,7 @@ function LoanRequestContent() {
                          name="loanPurpose"
                          value={formData.loanPurpose}
                          onChange={handleInputChange}
-                         className="w-full px-5 py-4 bg-card border border-[#252525] text-foreground rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all font-bold uppercase text-[10px] tracking-widest appearance-none cursor-pointer"
+                         className="w-full px-5 py-4 bg-card border border-[#252525] text-white rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all font-bold uppercase text-[10px] tracking-widest appearance-none cursor-pointer"
                        >
                          <option value="emergency">Urgence</option>
                          <option value="purchase">Achat / Consommation</option>
@@ -278,7 +278,7 @@ function LoanRequestContent() {
                          name="employmentStatus"
                          value={formData.employmentStatus}
                          onChange={handleInputChange}
-                         className="w-full px-5 py-4 bg-card border border-[#252525] text-foreground rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all font-bold uppercase text-[10px] tracking-widest appearance-none cursor-pointer"
+                         className="w-full px-5 py-4 bg-card border border-[#252525] text-white rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all font-bold uppercase text-[10px] tracking-widest appearance-none cursor-pointer"
                        >
                          <option value="employed">Salarié(e)</option>
                          <option value="self_employed">Indépendant(e)</option>
@@ -301,7 +301,7 @@ function LoanRequestContent() {
                             placeholder="Ex: 2500"
                             value={formData.monthlyIncome}
                             onChange={handleInputChange}
-                            className="w-full px-5 py-4 bg-card border border-[#252525] text-foreground rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder:text-muted-text font-bold text-[12px] tracking-widest pr-10"
+                            className="w-full px-5 py-4 bg-card border border-[#252525] text-white rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder:text-muted-text font-bold text-[12px] tracking-widest pr-10"
                           />
                           <span className="absolute right-5 top-1/2 -translate-y-1/2 text-muted-text font-bold">€</span>
                        </div>
@@ -391,7 +391,7 @@ function LoanRequestContent() {
 
              <Link 
                href="/dashboard/loans"
-               className="inline-block w-full py-5 rounded-[2rem] bg-primary text-foreground font-black text-[12px] uppercase tracking-[0.3em] shadow-lg shadow-primary/20 transition-all active:scale-[0.98]"
+               className="inline-block w-full py-5 rounded-[2rem] bg-primary text-white font-black text-[12px] uppercase tracking-[0.3em] shadow-lg shadow-primary/20 transition-all active:scale-[0.98]"
              >
                Voir mes prêts
              </Link>

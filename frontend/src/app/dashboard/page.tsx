@@ -142,10 +142,10 @@ export default function DashboardPage() {
              
              <div className="relative p-10 flex flex-col h-72 justify-between">
                 <div className="flex justify-between items-start">
-                   <div className="space-y-1">
-                      <p className="text-foreground/50 text-[10px] font-bold uppercase tracking-[0.1em]">Solde Disponible</p>
+                   <div className="space-y-1 text-white">
+                      <p className="text-white/50 text-[10px] font-bold uppercase tracking-[0.1em]">Solde Disponible</p>
                       <div className="flex items-baseline gap-2">
-                         <span className="text-2xl font-light text-foreground/70">€</span>
+                         <span className="text-2xl font-light text-white/70">€</span>
                          <h2 className="text-6xl font-black tracking-tighter">
                             {freshStatus ? freshStatus.balance.toFixed(2) : "0.00"}
                          </h2>
@@ -156,7 +156,7 @@ export default function DashboardPage() {
 
                 <div className="flex flex-col gap-4 mt-auto">
                    <div className="flex justify-between items-center">
-                      <p className="text-foreground/40 font-mono text-[10px] md:text-sm tracking-[0.2em] md:tracking-[0.3em] uppercase tracking-tighter">
+                      <p className="text-white/40 font-mono text-[10px] md:text-sm tracking-[0.2em] md:tracking-[0.3em] uppercase tracking-tighter">
                         ID: JD-{(session?.user as any)?.id?.slice(0, 8).toUpperCase() || "XXXXXXX"}
                       </p>
                       {isActivated && (
@@ -169,7 +169,7 @@ export default function DashboardPage() {
                    <div className="flex gap-3">
                       <Link 
                         href="/dashboard/deposit"
-                        className="flex-1 text-center py-4 bg-primary text-foreground rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl hover:opacity-90 transition-all active:scale-95"
+                        className="flex-1 text-center py-4 bg-primary text-white rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl hover:opacity-90 transition-all active:scale-95"
                       >
                          Déposer
                       </Link>
@@ -277,7 +277,7 @@ export default function DashboardPage() {
               <p className="text-[9px] text-muted-text font-bold uppercase tracking-wider">Capacité d'emprunt</p>
            </div>
            
-           <div className="p-10 rounded-[3rem] bg-gradient-to-br from-[#0c0c0c] to-[#070707] border border-card-border relative overflow-hidden group">
+           <div className="p-10 rounded-[3rem] bg-card border border-card-border relative overflow-hidden group">
               <div className="relative flex flex-col justify-between items-center text-center space-y-6">
                  <div className="w-24 h-24 rounded-full border-4 border-primary/20 flex items-center justify-center relative">
                     <div className="absolute inset-0 border-4 border-primary rounded-full border-t-transparent animate-spin-slow"></div>
@@ -349,7 +349,7 @@ export default function DashboardPage() {
                   router.push(!freshStatus?.kycVerified ? "/dashboard/onboarding/kyc" : (!freshStatus?.hasDeposited ? "/dashboard/onboarding/deposit" : "/dashboard/onboarding/pwa"));
                 }
               }}
-              className="w-full py-4 bg-primary text-foreground font-black rounded-2xl hover:bg-primary/90 transition-all uppercase text-[10px] tracking-widest shadow-lg shadow-primary/20"
+              className="w-full py-4 bg-primary text-white font-black rounded-2xl hover:bg-primary/90 transition-all uppercase text-[10px] tracking-widest shadow-lg shadow-primary/20"
             >
               {showActivationModal.action === "no_credit" ? "Aller à la demande" : "Continuer l'activation"}
             </button>

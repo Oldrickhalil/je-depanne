@@ -113,7 +113,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           
           <Link 
             href="/dashboard/deposit"
-            className="relative ml-1 p-4 bg-primary text-foreground rounded-[1.8rem] shadow-[0_10px_20px_rgba(225,29,72,0.3)] active:scale-90 transition-all duration-300"
+            className="relative ml-1 p-4 bg-primary text-white rounded-[1.8rem] shadow-[0_10px_20px_rgba(225,29,72,0.3)] active:scale-90 transition-all duration-300"
           >
             <Plus size={22} strokeWidth={3} />
           </Link>

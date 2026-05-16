@@ -97,7 +97,7 @@ export default function StatsPage() {
           </p>
         </div>
         
-        <button className="px-6 py-3 bg-white/5 border border-card-border text-foreground rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl hover:bg-white/10 transition-all flex items-center gap-2">
+        <button className="px-6 py-3 bg-white/5 border border-card-border text-white rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl hover:bg-white/10 transition-all flex items-center gap-2">
           <Download size={14} /> Exporter (PDF)
         </button>
       </section>
@@ -175,9 +175,9 @@ export default function StatsPage() {
                <p className="text-[10px] font-bold uppercase tracking-widest text-muted-text">Dépenses vs Remboursements (6 derniers mois)</p>
             </div>
             <div className="flex gap-2 p-1 bg-white/5 rounded-2xl border border-card-border">
-               <button className="px-4 py-2 bg-background text-foreground rounded-xl text-[9px] font-black uppercase tracking-widest shadow-sm">6 Mois</button>
-               <button className="px-4 py-2 text-muted-text hover:text-foreground rounded-xl text-[9px] font-black uppercase tracking-widest transition-colors">1 An</button>
-               <button className="px-4 py-2 text-muted-text hover:text-foreground rounded-xl text-[9px] font-black uppercase tracking-widest transition-colors">Tout</button>
+               <button className="px-4 py-2 bg-background text-white rounded-xl text-[9px] font-black uppercase tracking-widest shadow-sm">6 Mois</button>
+               <button className="px-4 py-2 text-muted-text hover:text-white rounded-xl text-[9px] font-black uppercase tracking-widest transition-colors">1 An</button>
+               <button className="px-4 py-2 text-muted-text hover:text-white rounded-xl text-[9px] font-black uppercase tracking-widest transition-colors">Tout</button>
             </div>
          </div>
 
@@ -206,7 +206,7 @@ export default function StatsPage() {
                         className="w-1/3 max-w-[20px] bg-primary rounded-t-sm shadow-[0_0_15px_rgba(81,32,179,0.5)] group-hover:brightness-125 transition-all relative"
                         style={{ height: `${data.val2}%` }}
                      >
-                         <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-primary text-foreground text-[8px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-20">{data.rawRemboursements}€</div>
+                         <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-primary text-white text-[8px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-20">{data.rawRemboursements}€</div>
                      </div>
                   </div>
                   <span className="text-[10px] font-bold uppercase tracking-widest text-muted-text">{data.month}</span>

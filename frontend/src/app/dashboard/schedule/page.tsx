@@ -235,7 +235,7 @@ export default function SchedulePage() {
                                     <button 
                                        onClick={() => setConfirmModal({ show: true, loanId: loan.id, amount: remainingBalance, type: 'FULL' })}
                                        disabled={repaying === loan.id}
-                                       className="w-full py-5 bg-primary text-foreground font-black text-[10px] uppercase tracking-widest rounded-2xl hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-3 disabled:opacity-50"
+                                       className="w-full py-5 bg-primary text-white font-black text-[10px] uppercase tracking-widest rounded-2xl hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-3 disabled:opacity-50"
                                     >
                                        {repaying === loan.id ? <Loader2 size={16} className="animate-spin" /> : <RefreshCcw size={16} />}
                                        Solder le prêt
@@ -314,7 +314,7 @@ export default function SchedulePage() {
                  </button>
                  <button 
                    onClick={executeRepayment}
-                   className="flex-1 py-4 bg-primary text-foreground font-black rounded-2xl hover:bg-primary/90 transition-all uppercase text-[10px] tracking-widest shadow-lg shadow-primary/20"
+                   className="flex-1 py-4 bg-primary text-white font-black rounded-2xl hover:bg-primary/90 transition-all uppercase text-[10px] tracking-widest shadow-lg shadow-primary/20"
                  >
                    Confirmer
                  </button>
