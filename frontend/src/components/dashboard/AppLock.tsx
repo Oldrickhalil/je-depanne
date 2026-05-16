@@ -16,31 +16,60 @@ export default function AppLock({ children }: { children: React.ReactNode }) {
   const hasPin = session && (session.user as any)?.hasPin;
 
   useEffect(() => {
-    // Check if the app should be locked on load or return from background
+    if (!hasPin || pathname.includes("/login") || pathname.includes("/register")) return;
+
     const checkLock = () => {
-      if (hasPin && !pathname.includes("/login") && !pathname.includes("/register")) {
-        const unlockedAt = sessionStorage.getItem("jd_unlocked_at");
-        if (!unlockedAt) {
+      // Don't check if already locked to prevent unnecessary renders
+      if (isLocked) return;
+      
+      const unlockedAt = sessionStorage.getItem("jd_unlocked_at");
+      if (!unlockedAt) {
+        setIsLocked(true);
+      } else {
+        // Lock after 1 minute of inactivity
+        const timePassed = Date.now() - parseInt(unlockedAt);
+        if (timePassed > 60 * 1000) {
           setIsLocked(true);
-        } else {
-          // Lock after 1 minute of inactivity
-          const timePassed = Date.now() - parseInt(unlockedAt);
-          if (timePassed > 1 * 60 * 1000) {
-            setIsLocked(true);
-          } else {
-             // Refresh timer
-             sessionStorage.setItem("jd_unlocked_at", Date.now().toString());
-          }
         }
       }
     };
 
     checkLock();
 
-    // Re-check when window regains focus (user comes back to app)
-    window.addEventListener("focus", checkLock);
-    return () => window.removeEventListener("focus", checkLock);
-  }, [hasPin, pathname]);
+    // Periodic check every 5 seconds
+    const interval = setInterval(checkLock, 5000);
+
+    // Throttle activity updates to avoid writing to storage constantly
+    let lastUpdate = Date.now();
+    const updateActivity = () => {
+      const now = Date.now();
+      if (!isLocked && now - lastUpdate > 2000) {
+        sessionStorage.setItem("jd_unlocked_at", now.toString());
+        lastUpdate = now;
+      }
+    };
+
+    // iOS and PWA reliable background detection
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        checkLock();
+      } else {
+        // App is going to background, save the exact exit time
+        if (!isLocked) sessionStorage.setItem("jd_unlocked_at", Date.now().toString());
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    document.addEventListener("touchstart", updateActivity, { passive: true });
+    document.addEventListener("click", updateActivity, { passive: true });
+
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      document.removeEventListener("touchstart", updateActivity);
+      document.removeEventListener("click", updateActivity);
+    };
+  }, [hasPin, pathname, isLocked]);
 
   const verifyPin = async () => {
     if (pin.length < 4) return;
