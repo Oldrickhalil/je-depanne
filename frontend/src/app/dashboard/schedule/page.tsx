@@ -316,10 +316,7 @@ export default function SchedulePage() {
                    Annuler
                  </button>
                  <button 
-                   onClick={() => {
-                     setConfirmModal(null);
-                     setShowPinModal(true);
-                   }}
+                   onClick={() => setShowPinModal(true)}
                    className="flex-1 py-4 bg-primary text-white font-black rounded-2xl hover:bg-primary/90 transition-all uppercase text-[10px] tracking-widest shadow-lg shadow-primary/20"
                  >
                    Confirmer
