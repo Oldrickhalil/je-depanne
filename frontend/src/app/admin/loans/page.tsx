@@ -65,6 +65,7 @@ type UserType = {
 type Loan = {
   id: string;
   amount: number;
+  amountRepaid: number;
   status: 'PENDING' | 'APPROVED' | 'REJECTED' | 'PAID_BACK';
   createdAt: string;
   termMonths: number;
