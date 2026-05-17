@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { ShieldCheck, Upload, ArrowRight, CheckCircle2, Camera, X, FileText, Check, MapPin } from "lucide-react";
+import { ShieldCheck, Upload, ArrowRight, CheckCircle2, Camera, X, FileText, Check, MapPin, Loader2 } from "lucide-react";
 import Image from "next/image";
 
 export default function KYCPage() {
