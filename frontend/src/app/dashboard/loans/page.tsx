@@ -40,6 +40,21 @@ export default function MyLoansPage() {
     l.status.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const getStatusDisplay = (status: string) => {
+    switch (status) {
+      case "PENDING":
+        return { label: "En attente", color: "text-amber-500", bg: "bg-amber-500/10", icon: Clock };
+      case "APPROVED":
+        return { label: "Approuvé", color: "text-green-500", bg: "bg-green-500/10", icon: CheckCircle2 };
+      case "REJECTED":
+        return { label: "Refusé", color: "text-red-500", bg: "bg-red-500/10", icon: XCircle };
+      case "PAID_BACK":
+        return { label: "Remboursé", color: "text-blue-500", bg: "bg-blue-500/10", icon: CheckCircle2 };
+      default:
+        return { label: "Inconnu", color: "text-muted-text", bg: "bg-gray-500/10", icon: Info };
+    }
+  };
+
   return (
     <div className="max-w-4xl mx-auto space-y-10 animate-in fade-in duration-700 pb-20">
       
