@@ -395,7 +395,7 @@ export default function AdminDashboard() {
         <div className="fixed inset-0 z-[100] bg-background/90 backdrop-blur-xl flex items-center justify-center p-4 h-[100dvh] w-screen">
           <div className="bg-card border border-card-border rounded-[2.5rem] w-full max-w-4xl max-h-[90vh] overflow-y-auto custom-scrollbar p-8 md:p-10 space-y-8 relative shadow-2xl animate-in zoom-in-95 duration-500">
             <button 
-               onClick={() => setSelectedUserKyc(null)}
+               onClick={() => setSelectedKycUser(null)}
                className="absolute top-6 right-6 w-10 h-10 bg-foreground/5 hover:bg-red-500/20 hover:text-red-500 rounded-full flex items-center justify-center transition-colors"
             >
               <XCircle size={20} />
@@ -428,7 +428,7 @@ export default function AdminDashboard() {
                      <button 
                         onClick={() => {
                            updateKycStatus(selectedKycUser.id, true);
-                           setSelectedUserKyc(null);
+                           setSelectedKycUser(null);
                         }}
                         className="w-full py-5 bg-green-500 text-white font-black rounded-2xl hover:bg-green-600 transition-all uppercase text-xs tracking-widest shadow-lg shadow-green-500/20 flex items-center justify-center gap-2"
                      >
@@ -439,7 +439,7 @@ export default function AdminDashboard() {
                      <button 
                         onClick={() => {
                            updateKycStatus(selectedKycUser.id, false);
-                           setSelectedUserKyc(null);
+                           setSelectedKycUser(null);
                         }}
                         className="w-full py-5 bg-red-500/10 text-red-500 border border-red-500/20 font-black rounded-2xl hover:bg-red-500 hover:text-white transition-all uppercase text-xs tracking-widest flex items-center justify-center gap-2"
                      >
