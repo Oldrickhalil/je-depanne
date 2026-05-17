@@ -6,12 +6,14 @@ import { signIn } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
 import { Mail, Lock, Loader2, ArrowRight, ShieldCheck, AlertCircle, Eye, EyeOff } from "lucide-react";
+import VerifyEmailModal from "@/components/auth/VerifyEmailModal";
 
 export default function LoginPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [showVerifyModal, setShowVerifyModal] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -30,8 +32,12 @@ export default function LoginPage() {
       });
 
       if (res?.error) {
-        // NextAuth prefixes custom errors with "Error: "
-        setError(res.error.replace("Error: ", ""));
+        const errorMessage = res.error.replace("Error: ", "");
+        if (errorMessage.includes("vérifier votre adresse e-mail")) {
+           setShowVerifyModal(true);
+        } else {
+           setError(errorMessage);
+        }
       } else {
         router.push("/dashboard");
       }
@@ -44,6 +50,11 @@ export default function LoginPage() {
 
   return (
     <div className="relative min-h-screen bg-background flex flex-col items-center justify-center p-6 selection:bg-primary/30">
+      <VerifyEmailModal 
+         isOpen={showVerifyModal}
+         onClose={() => setShowVerifyModal(false)}
+         email={formData.email}
+      />
       {/* Background Decor */}
       <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-primary/10 blur-[100px] rounded-full"></div>
       

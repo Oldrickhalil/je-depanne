@@ -126,6 +126,70 @@ export const verifyEmail = async (req: Request, res: Response) => {
   }
 };
 
+export const resendVerification = async (req: Request, res: Response) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ message: 'L\'adresse e-mail est requise.' });
+    }
+
+    const user = await prisma.user.findUnique({ where: { email } });
+
+    if (!user) {
+      return res.status(404).json({ message: 'Utilisateur non trouvé.' });
+    }
+
+    if (user.emailVerified) {
+      return res.status(400).json({ message: 'Cet e-mail est déjà vérifié.' });
+    }
+
+    // Generate new token
+    const verificationToken = crypto.randomBytes(32).toString('hex');
+    const verificationExpires = new Date(Date.now() + 24 * 60 * 60 * 1000);
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        verificationToken,
+        verificationExpires
+      }
+    });
+
+    // Send email via Resend
+    try {
+      const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+      const verificationLink = `${appUrl}/api/auth/verify-email?token=${verificationToken}`;
+
+      await resend.emails.send({
+        from: 'Je Dépanne <noreply@je-depanne.com>',
+        to: [email],
+        subject: 'Vérifiez votre adresse e-mail - Je Dépanne',
+        html: `
+          <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+            <h1 style="color: #5120B3; text-align: center;">Vérification de votre compte</h1>
+            <p>Bonjour ${user.firstName},</p>
+            <p>Vous avez demandé un nouveau lien de vérification. Veuillez cliquer sur le bouton ci-dessous pour activer votre compte :</p>
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="${verificationLink}" style="background-color: #5120B3; color: white; padding: 15px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">Vérifier mon e-mail</a>
+            </div>
+            <p style="font-size: 12px; color: #666;">Ce lien expirera dans 24 heures.</p>
+            <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;" />
+            <p style="font-size: 10px; color: #999; text-align: center;">&copy; 2026 Je Dépanne. Tous droits réservés.</p>
+          </div>
+        `
+      });
+    } catch (emailError) {
+      console.error('Failed to resend verification email:', emailError);
+    }
+
+    res.status(200).json({ message: 'Un nouveau lien de vérification a été envoyé.' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Erreur lors de l\'envoi du mail.' });
+  }
+};
+
 export const login = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;

@@ -6,6 +6,7 @@ import { signIn } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
 import { Mail, Lock, User, Loader2, ArrowRight, ShieldCheck, AlertCircle, CheckCircle2, Eye, EyeOff, Phone, Globe } from "lucide-react";
+import VerifyEmailModal from "@/components/auth/VerifyEmailModal";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -13,6 +14,7 @@ export default function RegisterPage() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showVerifyModal, setShowVerifyModal] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -50,10 +52,7 @@ export default function RegisterPage() {
       const data = await res.json();
 
       if (res.ok) {
-        setSuccess(true);
-        setTimeout(() => {
-          router.push("/login");
-        }, 2000);
+        setShowVerifyModal(true);
       } else {
         setError(data.message || "Une erreur est survenue lors de l'inscription.");
       }
@@ -64,20 +63,13 @@ export default function RegisterPage() {
     }
   };
 
-  if (success) {
-    return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6 text-center">
-        <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mb-6 animate-in zoom-in duration-500">
-           <CheckCircle2 size={40} className="text-green-500" />
-        </div>
-        <h1 className="text-3xl font-black uppercase tracking-tighter text-foreground mb-2">Compte Créé !</h1>
-        <p className="text-muted-text text-xs font-bold uppercase tracking-widest">Redirection vers la page de connexion...</p>
-      </div>
-    );
-  }
-
   return (
     <div className="relative min-h-screen bg-background flex flex-col items-center justify-center p-6 selection:bg-primary/30">
+      <VerifyEmailModal 
+        isOpen={showVerifyModal}
+        onClose={() => router.push("/login")}
+        email={formData.email}
+      />
       {/* Background Decor */}
       <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-primary/5 blur-[120px] rounded-full"></div>
       
