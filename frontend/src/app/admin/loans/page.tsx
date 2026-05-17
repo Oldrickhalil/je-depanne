@@ -487,53 +487,72 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* Bottom Navigation - Native App Style */}
-      <nav className="fixed bottom-0 left-0 w-full bg-card/80 backdrop-blur-xl border-t border-card-border px-4 py-4 z-50 flex items-center justify-around shadow-[0_-10px_40px_rgba(0,0,0,0.3)] safe-area-bottom">
-         <button 
-           onClick={() => setView('loans')}
-           className={`flex flex-col items-center gap-1.5 transition-all min-w-[64px] ${view === 'loans' ? 'text-amber-500 scale-110' : 'text-muted-text'}`}
-         >
-            <div className={`p-2 rounded-xl transition-colors ${view === 'loans' ? 'bg-amber-500/10' : ''}`}>
-               <Zap size={20} fill={view === 'loans' ? 'currentColor' : 'none'} />
-            </div>
-            <span className="text-[8px] font-black uppercase tracking-widest">Prêts</span>
-         </button>
-
-         <button 
-           onClick={() => setView('withdrawals')}
-           className={`flex flex-col items-center gap-1.5 transition-all min-w-[64px] relative ${view === 'withdrawals' ? 'text-amber-500 scale-110' : 'text-muted-text'}`}
-         >
-            <div className={`p-2 rounded-xl transition-colors ${view === 'withdrawals' ? 'bg-amber-500/10' : ''}`}>
-               <Banknote size={20} fill={view === 'withdrawals' ? 'currentColor' : 'none'} />
-            </div>
-            <span className="text-[8px] font-black uppercase tracking-widest">Retraits</span>
-            {pendingWithdrawals.length > 0 && (
-               <span className="absolute top-1 right-2 w-4 h-4 bg-red-500 text-white text-[8px] flex items-center justify-center rounded-full font-black animate-pulse shadow-lg border border-background">
-                  {pendingWithdrawals.length}
-               </span>
+      {/* ULTRA PREMIUM Glass Bottom Nav - Admin Version */}
+      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 w-[92%] max-w-[440px] z-50">
+        <nav className="relative glass-dark rounded-[2.5rem] p-2 flex items-center justify-around shadow-[0_20px_50px_rgba(0,0,0,0.6)] border border-white/10 overflow-hidden">
+          {/* Active indicator background effect */}
+          <div className="absolute inset-0 bg-gradient-to-r from-amber-500/5 via-transparent to-amber-500/5 pointer-events-none"></div>
+          
+          <button 
+            onClick={() => setView('loans')}
+            className={`relative p-4 rounded-[1.8rem] transition-all duration-500 group flex flex-col items-center gap-1 ${
+              view === 'loans' ? "text-amber-500 bg-white/5 shadow-inner" : "text-gray-500 hover:text-white"
+            }`}
+          >
+            {view === 'loans' && (
+              <span className="absolute inset-0 bg-amber-500/10 blur-lg rounded-full"></span>
             )}
-         </button>
+            <Zap size={20} className={`relative z-10 transition-transform duration-300 ${view === 'loans' ? "scale-110" : "group-hover:scale-110"}`} fill={view === 'loans' ? 'currentColor' : 'none'} />
+            <span className="text-[7px] font-black uppercase tracking-widest relative z-10">Prêts</span>
+          </button>
 
-         <button 
-           onClick={() => setView('users')}
-           className={`flex flex-col items-center gap-1.5 transition-all min-w-[64px] ${view === 'users' ? 'text-amber-500 scale-110' : 'text-muted-text'}`}
-         >
-            <div className={`p-2 rounded-xl transition-colors ${view === 'users' ? 'bg-amber-500/10' : ''}`}>
-               <Users size={20} fill={view === 'users' ? 'currentColor' : 'none'} />
+          <button 
+            onClick={() => setView('withdrawals')}
+            className={`relative p-4 rounded-[1.8rem] transition-all duration-500 group flex flex-col items-center gap-1 ${
+              view === 'withdrawals' ? "text-amber-500 bg-white/5 shadow-inner" : "text-gray-500 hover:text-white"
+            }`}
+          >
+            {view === 'withdrawals' && (
+              <span className="absolute inset-0 bg-amber-500/10 blur-lg rounded-full"></span>
+            )}
+            <div className="relative">
+               <Banknote size={20} className={`relative z-10 transition-transform duration-300 ${view === 'withdrawals' ? "scale-110" : "group-hover:scale-110"}`} fill={view === 'withdrawals' ? 'currentColor' : 'none'} />
+               {pendingWithdrawals.length > 0 && (
+                  <span className="absolute -top-2 -right-2 w-4 h-4 bg-red-500 text-white text-[8px] flex items-center justify-center rounded-full font-black shadow-lg border border-[#0c0c0c] z-20">
+                     {pendingWithdrawals.length}
+                  </span>
+               )}
             </div>
-            <span className="text-[8px] font-black uppercase tracking-widest">Clients</span>
-         </button>
+            <span className="text-[7px] font-black uppercase tracking-widest relative z-10">Retraits</span>
+          </button>
 
-         <button 
-           onClick={() => setView('settings')}
-           className={`flex flex-col items-center gap-1.5 transition-all min-w-[64px] ${view === 'settings' ? 'text-amber-500 scale-110' : 'text-muted-text'}`}
-         >
-            <div className={`p-2 rounded-xl transition-colors ${view === 'settings' ? 'bg-amber-500/10' : ''}`}>
-               <Settings size={20} fill={view === 'settings' ? 'currentColor' : 'none'} />
-            </div>
-            <span className="text-[8px] font-black uppercase tracking-widest">Réglages</span>
-         </button>
-      </nav>
+          <button 
+            onClick={() => setView('users')}
+            className={`relative p-4 rounded-[1.8rem] transition-all duration-500 group flex flex-col items-center gap-1 ${
+              view === 'users' ? "text-amber-500 bg-white/5 shadow-inner" : "text-gray-500 hover:text-white"
+            }`}
+          >
+            {view === 'users' && (
+              <span className="absolute inset-0 bg-amber-500/10 blur-lg rounded-full"></span>
+            )}
+            <Users size={20} className={`relative z-10 transition-transform duration-300 ${view === 'users' ? "scale-110" : "group-hover:scale-110"}`} fill={view === 'users' ? 'currentColor' : 'none'} />
+            <span className="text-[7px] font-black uppercase tracking-widest relative z-10">Clients</span>
+          </button>
+
+          <button 
+            onClick={() => setView('settings')}
+            className={`relative p-4 rounded-[1.8rem] transition-all duration-500 group flex flex-col items-center gap-1 ${
+              view === 'settings' ? "text-amber-500 bg-white/5 shadow-inner" : "text-gray-500 hover:text-white"
+            }`}
+          >
+            {view === 'settings' && (
+              <span className="absolute inset-0 bg-amber-500/10 blur-lg rounded-full"></span>
+            )}
+            <Settings size={20} className={`relative z-10 transition-transform duration-300 ${view === 'settings' ? "scale-110" : "group-hover:scale-110"}`} fill={view === 'settings' ? 'currentColor' : 'none'} />
+            <span className="text-[7px] font-black uppercase tracking-widest relative z-10">Réglages</span>
+          </button>
+        </nav>
+      </div>
 
       {/* KYC Modal */}
       {selectedKycUser && (
