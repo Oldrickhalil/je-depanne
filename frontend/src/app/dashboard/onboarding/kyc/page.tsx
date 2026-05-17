@@ -19,10 +19,10 @@ export default function KYCPage() {
   // Redirection automatique si déjà vérifié
   useEffect(() => {
     const user = session?.user as any;
-    if (user?.kycVerified) {
+    if (user?.kycVerified && step !== 3) {
       router.replace("/dashboard/onboarding/deposit");
     }
-  }, [session, router]);
+  }, [session, router, step]);
 
   const [files, setFiles] = useState<{
     recto: File | null;
@@ -101,24 +101,25 @@ export default function KYCPage() {
       });
 
       if (res.ok) {
-        await update({ ...session, user: { ...session?.user, kycVerified: true } });
         setStep(3);
-        setTimeout(() => {
+        // Wait for animation before updating session/redirecting
+        setTimeout(async () => {
+          await update({ ...session, user: { ...session?.user, kycVerified: true } });
           router.push("/dashboard/onboarding/deposit");
         }, 2500);
       } else {
         const errorData = await res.json();
-        alert(errorData.message || "Une erreur est survenue.");
+        alert(errorData.message || "Une erreur est survenue lors de l'envoi.");
       }
     } catch (error) {
       console.error("KYC error:", error);
-      alert("Une erreur est survenue lors de la vérification.");
+      alert("Erreur de connexion au serveur.");
     } finally {
       setLoading(false);
     }
   };
 
-  if ((session?.user as any)?.kycVerified) return null;
+  if ((session?.user as any)?.kycVerified && step !== 3) return null;
 
   return (
     <div className="min-h-[80vh] flex flex-col items-center justify-center p-4">
@@ -177,7 +178,7 @@ export default function KYCPage() {
                       required
                       value={formData.birthDate}
                       onChange={(e) => setFormData({ ...formData, birthDate: e.target.value })}
-                      className="w-full h-[48px] bg-background border border-card-border rounded-xl px-4 py-3 text-[12px] text-foreground focus:outline-none focus:border-primary/50 transition-colors"
+                      className="w-full h-12 bg-background border border-card-border rounded-xl px-4 text-[13px] text-foreground focus:outline-none focus:border-primary/50 transition-all box-border"
                     />
                   </div>
                   <div className="space-y-1">
@@ -191,7 +192,7 @@ export default function KYCPage() {
                             setPreviews(prev => ({ ...prev, verso: null }));
                         }
                       }}
-                      className="w-full h-[48px] bg-background border border-card-border rounded-xl px-4 py-3 text-[12px] text-foreground focus:outline-none focus:border-primary/50 transition-colors appearance-none"
+                      className="w-full h-12 bg-background border border-card-border rounded-xl px-4 text-[13px] text-foreground focus:outline-none focus:border-primary/50 transition-all appearance-none box-border"
                     >
                       <option value="passport">Passeport</option>
                       <option value="id_card">Carte d'ID</option>
@@ -206,11 +207,12 @@ export default function KYCPage() {
                   required
                   value={formData.address}
                   onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                  className="w-full bg-background border border-card-border rounded-xl px-4 py-3 text-xs text-foreground focus:outline-none focus:border-primary/50 transition-colors"
+                  className="w-full h-12 bg-background border border-card-border rounded-xl px-4 text-xs text-foreground focus:outline-none focus:border-primary/50 transition-all box-border"
                   placeholder="Rue, Code Postal, Ville"
                 />
               </div>
 
+              {/* Justificatif de domicile */}
               <div className="space-y-2">
                  <label className="text-[10px] font-black text-muted-text uppercase tracking-widest ml-1">Justificatif de domicile</label>
                  <input type="file" hidden ref={addressInputRef} accept="image/*,application/pdf" onChange={(e) => handleFileChange(e, 'addressProof')} />
@@ -232,6 +234,7 @@ export default function KYCPage() {
                  </div>
               </div>
 
+              {/* Upload Section ID */}
               <div className="space-y-2">
                 <label className="text-[10px] font-black text-muted-text uppercase tracking-widest ml-1">Identité ({formData.idType === 'id_card' ? 'Recto/Verso' : 'Recto'})</label>
                 <div className={`grid ${formData.idType === 'id_card' ? 'grid-cols-2' : 'grid-cols-1'} gap-3`}>
@@ -277,9 +280,9 @@ export default function KYCPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-5 bg-primary text-white font-black rounded-2xl hover:opacity-90 transition-all disabled:opacity-50 uppercase text-[10px] tracking-[0.2em] shadow-lg shadow-primary/20"
+              className="w-full py-5 bg-primary text-white font-black rounded-2xl hover:opacity-90 transition-all disabled:opacity-50 uppercase text-[10px] tracking-[0.2em] shadow-lg shadow-primary/20 flex items-center justify-center"
             >
-              {loading ? <Loader2 className="animate-spin mx-auto" size={18} /> : "Finaliser la vérification"}
+              {loading ? <Loader2 className="animate-spin" size={18} /> : "Finaliser la vérification"}
             </button>
           </form>
         )}
