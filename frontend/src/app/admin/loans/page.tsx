@@ -489,7 +489,7 @@ export default function AdminDashboard() {
 
       {/* ULTRA PREMIUM Glass Bottom Nav - Admin Version */}
       <div className="fixed bottom-8 left-1/2 -translate-x-1/2 w-[92%] max-w-[440px] z-50">
-        <nav className="relative glass-dark rounded-[2.5rem] p-2 flex items-center justify-around shadow-[0_20px_50px_rgba(0,0,0,0.6)] border border-white/10 overflow-hidden">
+        <nav className="relative bg-[#0c0c0c] backdrop-blur-3xl rounded-[2.5rem] p-2 flex items-center justify-around shadow-[0_20px_50px_rgba(0,0,0,0.8)] border border-white/10 overflow-hidden">
           {/* Active indicator background effect */}
           <div className="absolute inset-0 bg-gradient-to-r from-amber-500/5 via-transparent to-amber-500/5 pointer-events-none"></div>
           
