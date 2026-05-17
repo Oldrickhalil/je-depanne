@@ -19,10 +19,12 @@ import {
   Banknote,
   Settings,
   LogOut,
-  User
+  User,
+  BellRing
 } from "lucide-react";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
+import PushNotificationPrompt from "@/components/dashboard/PushNotificationPrompt";
 
 type Transaction = {
   id: string;
@@ -122,10 +124,15 @@ export default function AdminDashboard() {
       const transData = await transRes.json();
       const settingsData = await settingsRes.json();
       
-      setLoans(loansData);
-      setUsers(usersData);
-      setTransactions(transData);
-      setSystemSettings(settingsData);
+      setLoans(loansData || []);
+      setUsers(usersData || []);
+      setTransactions(transData || []);
+      setSystemSettings(settingsData || {
+        interestRate: 0.03,
+        welcomeBonus: 80,
+        minDeposit: 20,
+        maintenanceMode: false
+      });
     } catch (err) {
       console.error("Fetch error:", err);
     } finally {
@@ -226,55 +233,26 @@ export default function AdminDashboard() {
   const pendingWithdrawals = transactions.filter(t => t.type === 'WITHDRAWAL' && t.status === 'PENDING');
 
   return (
-    <div className="min-h-screen bg-background text-foreground p-6 md:p-12 font-sans pb-32">
-      <div className="max-w-6xl mx-auto space-y-10">
+    <div className="min-h-screen bg-background text-foreground p-4 md:p-12 font-sans pb-32">
+      <div className="max-w-6xl mx-auto space-y-8">
         
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+        {/* Header - Simple and Clean */}
+        <div className="flex items-center justify-between mt-2">
            <div className="space-y-1">
-              <Link href="/dashboard" className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.3em] text-muted-text hover:text-foreground transition-colors mb-4">
-                 <ArrowLeft size={12} /> Retour
-              </Link>
-              <h1 className="text-4xl font-title font-bold tight-tracking uppercase">
+              <h1 className="text-3xl font-title font-bold tight-tracking uppercase">
                  Console <span className="text-amber-500">Admin</span>
               </h1>
+              <p className="text-[9px] text-muted-text font-black uppercase tracking-[0.3em]">
+                {view === 'loans' ? 'Gestion des Prêts' : (view === 'users' ? 'Base Utilisateurs' : (view === 'withdrawals' ? 'Demandes de Retraits' : 'Paramètres Système'))}
+              </p>
            </div>
 
-           <div className="flex items-center gap-4">
-              <div className="flex bg-card p-1 rounded-2xl border border-card-border overflow-x-auto scrollbar-hide">
-                <button 
-                  onClick={() => setView('loans')}
-                  className={`px-4 py-2.5 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all shrink-0 ${view === 'loans' ? 'bg-amber-500 text-black shadow-lg shadow-amber-500/20' : 'text-muted-text hover:text-foreground'}`}
-                >
-                  Prêts
-                </button>
-                <button 
-                  onClick={() => setView('withdrawals')}
-                  className={`px-4 py-2.5 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all shrink-0 relative ${view === 'withdrawals' ? 'bg-amber-500 text-black shadow-lg shadow-amber-500/20' : 'text-muted-text hover:text-foreground'}`}
-                >
-                  Retraits {pendingWithdrawals.length > 0 && <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[8px] flex items-center justify-center rounded-full animate-pulse font-black">{pendingWithdrawals.length}</span>}
-                </button>
-                <button 
-                  onClick={() => setView('users')}
-                  className={`px-4 py-2.5 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all shrink-0 ${view === 'users' ? 'bg-amber-500 text-black shadow-lg shadow-amber-500/20' : 'text-muted-text hover:text-foreground'}`}
-                >
-                  Utilisateurs
-                </button>
-                <button 
-                  onClick={() => setView('settings')}
-                  className={`px-4 py-2.5 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all shrink-0 ${view === 'settings' ? 'bg-amber-500 text-black shadow-lg shadow-amber-500/20' : 'text-muted-text hover:text-foreground'}`}
-                >
-                  Paramètres
-                </button>
-              </div>
-
-              <button 
-                onClick={() => signOut({ callbackUrl: "/login" })}
-                className="w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-500 hover:bg-red-500 hover:text-white transition-all shadow-lg shrink-0"
-              >
-                 <LogOut size={18} />
-              </button>
-           </div>
+           <button 
+             onClick={() => signOut({ callbackUrl: "/login" })}
+             className="w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-500 hover:bg-red-500 hover:text-white transition-all shadow-sm"
+           >
+              <LogOut size={18} />
+           </button>
         </div>
 
         {/* Global Stats */}
@@ -285,11 +263,11 @@ export default function AdminDashboard() {
              { label: "Dépôts Total", val: `${users.reduce((acc, curr) => acc + (curr.wallet?.balance || 0), 0)} €`, icon: Wallet, color: "text-green-500" },
              { label: "Retraits Attente", val: pendingWithdrawals.length, icon: Clock, color: "text-amber-500" }
            ].map((stat, i) => (
-             <div key={i} className="bg-card border border-card-border p-6 rounded-[2rem] space-y-3">
+             <div key={i} className="bg-card border border-card-border p-5 rounded-[2rem] space-y-3 shadow-sm">
                 <stat.icon size={16} className={stat.color} />
                 <div>
                    <p className="text-[8px] font-black uppercase tracking-widest text-muted-text">{stat.label}</p>
-                   <p className="text-2xl font-black tracking-tighter text-foreground">{stat.val}</p>
+                   <p className="text-xl font-black tracking-tighter text-foreground">{stat.val}</p>
                 </div>
              </div>
            ))}
@@ -297,22 +275,17 @@ export default function AdminDashboard() {
 
         {/* Content Table */}
         <div className="space-y-6">
-           <div className="flex items-center justify-between border-b border-card-border pb-6 gap-4">
-              <h3 className="font-title font-bold text-lg tracking-widest uppercase shrink-0 text-foreground">
-                {view === 'loans' ? 'Demandes de Prêts' : (view === 'users' ? 'Base Utilisateurs' : (view === 'withdrawals' ? 'Demandes de Retraits' : 'Configuration Système'))}
-              </h3>
-              {view !== 'settings' && (
-                <div className="relative w-full max-w-xs">
-                   <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-text" size={14} />
-                   <input 
-                     value={search}
-                     onChange={(e) => setSearch(e.target.value)}
-                     placeholder="Rechercher..." 
-                     className="bg-card border border-card-border rounded-full py-2.5 pl-10 pr-6 text-[10px] font-bold uppercase tracking-widest focus:outline-none focus:ring-1 focus:ring-primary/50 transition-all w-full text-foreground"
-                   />
-                </div>
-              )}
-           </div>
+           {view !== 'settings' && (
+             <div className="relative w-full animate-in fade-in slide-in-from-top-2 duration-500">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-text" size={14} />
+                <input 
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Rechercher un dossier..." 
+                  className="bg-card border border-card-border rounded-2xl py-4 pl-10 pr-6 text-[10px] font-bold uppercase tracking-widest focus:outline-none focus:ring-1 focus:ring-primary/50 transition-all w-full text-foreground shadow-sm"
+                />
+             </div>
+           )}
 
            {loading ? (
              <div className="flex justify-center py-20"><Loader2 className="animate-spin text-primary" size={40} /></div>
@@ -433,9 +406,18 @@ export default function AdminDashboard() {
                  )
                ) : (
                  /* Settings View */
-                 <div className="max-w-2xl mx-auto animate-in slide-in-from-bottom-4 duration-500">
+                 <div className="space-y-8 animate-in slide-in-from-bottom-4 duration-500">
+                    <div className="bg-gradient-to-br from-amber-500/10 to-transparent border border-amber-500/20 rounded-[2.5rem] p-8 space-y-4">
+                       <div className="flex items-center gap-3">
+                          <BellRing className="text-amber-500" size={20} />
+                          <h3 className="font-title font-bold text-lg tracking-widest uppercase text-foreground">Alertes Admin</h3>
+                       </div>
+                       <p className="text-[10px] text-muted-text font-bold uppercase tracking-widest leading-relaxed">Activez les notifications pour être alerté en temps réel dès qu'un utilisateur effectue un dépôt ou une demande de retrait.</p>
+                       <PushNotificationPrompt />
+                    </div>
+
                     <form onSubmit={handleUpdateSettings} className="space-y-6">
-                       <div className="bg-card border border-card-border rounded-[2.5rem] p-8 space-y-8">
+                       <div className="bg-card border border-card-border rounded-[2.5rem] p-8 space-y-8 shadow-sm">
                           <div className="space-y-1 border-b border-card-border pb-6">
                              <h3 className="font-title font-bold text-lg tracking-widest uppercase text-foreground">Configuration Système</h3>
                              <p className="text-[10px] text-muted-text font-bold uppercase tracking-widest">Pilotez les règles de la plateforme</p>
@@ -449,7 +431,7 @@ export default function AdminDashboard() {
                                    step="0.01"
                                    value={settings.interestRate}
                                    onChange={(e) => setSystemSettings({...settings, interestRate: parseFloat(e.target.value)})}
-                                   className="w-full bg-background border border-card-border rounded-2xl px-4 py-4 text-sm font-bold text-foreground focus:outline-none focus:border-amber-500/50 transition-colors"
+                                   className="w-full bg-background border border-card-border rounded-2xl px-4 py-4 text-sm font-bold text-foreground focus:outline-none focus:border-amber-500/50 transition-colors shadow-inner"
                                 />
                              </div>
                              <div className="space-y-2">
@@ -458,7 +440,7 @@ export default function AdminDashboard() {
                                    type="number" 
                                    value={settings.welcomeBonus}
                                    onChange={(e) => setSystemSettings({...settings, welcomeBonus: parseFloat(e.target.value)})}
-                                   className="w-full bg-background border border-card-border rounded-2xl px-4 py-4 text-sm font-bold text-foreground focus:outline-none focus:border-amber-500/50 transition-colors"
+                                   className="w-full bg-background border border-card-border rounded-2xl px-4 py-4 text-sm font-bold text-foreground focus:outline-none focus:border-amber-500/50 transition-colors shadow-inner"
                                 />
                              </div>
                              <div className="space-y-2">
@@ -467,10 +449,10 @@ export default function AdminDashboard() {
                                    type="number" 
                                    value={settings.minDeposit}
                                    onChange={(e) => setSystemSettings({...settings, minDeposit: parseFloat(e.target.value)})}
-                                   className="w-full bg-background border border-card-border rounded-2xl px-4 py-4 text-sm font-bold text-foreground focus:outline-none focus:border-amber-500/50 transition-colors"
+                                   className="w-full bg-background border border-card-border rounded-2xl px-4 py-4 text-sm font-bold text-foreground focus:outline-none focus:border-amber-500/50 transition-colors shadow-inner"
                                 />
                              </div>
-                             <div className="flex items-center justify-between p-4 bg-background border border-card-border rounded-2xl">
+                             <div className="flex items-center justify-between p-4 bg-background border border-card-border rounded-2xl shadow-inner">
                                 <div>
                                    <p className="text-[10px] font-black text-muted-text uppercase tracking-widest">Mode Maintenance</p>
                                    <p className="text-xs font-bold text-foreground">{settings.maintenanceMode ? 'Activé' : 'Désactivé'}</p>
@@ -505,6 +487,54 @@ export default function AdminDashboard() {
         </div>
       </div>
 
+      {/* Bottom Navigation - Native App Style */}
+      <nav className="fixed bottom-0 left-0 w-full bg-card/80 backdrop-blur-xl border-t border-card-border px-4 py-4 z-50 flex items-center justify-around shadow-[0_-10px_40px_rgba(0,0,0,0.3)] safe-area-bottom">
+         <button 
+           onClick={() => setView('loans')}
+           className={`flex flex-col items-center gap-1.5 transition-all min-w-[64px] ${view === 'loans' ? 'text-amber-500 scale-110' : 'text-muted-text'}`}
+         >
+            <div className={`p-2 rounded-xl transition-colors ${view === 'loans' ? 'bg-amber-500/10' : ''}`}>
+               <Zap size={20} fill={view === 'loans' ? 'currentColor' : 'none'} />
+            </div>
+            <span className="text-[8px] font-black uppercase tracking-widest">Prêts</span>
+         </button>
+
+         <button 
+           onClick={() => setView('withdrawals')}
+           className={`flex flex-col items-center gap-1.5 transition-all min-w-[64px] relative ${view === 'withdrawals' ? 'text-amber-500 scale-110' : 'text-muted-text'}`}
+         >
+            <div className={`p-2 rounded-xl transition-colors ${view === 'withdrawals' ? 'bg-amber-500/10' : ''}`}>
+               <Banknote size={20} fill={view === 'withdrawals' ? 'currentColor' : 'none'} />
+            </div>
+            <span className="text-[8px] font-black uppercase tracking-widest">Retraits</span>
+            {pendingWithdrawals.length > 0 && (
+               <span className="absolute top-1 right-2 w-4 h-4 bg-red-500 text-white text-[8px] flex items-center justify-center rounded-full font-black animate-pulse shadow-lg border border-background">
+                  {pendingWithdrawals.length}
+               </span>
+            )}
+         </button>
+
+         <button 
+           onClick={() => setView('users')}
+           className={`flex flex-col items-center gap-1.5 transition-all min-w-[64px] ${view === 'users' ? 'text-amber-500 scale-110' : 'text-muted-text'}`}
+         >
+            <div className={`p-2 rounded-xl transition-colors ${view === 'users' ? 'bg-amber-500/10' : ''}`}>
+               <Users size={20} fill={view === 'users' ? 'currentColor' : 'none'} />
+            </div>
+            <span className="text-[8px] font-black uppercase tracking-widest">Clients</span>
+         </button>
+
+         <button 
+           onClick={() => setView('settings')}
+           className={`flex flex-col items-center gap-1.5 transition-all min-w-[64px] ${view === 'settings' ? 'text-amber-500 scale-110' : 'text-muted-text'}`}
+         >
+            <div className={`p-2 rounded-xl transition-colors ${view === 'settings' ? 'bg-amber-500/10' : ''}`}>
+               <Settings size={20} fill={view === 'settings' ? 'currentColor' : 'none'} />
+            </div>
+            <span className="text-[8px] font-black uppercase tracking-widest">Réglages</span>
+         </button>
+      </nav>
+
       {/* KYC Modal */}
       {selectedKycUser && (
         <div className="fixed inset-0 z-[100] bg-background/90 backdrop-blur-xl flex items-center justify-center p-4 h-[100dvh] w-screen">
@@ -523,7 +553,7 @@ export default function AdminDashboard() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                <div className="space-y-6">
-                  <div className="bg-background p-6 rounded-3xl border border-card-border space-y-4">
+                  <div className="bg-background p-6 rounded-3xl border border-card-border space-y-4 shadow-inner">
                      <p className="text-[9px] font-black uppercase tracking-widest text-muted-text">Informations Déclarées</p>
                      <div>
                         <p className="text-[10px] text-muted-text uppercase tracking-widest">Document</p>
@@ -550,17 +580,6 @@ export default function AdminDashboard() {
                         <CheckCircle2 size={20} /> Approuver le dossier
                      </button>
                   )}
-                  {selectedKycUser.kycVerified && (
-                     <button 
-                        onClick={() => {
-                           updateKycStatus(selectedKycUser.id, false);
-                           setSelectedKycUser(null);
-                        }}
-                        className="w-full py-5 bg-red-500/10 text-red-500 border border-red-500/20 font-black rounded-2xl hover:bg-red-500 hover:text-white transition-all uppercase text-xs tracking-widest flex items-center justify-center gap-2"
-                     >
-                        <XCircle size={20} /> Révoquer le statut
-                     </button>
-                  )}
                </div>
 
                <div className="col-span-2 space-y-6">
@@ -570,15 +589,8 @@ export default function AdminDashboard() {
                            <ShieldCheck size={16} className="text-primary" />
                            <p className="text-xs font-black uppercase tracking-widest text-foreground">Justificatif de Domicile</p>
                         </div>
-                        <div className="aspect-[21/9] relative rounded-[2rem] overflow-hidden border border-card-border bg-background group">
-                           {selectedKycUser.kycAddressProof.startsWith('data:image') || selectedKycUser.kycAddressProof.startsWith('http') ? (
-                              <img src={selectedKycUser.kycAddressProof} alt="Domicile" className="w-full h-full object-cover group-hover:object-contain transition-all duration-300" />
-                           ) : (
-                              <div className="w-full h-full flex flex-col items-center justify-center gap-2 text-muted-text">
-                                 <FileText size={32} />
-                                 <span className="text-[10px] font-bold uppercase tracking-widest">Document PDF / Autre</span>
-                              </div>
-                           )}
+                        <div className="aspect-[21/9] relative rounded-[2rem] overflow-hidden border border-card-border bg-background group shadow-inner">
+                           <img src={selectedKycUser.kycAddressProof} alt="Domicile" className="w-full h-full object-cover group-hover:object-contain transition-all duration-300" />
                         </div>
                      </div>
                   )}
@@ -588,19 +600,8 @@ export default function AdminDashboard() {
                            <ShieldCheck size={16} className="text-primary" />
                            <p className="text-xs font-black uppercase tracking-widest text-foreground">Pièce d'Identité ({selectedKycUser.idType === 'passport' ? 'Page Info' : 'Recto'})</p>
                         </div>
-                        <div className="aspect-[16/10] relative rounded-[2rem] overflow-hidden border border-card-border bg-background group">
+                        <div className="aspect-[16/10] relative rounded-[2rem] overflow-hidden border border-card-border bg-background group shadow-inner">
                            <img src={selectedKycUser.kycRecto} alt="Recto" className="w-full h-full object-cover group-hover:object-contain transition-all duration-300" />
-                        </div>
-                     </div>
-                  )}
-                  {selectedKycUser.kycVerso && (
-                     <div className="space-y-3">
-                        <div className="flex items-center gap-2">
-                           <ShieldCheck size={16} className="text-primary" />
-                           <p className="text-xs font-black uppercase tracking-widest text-foreground">Pièce d'Identité (Verso)</p>
-                        </div>
-                        <div className="aspect-[16/10] relative rounded-[2rem] overflow-hidden border border-card-border bg-background group">
-                           <img src={selectedKycUser.kycVerso} alt="Verso" className="w-full h-full object-cover group-hover:object-contain transition-all duration-300" />
                         </div>
                      </div>
                   )}
@@ -628,57 +629,13 @@ export default function AdminDashboard() {
 
             <div className="space-y-6">
                <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-background p-4 rounded-2xl border border-card-border">
+                  <div className="bg-background p-4 rounded-2xl border border-card-border shadow-inner">
                      <p className="text-[9px] text-muted-text uppercase tracking-widest font-bold">Montant Demandé</p>
                      <p className="text-2xl font-black text-primary">{selectedLoan.amount} €</p>
                   </div>
-                  <div className="bg-background p-4 rounded-2xl border border-card-border">
+                  <div className="bg-background p-4 rounded-2xl border border-card-border shadow-inner">
                      <p className="text-[9px] text-muted-text uppercase tracking-widest font-bold">Durée & Taux</p>
                      <p className="text-lg font-black text-foreground">{selectedLoan.termMonths} mois <span className="text-xs text-muted-text font-medium">@ 3%</span></p>
-                  </div>
-               </div>
-
-               {(selectedLoan.status === 'APPROVED' || selectedLoan.status === 'PAID_BACK') && (
-                  <div className="bg-background p-6 rounded-3xl border border-card-border space-y-4">
-                     <div className="flex justify-between items-end">
-                        <div>
-                           <p className="text-[10px] font-black uppercase tracking-widest text-green-500 mb-1">Remboursement</p>
-                           <p className="text-2xl font-black text-foreground">{selectedLoan.amountRepaid?.toFixed(2) || "0.00"} € <span className="text-sm text-muted-text">/ {(selectedLoan.amount * 1.03).toFixed(2)} €</span></p>
-                        </div>
-                        <span className={`text-[8px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full ${selectedLoan.status === 'PAID_BACK' ? 'bg-green-500/10 text-green-500' : 'bg-primary/10 text-primary'}`}>
-                           {selectedLoan.status === 'PAID_BACK' ? 'Soldé' : 'En cours'}
-                        </span>
-                     </div>
-                     <div className="w-full bg-white/5 h-2 rounded-full overflow-hidden">
-                        <div className="h-full bg-green-500 transition-all duration-1000" style={{ width: `${Math.min(((selectedLoan.amountRepaid || 0) / (selectedLoan.amount * 1.03)) * 100, 100)}%` }}></div>
-                     </div>
-                  </div>
-               )}
-
-               <div className="bg-background p-6 rounded-3xl border border-card-border space-y-4">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-primary mb-2 flex items-center gap-2"><FileText size={14}/> Informations Complémentaires</p>
-                  
-                  <div className="grid grid-cols-2 gap-y-4 gap-x-2 text-left">
-                     <div>
-                        <p className="text-[9px] text-muted-text uppercase tracking-widest">État Civil</p>
-                        <p className="text-sm font-bold text-foreground capitalize">{selectedLoan.maritalStatus === 'single' ? 'Célibataire' : selectedLoan.maritalStatus === 'married' ? 'Marié(e) / Pacsé(e)' : selectedLoan.maritalStatus === 'divorced' ? 'Divorcé(e)' : selectedLoan.maritalStatus === 'widowed' ? 'Veuf/Veuve' : 'Non renseigné'}</p>
-                     </div>
-                     <div>
-                        <p className="text-[9px] text-muted-text uppercase tracking-widest">Situation Pro.</p>
-                        <p className="text-sm font-bold text-foreground capitalize">{selectedLoan.employmentStatus === 'employed' ? 'Salarié(e)' : selectedLoan.employmentStatus === 'self_employed' ? 'Indépendant(e)' : selectedLoan.employmentStatus === 'unemployed' ? 'Sans emploi' : selectedLoan.employmentStatus === 'student' ? 'Étudiant(e)' : selectedLoan.employmentStatus === 'retired' ? 'Retraité(e)' : 'Non renseigné'}</p>
-                     </div>
-                     <div>
-                        <p className="text-[9px] text-muted-text uppercase tracking-widest">Revenus Mensuels</p>
-                        <p className="text-sm font-bold text-foreground">{selectedLoan.monthlyIncome ? `${selectedLoan.monthlyIncome} €` : 'Non renseigné'}</p>
-                     </div>
-                     <div>
-                        <p className="text-[9px] text-muted-text uppercase tracking-widest">Crédits en cours</p>
-                        <p className="text-sm font-bold text-foreground">{selectedLoan.hasExistingCredits ? 'Oui' : 'Non'}</p>
-                     </div>
-                     <div className="col-span-2">
-                        <p className="text-[9px] text-muted-text uppercase tracking-widest">Motif du prêt</p>
-                        <p className="text-sm font-bold text-foreground capitalize">{selectedLoan.loanPurpose === 'emergency' ? 'Urgence' : selectedLoan.loanPurpose === 'purchase' ? 'Achat / Consommation' : selectedLoan.loanPurpose === 'travel' ? 'Voyage' : selectedLoan.loanPurpose === 'auto' ? 'Réparation Auto' : selectedLoan.loanPurpose === 'other' ? 'Autre' : 'Non renseigné'}</p>
-                     </div>
                   </div>
                </div>
 

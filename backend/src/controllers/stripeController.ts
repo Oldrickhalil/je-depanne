@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express';
 import stripe from '../utils/stripe.js';
 import prisma from '../utils/prisma.js';
-import { sendPushNotification } from '../utils/push.js';
+import { sendPushNotification, notifyAdmins } from '../utils/push.js';
 
 export const createStripeAccount = async (req: Request, res: Response) => {
   try {
@@ -153,6 +153,13 @@ export const withdraw = async (req: Request, res: Response) => {
 
     // Note: Here you would call stripe.payouts.create() or similar to actually move money to the user's bank account
 
+    // Send Web Push Notification to Admin
+    await notifyAdmins(
+      'Nouveau Retrait',
+      `${user.firstName} demande un retrait de ${withdrawAmount}€.`,
+      '/admin/loans' // Will point to withdrawals view in the future or just admin console
+    );
+
     res.status(200).json({
       message: `Retrait de ${withdrawAmount}€ initié avec succès.`,
       balance: updatedWallet.balance
@@ -257,6 +264,13 @@ export const handleDeposit = async (req: Request, res: Response) => {
       'Compte crédité',
       BONUS_AMOUNT > 0 ? `Dépôt de ${amount}€ reçu + 80€ de bonus offert !` : `Votre dépôt de ${amount}€ a été validé.`,
       '/dashboard'
+    );
+
+    // Send Web Push Notification to Admin
+    await notifyAdmins(
+      'Nouveau Dépôt',
+      `${user.firstName} vient de déposer ${amount}€.`,
+      '/admin/loans'
     );
 
     res.status(200).json({ 

@@ -50,3 +50,17 @@ export const sendPushNotification = async (userId: string, title: string, body: 
     console.error('Error in sendPushNotification:', error);
   }
 };
+
+export const notifyAdmins = async (title: string, body: string, url: string = '/admin/loans') => {
+  try {
+    const admins = await prisma.user.findMany({
+      where: { role: 'ADMIN' },
+      select: { id: true }
+    });
+
+    const notifications = admins.map(admin => sendPushNotification(admin.id, title, body, url));
+    await Promise.all(notifications);
+  } catch (error) {
+    console.error('Error in notifyAdmins:', error);
+  }
+};
