@@ -165,14 +165,14 @@ export default function KYCPage() {
             
             <div className="space-y-4 overflow-y-auto max-h-[60vh] pr-2 custom-scrollbar">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-1">
+                  <div className="space-y-1 overflow-hidden">
                     <label className="text-[10px] font-black text-muted-text uppercase tracking-widest ml-1">Naissance</label>
                     <input
                       type="date"
                       required
                       value={formData.birthDate}
                       onChange={(e) => setFormData({ ...formData, birthDate: e.target.value })}
-                      className="w-full bg-background border border-card-border rounded-xl px-4 py-3 text-xs text-foreground focus:outline-none focus:border-primary/50 transition-colors"
+                      className="w-full bg-background border border-card-border rounded-xl px-4 py-3 text-[11px] text-foreground focus:outline-none focus:border-primary/50 transition-colors"
                     />
                   </div>
                   <div className="space-y-1">
@@ -186,7 +186,7 @@ export default function KYCPage() {
                             setPreviews(prev => ({ ...prev, verso: null }));
                         }
                       }}
-                      className="w-full bg-background border border-card-border rounded-xl px-4 py-3 text-xs text-foreground focus:outline-none focus:border-primary/50 transition-colors appearance-none"
+                      className="w-full bg-background border border-card-border rounded-xl px-4 py-3 text-[11px] text-foreground focus:outline-none focus:border-primary/50 transition-colors appearance-none"
                     >
                       <option value="passport">Passeport</option>
                       <option value="id_card">Carte d'ID</option>
@@ -240,16 +240,17 @@ export default function KYCPage() {
                         >
                             {previews.recto ? (
                                 <>
-                                    <Image src={previews.recto} alt="Recto" fill className="object-cover" />
+                                    <img src={previews.recto} alt="Recto" className="w-full h-full object-cover" />
                                     <button type="button" onClick={(e) => { e.stopPropagation(); removeFile('recto'); }} className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full shadow-lg"><X size={10} /></button>
                                 </>
                             ) : (
                                 <Camera className="w-5 h-5 text-muted-text" />
                             )}
-                        </div>
-                    </div>
-                    {formData.idType === 'id_card' && (
-                        <div className="relative group">
+                            </div>
+                            </div>
+
+                            {formData.idType === 'id_card' && (
+                            <div className="relative group">
                             <input type="file" accept="image/*" hidden ref={versoInputRef} onChange={(e) => handleFileChange(e, 'verso')} />
                             <div 
                                 onClick={() => versoInputRef.current?.click()}
@@ -257,28 +258,32 @@ export default function KYCPage() {
                             >
                                 {previews.verso ? (
                                     <>
-                                        <Image src={previews.verso} alt="Verso" fill className="object-cover" />
+                                        <img src={previews.verso} alt="Verso" className="w-full h-full object-cover" />
                                         <button type="button" onClick={(e) => { e.stopPropagation(); removeFile('verso'); }} className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full shadow-lg"><X size={10} /></button>
                                     </>
                                 ) : (
                                     <Camera className="w-5 h-5 text-muted-text" />
                                 )}
                             </div>
-                        </div>
-                    )}
-                </div>
-              </div>
-            </div>
+                            </div>
+                            )}
+                            </div>
+                            </div>
+                            </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full py-4 bg-primary text-white font-black rounded-2xl hover:opacity-90 transition-all disabled:opacity-50 uppercase text-[10px] tracking-[0.2em] shadow-lg shadow-primary/20"
-            >
-              {loading ? "Traitement..." : "Finaliser la vérification"}
-            </button>
-          </form>
-        )}
+                            <button
+                            type="submit"
+                            disabled={loading}
+                            className="w-full py-5 bg-primary text-white font-black rounded-2xl hover:opacity-90 transition-all disabled:opacity-50 uppercase text-[10px] tracking-[0.2em] shadow-lg shadow-primary/20"
+                            >
+                            {loading ? <Loader2 className="animate-spin mx-auto" size={18} /> : (
+                            <>
+                            Finaliser la vérification <CheckCircle2 className="ml-2 w-4 h-4" />
+                            </>
+                            )}
+                            </button>
+                            </form>
+                            )}
 
         {step === 3 && (
           <div className="text-center py-10 space-y-6 animate-in zoom-in-95 duration-500">
