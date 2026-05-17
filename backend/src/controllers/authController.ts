@@ -87,7 +87,7 @@ export const verifyEmail = async (req: Request, res: Response) => {
     const { token } = req.query;
 
     if (!token) {
-      return res.status(400).send('<h1>Erreur</h1><p>Jeton de vérification manquant.</p>');
+      return res.status(400).json({ message: 'Jeton de vérification manquant.' });
     }
 
     const user = await prisma.user.findFirst({
@@ -100,7 +100,7 @@ export const verifyEmail = async (req: Request, res: Response) => {
     });
 
     if (!user) {
-      return res.status(400).send('<h1>Lien invalide</h1><p>Le lien de vérification est invalide ou a expiré.</p>');
+      return res.status(400).json({ message: 'Le lien est invalide ou a expiré.' });
     }
 
     await prisma.user.update({
@@ -112,18 +112,10 @@ export const verifyEmail = async (req: Request, res: Response) => {
       }
     });
 
-    // Success response - Redirect to login
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-    res.send(`
-      <div style="font-family: sans-serif; text-align: center; padding: 50px;">
-        <h1 style="color: #34A853;">E-mail vérifié avec succès !</h1>
-        <p>Votre compte est maintenant activé. Vous pouvez vous connecter à l'application.</p>
-        <a href="${appUrl}/login" style="background-color: #5120B3; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block; margin-top: 20px;">Aller à la connexion</a>
-      </div>
-    `);
+    res.status(200).json({ message: 'E-mail vérifié avec succès.' });
   } catch (error) {
     console.error(error);
-    res.status(500).send('<h1>Erreur</h1><p>Une erreur est survenue lors de la vérification de l\'email.</p>');
+    res.status(500).json({ message: 'Une erreur est survenue lors de la vérification.' });
   }
 };
 
@@ -160,7 +152,7 @@ export const resendVerification = async (req: Request, res: Response) => {
     // Send email via Resend
     try {
       const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-      const verificationLink = `${appUrl}/api/auth/verify-email?token=${verificationToken}`;
+      const verificationLink = `${appUrl}/verify-email?token=${verificationToken}`;
       const fromEmail = process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev';
 
       await resend.emails.send({
