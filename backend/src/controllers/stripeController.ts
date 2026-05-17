@@ -123,12 +123,12 @@ export const withdraw = async (req: Request, res: Response) => {
       }
     });
 
-    // Create Transaction
+    // Create Transaction (PENDING for admin approval)
     await prisma.transaction.create({
       data: {
         amount: withdrawAmount,
         type: 'WITHDRAWAL',
-        status: 'COMPLETED', // In a real app this might be PENDING until confirmed by Stripe
+        status: 'PENDING',
         wallet: { connect: { id: user.wallet.id } }
       }
     });
@@ -137,8 +137,8 @@ export const withdraw = async (req: Request, res: Response) => {
     await prisma.notification.create({
       data: {
         userId,
-        title: 'Retrait en cours',
-        message: `Votre demande de retrait de ${withdrawAmount}€ vers le compte ${bankName} a été initiée avec succès.`,
+        title: 'Retrait en attente',
+        message: `Votre demande de retrait de ${withdrawAmount}€ a été reçue. Elle est en attente de validation par notre service financier.`,
         type: 'INFO'
       }
     });
@@ -146,8 +146,8 @@ export const withdraw = async (req: Request, res: Response) => {
     // Send Web Push Notification
     await sendPushNotification(
       userId,
-      'Retrait initié',
-      `Votre retrait de ${withdrawAmount}€ est en cours.`,
+      'Retrait en attente',
+      `Votre retrait de ${withdrawAmount}€ est en attente de validation.`,
       '/dashboard/transactions'
     );
 
