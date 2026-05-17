@@ -3,8 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { ShieldCheck, Upload, ArrowRight, CheckCircle2, Camera, X, FileText, Check, MapPin, Loader2 } from "lucide-react";
-import Image from "next/image";
+import { ShieldCheck, ArrowRight, CheckCircle2, Camera, X, FileText, Check, MapPin, Loader2 } from "lucide-react";
 
 export default function KYCPage() {
   const { data: session, update } = useSession();
@@ -70,15 +69,15 @@ export default function KYCPage() {
     e.preventDefault();
     
     // Validation
-    if (!files.recto) {
+    if (!previews.recto) {
         alert("Veuillez uploader le recto de votre document d'identité.");
         return;
     }
-    if (formData.idType === 'id_card' && !files.verso) {
+    if (formData.idType === 'id_card' && !previews.verso) {
         alert("Veuillez uploader le verso de votre carte d'identité.");
         return;
     }
-    if (!files.addressProof) {
+    if (!previews.addressProof) {
         alert("Veuillez uploader un justificatif de domicile.");
         return;
     }
@@ -86,11 +85,14 @@ export default function KYCPage() {
     setLoading(true);
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/auth/verify-kyc`, {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+      const userId = (session?.user as any)?.id;
+
+      const res = await fetch(`${apiUrl}/api/auth/verify-kyc`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          userId: (session?.user as any)?.id,
+          userId,
           ...formData,
           recto: previews.recto,
           verso: previews.verso,
@@ -104,6 +106,9 @@ export default function KYCPage() {
         setTimeout(() => {
           router.push("/dashboard/onboarding/deposit");
         }, 2500);
+      } else {
+        const errorData = await res.json();
+        alert(errorData.message || "Une erreur est survenue.");
       }
     } catch (error) {
       console.error("KYC error:", error);
@@ -141,7 +146,7 @@ export default function KYCPage() {
               <div className="flex items-center gap-4 p-5 rounded-2xl bg-white/5 border border-card-border opacity-50">
                 <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-foreground/50 font-bold text-xs">2</div>
                 <div>
-                   <p className="text-xs font-black uppercase tracking-widest">Identité</p>
+                   <p className="text-xs font-black uppercase tracking-widest text-foreground">Identité</p>
                    <p className="text-[10px] text-muted-text font-bold uppercase tracking-tight">Passeport ou Carte d'Identité</p>
                 </div>
               </div>
@@ -165,14 +170,14 @@ export default function KYCPage() {
             
             <div className="space-y-4 overflow-y-auto max-h-[60vh] pr-2 custom-scrollbar">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-1 overflow-hidden">
+                  <div className="space-y-1">
                     <label className="text-[10px] font-black text-muted-text uppercase tracking-widest ml-1">Naissance</label>
                     <input
                       type="date"
                       required
                       value={formData.birthDate}
                       onChange={(e) => setFormData({ ...formData, birthDate: e.target.value })}
-                      className="w-full bg-background border border-card-border rounded-xl px-4 py-3 text-[11px] text-foreground focus:outline-none focus:border-primary/50 transition-colors"
+                      className="w-full h-[48px] bg-background border border-card-border rounded-xl px-4 py-3 text-[12px] text-foreground focus:outline-none focus:border-primary/50 transition-colors"
                     />
                   </div>
                   <div className="space-y-1">
@@ -186,7 +191,7 @@ export default function KYCPage() {
                             setPreviews(prev => ({ ...prev, verso: null }));
                         }
                       }}
-                      className="w-full bg-background border border-card-border rounded-xl px-4 py-3 text-[11px] text-foreground focus:outline-none focus:border-primary/50 transition-colors appearance-none"
+                      className="w-full h-[48px] bg-background border border-card-border rounded-xl px-4 py-3 text-[12px] text-foreground focus:outline-none focus:border-primary/50 transition-colors appearance-none"
                     >
                       <option value="passport">Passeport</option>
                       <option value="id_card">Carte d'ID</option>
@@ -206,7 +211,6 @@ export default function KYCPage() {
                 />
               </div>
 
-              {/* Justificatif de domicile */}
               <div className="space-y-2">
                  <label className="text-[10px] font-black text-muted-text uppercase tracking-widest ml-1">Justificatif de domicile</label>
                  <input type="file" hidden ref={addressInputRef} accept="image/*,application/pdf" onChange={(e) => handleFileChange(e, 'addressProof')} />
@@ -228,7 +232,6 @@ export default function KYCPage() {
                  </div>
               </div>
 
-              {/* Upload Section ID */}
               <div className="space-y-2">
                 <label className="text-[10px] font-black text-muted-text uppercase tracking-widest ml-1">Identité ({formData.idType === 'id_card' ? 'Recto/Verso' : 'Recto'})</label>
                 <div className={`grid ${formData.idType === 'id_card' ? 'grid-cols-2' : 'grid-cols-1'} gap-3`}>
@@ -246,11 +249,11 @@ export default function KYCPage() {
                             ) : (
                                 <Camera className="w-5 h-5 text-muted-text" />
                             )}
-                            </div>
-                            </div>
+                        </div>
+                    </div>
 
-                            {formData.idType === 'id_card' && (
-                            <div className="relative group">
+                    {formData.idType === 'id_card' && (
+                        <div className="relative group">
                             <input type="file" accept="image/*" hidden ref={versoInputRef} onChange={(e) => handleFileChange(e, 'verso')} />
                             <div 
                                 onClick={() => versoInputRef.current?.click()}
@@ -265,25 +268,21 @@ export default function KYCPage() {
                                     <Camera className="w-5 h-5 text-muted-text" />
                                 )}
                             </div>
-                            </div>
-                            )}
-                            </div>
-                            </div>
-                            </div>
+                        </div>
+                    )}
+                </div>
+              </div>
+            </div>
 
-                            <button
-                            type="submit"
-                            disabled={loading}
-                            className="w-full py-5 bg-primary text-white font-black rounded-2xl hover:opacity-90 transition-all disabled:opacity-50 uppercase text-[10px] tracking-[0.2em] shadow-lg shadow-primary/20"
-                            >
-                            {loading ? <Loader2 className="animate-spin mx-auto" size={18} /> : (
-                            <>
-                            Finaliser la vérification <CheckCircle2 className="ml-2 w-4 h-4" />
-                            </>
-                            )}
-                            </button>
-                            </form>
-                            )}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full py-5 bg-primary text-white font-black rounded-2xl hover:opacity-90 transition-all disabled:opacity-50 uppercase text-[10px] tracking-[0.2em] shadow-lg shadow-primary/20"
+            >
+              {loading ? <Loader2 className="animate-spin mx-auto" size={18} /> : "Finaliser la vérification"}
+            </button>
+          </form>
+        )}
 
         {step === 3 && (
           <div className="text-center py-10 space-y-6 animate-in zoom-in-95 duration-500">
