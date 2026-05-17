@@ -225,7 +225,8 @@ export const login = async (req: Request, res: Response) => {
         hasDeposited: user.hasDeposited,
         isInstalled: user.isInstalled,
         hasPin: !!(user as any).pinCode,
-        creditLimit: user.creditLimit
+        creditLimit: user.creditLimit,
+        role: user.role
       }
     });
   } catch (error) {

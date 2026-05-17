@@ -36,7 +36,8 @@ const handler = NextAuth({
               hasDeposited: data.user.hasDeposited,
               isInstalled: data.user.isInstalled,
               hasPin: data.user.hasPin,
-              creditLimit: data.user.creditLimit
+              creditLimit: data.user.creditLimit,
+              role: data.user.role
             };
           }
           
@@ -68,6 +69,7 @@ const handler = NextAuth({
         token.isInstalled = session.user.isInstalled;
         token.hasPin = session.user.hasPin;
         token.creditLimit = session.user.creditLimit;
+        token.role = session.user.role;
         token.name = session.user.name;
       }
       if (user) {
@@ -78,6 +80,7 @@ const handler = NextAuth({
         token.isInstalled = (user as any).isInstalled;
         token.hasPin = (user as any).hasPin;
         token.creditLimit = (user as any).creditLimit;
+        token.role = (user as any).role;
       }
       return token;
     },
@@ -90,6 +93,7 @@ const handler = NextAuth({
         (session.user as any).isInstalled = token.isInstalled;
         (session.user as any).hasPin = token.hasPin;
         (session.user as any).creditLimit = token.creditLimit;
+        (session.user as any).role = token.role;
       }
       return session;
     },

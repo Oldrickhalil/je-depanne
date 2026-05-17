@@ -140,25 +140,34 @@ export default function AdminDashboard() {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
            <div className="space-y-1">
               <Link href="/dashboard" className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.3em] text-muted-text hover:text-foreground transition-colors mb-4">
-                 <ArrowLeft size={12} /> Dashboard
+                 <ArrowLeft size={12} /> Retour
               </Link>
               <h1 className="text-4xl font-title font-bold tight-tracking uppercase">
-                 Admin <span className="text-primary">System</span>
+                 Console <span className="text-amber-500">Admin</span>
               </h1>
            </div>
 
-           <div className="flex bg-card p-1 rounded-2xl border border-card-border">
+           <div className="flex items-center gap-4">
+              <div className="flex bg-card p-1 rounded-2xl border border-card-border">
+                <button 
+                  onClick={() => setView('loans')}
+                  className={`px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${view === 'loans' ? 'bg-amber-500 text-black shadow-lg shadow-amber-500/20' : 'text-muted-text hover:text-foreground'}`}
+                >
+                  Prêts
+                </button>
+                <button 
+                  onClick={() => setView('users')}
+                  className={`px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${view === 'users' ? 'bg-amber-500 text-black shadow-lg shadow-amber-500/20' : 'text-muted-text hover:text-foreground'}`}
+                >
+                  Utilisateurs
+                </button>
+              </div>
+
               <button 
-                onClick={() => setView('loans')}
-                className={`px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${view === 'loans' ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'text-muted-text hover:text-white'}`}
+                onClick={() => signOut({ callbackUrl: "/login" })}
+                className="w-12 h-12 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-500 hover:bg-red-500 hover:text-white transition-all shadow-lg"
               >
-                Prêts
-              </button>
-              <button 
-                onClick={() => setView('users')}
-                className={`px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${view === 'users' ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'text-muted-text hover:text-white'}`}
-              >
-                Utilisateurs
+                 <LogOut size={20} />
               </button>
            </div>
         </div>

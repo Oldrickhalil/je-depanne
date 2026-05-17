@@ -1,0 +1,21 @@
+{
+  "name": "JD Admin Console",
+  "short_name": "JDAdmin",
+  "description": "Administrative Console for Je Dépanne",
+  "start_url": "/admin/login",
+  "display": "standalone",
+  "background_color": "#050505",
+  "theme_color": "#050505",
+  "icons": [
+    {
+      "src": "/images/admin_icon.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/images/admin_icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}
