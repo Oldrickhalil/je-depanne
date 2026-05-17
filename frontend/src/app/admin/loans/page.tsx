@@ -26,6 +26,19 @@ import Link from "next/link";
 import { signOut } from "next-auth/react";
 import PushNotificationPrompt from "@/components/dashboard/PushNotificationPrompt";
 
+type Activity = {
+  id: string;
+  type: 'REGISTER' | 'DEPOSIT' | 'WITHDRAWAL' | 'LOAN_REQUEST' | 'REPAYMENT' | 'LOAN_APPROVED' | 'LOAN_REJECTED';
+  title: string;
+  message: string;
+  createdAt: string;
+  user?: {
+    firstName: string;
+    lastName: string;
+    email: string;
+  };
+};
+
 type Transaction = {
   id: string;
   amount: number;
@@ -92,10 +105,11 @@ type SystemSettings = {
 };
 
 export default function AdminDashboard() {
-  const [view, setView] = useState<'loans' | 'users' | 'withdrawals' | 'settings'>('loans');
+  const [view, setView] = useState<'loans' | 'users' | 'withdrawals' | 'settings' | 'activity'>('loans');
   const [loans, setLoans] = useState<Loan[]>([]);
   const [users, setUsers] = useState<UserType[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [activities, setActivities] = useState<Activity[]>([]);
   const [settings, setSystemSettings] = useState<SystemSettings>({
     interestRate: 0.03,
     welcomeBonus: 80,
@@ -113,20 +127,23 @@ export default function AdminDashboard() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const [loansRes, usersRes, transRes, settingsRes] = await Promise.all([
+      const [loansRes, usersRes, transRes, settingsRes, activitiesRes] = await Promise.all([
         fetch(`${apiUrl}/api/loans/admin/all`),
         fetch(`${apiUrl}/api/auth/admin/users`),
         fetch(`${apiUrl}/api/activity/admin/transactions`),
-        fetch(`${apiUrl}/api/settings`)
+        fetch(`${apiUrl}/api/settings`),
+        fetch(`${apiUrl}/api/activity/admin/activities`)
       ]);
       const loansData = await loansRes.json();
       const usersData = await usersRes.json();
       const transData = await transRes.json();
       const settingsData = await settingsRes.json();
+      const activitiesData = await activitiesRes.json();
       
       setLoans(loansData || []);
       setUsers(usersData || []);
       setTransactions(transData || []);
+      setActivities(activitiesData || []);
       setSystemSettings(settingsData || {
         interestRate: 0.03,
         welcomeBonus: 80,
@@ -243,16 +260,24 @@ export default function AdminDashboard() {
                  Console <span className="text-amber-500">Admin</span>
               </h1>
               <p className="text-[9px] text-muted-text font-black uppercase tracking-[0.3em]">
-                {view === 'loans' ? 'Gestion des Prêts' : (view === 'users' ? 'Base Utilisateurs' : (view === 'withdrawals' ? 'Demandes de Retraits' : 'Paramètres Système'))}
+                {view === 'loans' ? 'Gestion des Prêts' : (view === 'users' ? 'Base Utilisateurs' : (view === 'withdrawals' ? 'Demandes de Retraits' : (view === 'settings' ? 'Paramètres Système' : 'Journal d\'Activité')))}
               </p>
            </div>
 
-           <button 
-             onClick={() => signOut({ callbackUrl: "/login" })}
-             className="w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-500 hover:bg-red-500 hover:text-white transition-all shadow-sm"
-           >
-              <LogOut size={18} />
-           </button>
+           <div className="flex items-center gap-3">
+              <button 
+                onClick={fetchData}
+                className="w-10 h-10 rounded-xl bg-white/5 border border-card-border flex items-center justify-center text-muted-text hover:text-foreground transition-all shadow-sm active:rotate-180 duration-500"
+              >
+                 <Clock size={18} />
+              </button>
+              <button 
+                onClick={() => signOut({ callbackUrl: "/login" })}
+                className="w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-500 hover:bg-red-500 hover:text-white transition-all shadow-sm"
+              >
+                 <LogOut size={18} />
+              </button>
+           </div>
         </div>
 
         {/* Global Stats */}
@@ -275,7 +300,7 @@ export default function AdminDashboard() {
 
         {/* Content Table */}
         <div className="space-y-6">
-           {view !== 'settings' && (
+           {view !== 'settings' && view !== 'activity' && (
              <div className="relative w-full animate-in fade-in slide-in-from-top-2 duration-500">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-text" size={14} />
                 <input 
@@ -404,10 +429,63 @@ export default function AdminDashboard() {
                  ) : (
                    <div className="py-20 text-center text-muted-text uppercase text-[10px] font-black tracking-widest">Aucun retrait trouvé</div>
                  )
+               ) : view === 'activity' ? (
+                <div className="space-y-6 animate-in slide-in-from-bottom-4 duration-500">
+                   <div className="flex items-center justify-between border-b border-card-border pb-4">
+                      <h3 className="font-title font-bold text-lg tracking-widest uppercase text-foreground">Activité en Direct</h3>
+                      <div className="flex items-center gap-2 text-green-500 animate-pulse">
+                         <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                         <span className="text-[8px] font-black uppercase tracking-widest">Live</span>
+                      </div>
+                   </div>
+
+                   <div className="relative space-y-4 before:absolute before:left-6 before:top-4 before:bottom-0 before:w-0.5 before:bg-card-border">
+                      {activities.length > 0 ? (
+                        activities.map((act) => (
+                          <div key={act.id} className="relative flex items-start gap-6 pl-2 group">
+                             <div className={`w-8 h-8 rounded-full border-4 border-background z-10 flex items-center justify-center shrink-0 shadow-lg ${
+                                act.type === 'REGISTER' ? 'bg-blue-500 text-white' :
+                                act.type === 'DEPOSIT' ? 'bg-green-500 text-white' :
+                                act.type === 'WITHDRAWAL' ? 'bg-amber-500 text-white' :
+                                act.type === 'LOAN_REQUEST' ? 'bg-primary text-white' :
+                                act.type === 'REPAYMENT' ? 'bg-purple-500 text-white' :
+                                act.type === 'LOAN_APPROVED' ? 'bg-green-600 text-white' :
+                                'bg-gray-500 text-white'
+                             }`}>
+                                {act.type === 'REGISTER' && <User size={12} />}
+                                {act.type === 'DEPOSIT' && <ArrowDownRight size={12} />}
+                                {act.type === 'WITHDRAWAL' && <ArrowUpRight size={12} />}
+                                {act.type === 'LOAN_REQUEST' && <FileText size={12} />}
+                                {act.type === 'REPAYMENT' && <Wallet size={12} />}
+                                {(act.type === 'LOAN_APPROVED' || act.type === 'LOAN_REJECTED') && <ShieldCheck size={12} />}
+                             </div>
+                             
+                             <div className="bg-card border border-card-border rounded-[1.5rem] p-5 flex-1 shadow-sm group-hover:border-primary/20 transition-all">
+                                <div className="flex justify-between items-start mb-1">
+                                   <h4 className="text-xs font-black uppercase tracking-tight text-foreground">{act.title}</h4>
+                                   <span className="text-[8px] font-bold text-muted-text uppercase tracking-widest">{new Date(act.createdAt).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</span>
+                                </div>
+                                <p className="text-[10px] text-muted-text font-medium leading-relaxed mb-3">{act.message}</p>
+                                {act.user && (
+                                  <div className="flex items-center gap-2 pt-3 border-t border-white/5">
+                                     <div className="w-5 h-5 rounded-full bg-white/5 flex items-center justify-center text-primary text-[8px] font-black">
+                                        {act.user.firstName.charAt(0)}
+                                     </div>
+                                     <p className="text-[8px] font-bold text-gray-500 uppercase tracking-widest">{act.user.firstName} {act.user.lastName} • {act.user.email}</p>
+                                  </div>
+                                )}
+                             </div>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="py-20 text-center text-muted-text uppercase text-[10px] font-black tracking-widest">Aucune activité enregistrée</div>
+                      )}
+                   </div>
+                </div>
                ) : (
                  /* Settings View */
                  <div className="space-y-8 animate-in slide-in-from-bottom-4 duration-500">
-                    <div className="bg-gradient-to-br from-amber-500/10 to-transparent border border-amber-500/20 rounded-[2.5rem] p-8 space-y-4">
+                    <div className="bg-gradient-to-br from-amber-500/10 to-transparent border border-amber-500/20 rounded-[2.5rem] p-8 space-y-4 shadow-sm">
                        <div className="flex items-center gap-3">
                           <BellRing className="text-amber-500" size={20} />
                           <h3 className="font-title font-bold text-lg tracking-widest uppercase text-foreground">Alertes Admin</h3>
@@ -488,67 +566,75 @@ export default function AdminDashboard() {
       </div>
 
       {/* ULTRA PREMIUM Glass Bottom Nav - Admin Version */}
-      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 w-[92%] max-w-[440px] z-50">
+      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 w-[95%] max-w-[500px] z-50">
         <nav className="relative bg-[#0c0c0c] backdrop-blur-3xl rounded-[2.5rem] p-2 flex items-center justify-around shadow-[0_20px_50px_rgba(0,0,0,0.8)] border border-white/10 overflow-hidden">
-          {/* Active indicator background effect */}
           <div className="absolute inset-0 bg-gradient-to-r from-amber-500/5 via-transparent to-amber-500/5 pointer-events-none"></div>
           
           <button 
             onClick={() => setView('loans')}
-            className={`relative p-4 rounded-[1.8rem] transition-all duration-500 group flex flex-col items-center gap-1 ${
+            className={`relative p-3 rounded-[1.8rem] transition-all duration-500 group flex flex-col items-center gap-1 ${
               view === 'loans' ? "text-amber-500 bg-white/5 shadow-inner" : "text-gray-500 hover:text-white"
             }`}
           >
             {view === 'loans' && (
               <span className="absolute inset-0 bg-amber-500/10 blur-lg rounded-full"></span>
             )}
-            <Zap size={20} className={`relative z-10 transition-transform duration-300 ${view === 'loans' ? "scale-110" : "group-hover:scale-110"}`} fill={view === 'loans' ? 'currentColor' : 'none'} />
+            <Zap size={18} fill={view === 'loans' ? 'currentColor' : 'none'} className="relative z-10 transition-transform group-active:scale-90" />
             <span className="text-[7px] font-black uppercase tracking-widest relative z-10">Prêts</span>
           </button>
 
           <button 
             onClick={() => setView('withdrawals')}
-            className={`relative p-4 rounded-[1.8rem] transition-all duration-500 group flex flex-col items-center gap-1 ${
+            className={`relative p-3 rounded-[1.8rem] transition-all duration-500 group flex flex-col items-center gap-1 ${
               view === 'withdrawals' ? "text-amber-500 bg-white/5 shadow-inner" : "text-gray-500 hover:text-white"
             }`}
           >
             {view === 'withdrawals' && (
               <span className="absolute inset-0 bg-amber-500/10 blur-lg rounded-full"></span>
             )}
-            <div className="relative">
-               <Banknote size={20} className={`relative z-10 transition-transform duration-300 ${view === 'withdrawals' ? "scale-110" : "group-hover:scale-110"}`} fill={view === 'withdrawals' ? 'currentColor' : 'none'} />
-               {pendingWithdrawals.length > 0 && (
-                  <span className="absolute -top-2 -right-2 w-4 h-4 bg-red-500 text-white text-[8px] flex items-center justify-center rounded-full font-black shadow-lg border border-[#0c0c0c] z-20">
-                     {pendingWithdrawals.length}
-                  </span>
-               )}
+            <div className="relative z-10">
+               <Banknote size={18} fill={view === 'withdrawals' ? 'currentColor' : 'none'} className="transition-transform group-active:scale-90" />
+               {pendingWithdrawals.length > 0 && <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 text-white text-[7px] flex items-center justify-center rounded-full font-black animate-pulse shadow-lg">{pendingWithdrawals.length}</span>}
             </div>
             <span className="text-[7px] font-black uppercase tracking-widest relative z-10">Retraits</span>
           </button>
 
           <button 
+            onClick={() => setView('activity')}
+            className={`relative p-3 rounded-[1.8rem] transition-all duration-500 group flex flex-col items-center gap-1 ${
+              view === 'activity' ? "text-amber-500 bg-white/5 shadow-inner" : "text-gray-500 hover:text-white"
+            }`}
+          >
+            {view === 'activity' && (
+              <span className="absolute inset-0 bg-amber-500/10 blur-lg rounded-full"></span>
+            )}
+            <Clock size={18} fill={view === 'activity' ? 'currentColor' : 'none'} className="relative z-10 transition-transform group-active:scale-90" />
+            <span className="text-[7px] font-black uppercase tracking-widest relative z-10">Live</span>
+          </button>
+
+          <button 
             onClick={() => setView('users')}
-            className={`relative p-4 rounded-[1.8rem] transition-all duration-500 group flex flex-col items-center gap-1 ${
+            className={`relative p-3 rounded-[1.8rem] transition-all duration-500 group flex flex-col items-center gap-1 ${
               view === 'users' ? "text-amber-500 bg-white/5 shadow-inner" : "text-gray-500 hover:text-white"
             }`}
           >
             {view === 'users' && (
               <span className="absolute inset-0 bg-amber-500/10 blur-lg rounded-full"></span>
             )}
-            <Users size={20} className={`relative z-10 transition-transform duration-300 ${view === 'users' ? "scale-110" : "group-hover:scale-110"}`} fill={view === 'users' ? 'currentColor' : 'none'} />
+            <Users size={18} fill={view === 'users' ? 'currentColor' : 'none'} className="relative z-10 transition-transform group-active:scale-90" />
             <span className="text-[7px] font-black uppercase tracking-widest relative z-10">Clients</span>
           </button>
 
           <button 
             onClick={() => setView('settings')}
-            className={`relative p-4 rounded-[1.8rem] transition-all duration-500 group flex flex-col items-center gap-1 ${
+            className={`relative p-3 rounded-[1.8rem] transition-all duration-500 group flex flex-col items-center gap-1 ${
               view === 'settings' ? "text-amber-500 bg-white/5 shadow-inner" : "text-gray-500 hover:text-white"
             }`}
           >
             {view === 'settings' && (
               <span className="absolute inset-0 bg-amber-500/10 blur-lg rounded-full"></span>
             )}
-            <Settings size={20} className={`relative z-10 transition-transform duration-300 ${view === 'settings' ? "scale-110" : "group-hover:scale-110"}`} fill={view === 'settings' ? 'currentColor' : 'none'} />
+            <Settings size={18} fill={view === 'settings' ? 'currentColor' : 'none'} className="relative z-10 transition-transform group-active:scale-90" />
             <span className="text-[7px] font-black uppercase tracking-widest relative z-10">Réglages</span>
           </button>
         </nav>

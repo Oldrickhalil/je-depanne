@@ -10,5 +10,6 @@ router.post('/notifications/:userId/read', markNotificationsRead);
 // Admin Routes
 router.get('/admin/transactions', getAllTransactions);
 router.patch('/admin/transactions/:transactionId/status', updateTransactionStatus);
+router.get('/admin/activities', getActivities);
 
 export default router;

@@ -75,6 +75,20 @@ export const register = async (req: Request, res: Response) => {
       // We still return success because user is created, they can resend later (logic not yet implemented)
     }
 
+    // Log Activity
+    try {
+      await prisma.activity.create({
+        data: {
+          type: 'REGISTER',
+          title: 'Nouvelle Inscription',
+          message: `${firstName} ${lastName} s'est inscrit sur la plateforme.`,
+          userId: user.id
+        }
+      });
+    } catch (actError) {
+      console.error('Activity Log Error:', actError);
+    }
+
     res.status(201).json({ message: 'Utilisateur créé. Veuillez vérifier votre email.' });
   } catch (error) {
     console.error(error);

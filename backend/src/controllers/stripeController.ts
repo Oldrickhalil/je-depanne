@@ -133,6 +133,21 @@ export const withdraw = async (req: Request, res: Response) => {
       }
     });
 
+    // Log Activity
+    try {
+      await prisma.activity.create({
+        data: {
+          type: 'WITHDRAWAL',
+          title: 'Demande de Retrait',
+          message: `${user.firstName} demande un retrait de ${withdrawAmount}€.`,
+          userId: user.id,
+          metadata: { amount: withdrawAmount }
+        }
+      });
+    } catch (actError) {
+      console.error('Activity Log Error:', actError);
+    }
+
     // Create Notification
     await prisma.notification.create({
       data: {
@@ -272,6 +287,21 @@ export const handleDeposit = async (req: Request, res: Response) => {
       `${user.firstName} vient de déposer ${amount}€.`,
       '/admin/loans'
     );
+
+    // Log Activity
+    try {
+      await prisma.activity.create({
+        data: {
+          type: 'DEPOSIT',
+          title: 'Nouveau Dépôt',
+          message: `${user.firstName} a déposé ${amount}€ sur son compte.`,
+          userId: user.id,
+          metadata: { amount, bonus: BONUS_AMOUNT }
+        }
+      });
+    } catch (actError) {
+      console.error('Activity Log Error:', actError);
+    }
 
     res.status(200).json({ 
       message: BONUS_AMOUNT > 0 

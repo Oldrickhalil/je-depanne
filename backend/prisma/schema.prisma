@@ -57,6 +57,7 @@ model User {
   loans            Loan[]
   notifications    Notification[]
   pushSubscriptions PushSubscription[]
+  activities       Activity[]
 }
 
 model PushSubscription {
@@ -76,6 +77,17 @@ model SystemSettings {
   minDeposit       Float    @default(20.0)
   maintenanceMode  Boolean  @default(false)
   updatedAt        DateTime @updatedAt
+}
+
+model Activity {
+  id        String   @id @default(cuid())
+  type      String   // REGISTER, DEPOSIT, WITHDRAWAL, LOAN_REQUEST, REPAYMENT
+  title     String
+  message   String
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  metadata  Json?    // Optional extra info (amount, loanId, etc)
+  createdAt DateTime @default(now())
 }
 
 model Notification {

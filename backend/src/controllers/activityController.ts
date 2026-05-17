@@ -154,3 +154,26 @@ export const updateTransactionStatus = async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Erreur lors de la mise à jour.' });
   }
 };
+
+export const getActivities = async (req: Request, res: Response) => {
+  try {
+    const activities = await prisma.activity.findMany({
+      include: {
+        user: {
+          select: {
+            firstName: true,
+            lastName: true,
+            email: true
+          }
+        }
+      },
+      orderBy: { createdAt: 'desc' },
+      take: 50 // Only last 50 events
+    });
+
+    res.status(200).json(activities);
+  } catch (error) {
+    console.error('Error fetching activities:', error);
+    res.status(500).json({ message: 'Erreur lors de la récupération du journal.' });
+  }
+};

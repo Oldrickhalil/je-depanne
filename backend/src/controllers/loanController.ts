@@ -74,6 +74,22 @@ export const createLoan = async (req: Request, res: Response) => {
       '/dashboard/loans'
     );
 
+    // Log Activity
+    try {
+      const user = await prisma.user.findUnique({ where: { id: userId } });
+      await prisma.activity.create({
+        data: {
+          type: 'LOAN_REQUEST',
+          title: 'Nouvelle Demande de Prêt',
+          message: `${user?.firstName} demande un prêt de ${amount}€.`,
+          userId,
+          metadata: { amount, loanId: loan.id }
+        }
+      });
+    } catch (actError) {
+      console.error('Activity Log Error:', actError);
+    }
+
     res.status(201).json(loan);
   } catch (error: any) {
     console.error('Create Loan Error:', error);
@@ -228,6 +244,21 @@ export const updateLoanStatus = async (req: Request, res: Response) => {
       '/dashboard/loans'
     );
 
+    // Log Activity
+    try {
+      await prisma.activity.create({
+        data: {
+          type: status === 'APPROVED' ? 'LOAN_APPROVED' : 'LOAN_REJECTED',
+          title: status === 'APPROVED' ? 'Prêt Approuvé' : 'Prêt Rejeté',
+          message: `Le prêt de ${loan.amount}€ pour ${loan.user.firstName} a été ${status === 'APPROVED' ? 'approuvé' : 'rejeté'}.`,
+          userId: loan.userId,
+          metadata: { amount: loan.amount, loanId }
+        }
+      });
+    } catch (actError) {
+      console.error('Activity Log Error:', actError);
+    }
+
     res.status(200).json(updatedLoan);
   } catch (error: any) {
     console.error('Update Status Error:', error);
@@ -317,6 +348,21 @@ export const repayLoan = async (req: Request, res: Response) => {
           : `Votre paiement de ${amountToRepay.toFixed(2)}€ a bien été reçu.`,
       '/dashboard/schedule'
     );
+
+    // Log Activity
+    try {
+      await prisma.activity.create({
+        data: {
+          type: 'REPAYMENT',
+          title: isFullyPaid ? 'Prêt Soldé' : 'Remboursement Partiel',
+          message: `${loan.user.firstName} a payé ${amountToRepay.toFixed(2)}€ pour son prêt.`,
+          userId,
+          metadata: { amount: amountToRepay, loanId, isFullyPaid }
+        }
+      });
+    } catch (actError) {
+      console.error('Activity Log Error:', actError);
+    }
 
     res.status(200).json({ message: 'Remboursement réussi.', loan: updatedLoan });
   } catch (error: any) {
