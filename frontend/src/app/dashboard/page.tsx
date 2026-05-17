@@ -19,10 +19,12 @@ import OnboardingIntro from "@/components/dashboard/OnboardingIntro";
 import PushNotificationPrompt from "@/components/dashboard/PushNotificationPrompt";
 import PinNotificationPrompt from "@/components/dashboard/PinNotificationPrompt";
 import { useRouter } from "next/navigation";
+import { useSearch } from "@/context/SearchContext";
 
 export default function DashboardPage() {
   const { data: session, update: updateSession } = useSession();
   const router = useRouter();
+  const { searchQuery } = useSearch();
   const [loans, setLoans] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [showIntro, setShowIntro] = useState(false);
@@ -107,6 +109,12 @@ export default function DashboardPage() {
   const activeLoan = loans.length > 0 ? loans[0] : null;
   const hasObtainedCredit = loans.some(l => l.status === 'APPROVED' || l.status === 'PAID_BACK');
   const isActivated = freshStatus ? (freshStatus.kycVerified && freshStatus.hasDeposited && freshStatus.isInstalled && freshStatus.hasPin) : false;
+
+  const filteredRecentLoans = loans.filter(l => 
+    searchQuery === "" || 
+    l.amount.toString().includes(searchQuery) ||
+    l.status.toLowerCase().includes(searchQuery.toLowerCase())
+  ).slice(0, 3);
 
   const getStatusDisplay = (status: string) => {
     switch (status) {
@@ -252,8 +260,8 @@ export default function DashboardPage() {
            </div>
 
            <div className="space-y-3">
-              {loans.length > 0 ? (
-                loans.slice(0, 3).map((loan) => (
+              {filteredRecentLoans.length > 0 ? (
+                filteredRecentLoans.map((loan) => (
                     <div key={loan.id} className="group flex items-center justify-between p-6 rounded-[2rem] bg-card border border-card-border hover:border-primary/20 transition-all duration-500">
                         <div className="flex items-center gap-5">
                             <div className={`w-12 h-12 rounded-2xl ${getStatusDisplay(loan.status).bg} ${getStatusDisplay(loan.status).color} flex items-center justify-center`}>

@@ -182,12 +182,12 @@ export default function StatsPage() {
          </div>
 
          {/* Faux Graphique à barres stylisé en CSS */}
-         <div className="h-64 flex items-end gap-2 md:gap-6 pt-4 relative">
+         <div className="h-64 flex items-end gap-2 md:gap-6 pt-4 relative pl-10 pr-2">
             {/* Lignes de repère */}
-            <div className="absolute inset-0 flex flex-col justify-between pointer-events-none pb-8">
+            <div className="absolute inset-y-0 left-10 right-2 flex flex-col justify-between pointer-events-none pb-8">
                {[100, 75, 50, 25, 0].map(val => (
                   <div key={val} className="w-full border-b border-card-border relative">
-                     <span className="absolute -top-2 -left-8 text-[8px] font-bold text-muted-text">{val}%</span>
+                     <span className="absolute -top-2 -left-10 w-8 text-[8px] font-bold text-muted-text text-right">{val}%</span>
                   </div>
                ))}
             </div>
@@ -197,16 +197,16 @@ export default function StatsPage() {
                <div key={i} className="flex-1 flex flex-col items-center gap-4 relative z-10 group">
                   <div className="w-full flex items-end justify-center gap-1 md:gap-2 h-[200px]">
                      <div 
-                        className="w-1/3 max-w-[20px] bg-white/10 rounded-t-sm group-hover:bg-white/20 transition-all relative"
+                        className="w-[12px] md:w-[20px] bg-white/10 rounded-t-sm group-hover:bg-white/20 transition-all relative"
                         style={{ height: `${data.val1}%` }}
                      >
-                        <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-foreground text-[8px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity">{data.rawEmprunts}€</div>
+                        <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-foreground text-[8px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-30">{data.rawEmprunts}€</div>
                      </div>
                      <div 
-                        className="w-1/3 max-w-[20px] bg-primary rounded-t-sm shadow-[0_0_15px_rgba(81,32,179,0.5)] group-hover:brightness-125 transition-all relative"
+                        className="w-[12px] md:w-[20px] bg-primary rounded-t-sm shadow-[0_0_15px_rgba(81,32,179,0.5)] group-hover:brightness-125 transition-all relative"
                         style={{ height: `${data.val2}%` }}
                      >
-                         <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-primary text-white text-[8px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-20">{data.rawRemboursements}€</div>
+                         <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-primary text-white text-[8px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-40 whitespace-nowrap">{data.rawRemboursements}€</div>
                      </div>
                   </div>
                   <span className="text-[10px] font-bold uppercase tracking-wider text-muted-text">{data.month}</span>

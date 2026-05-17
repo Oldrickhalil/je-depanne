@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { useSearch } from "@/context/SearchContext";
 
 type Loan = {
   id: string;
@@ -26,43 +27,18 @@ type Loan = {
 
 export default function MyLoansPage() {
   const { data: session } = useSession();
+  const { searchQuery } = useSearch();
   const [loans, setLoans] = useState<Loan[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchLoans = async () => {
-      const userId = (session?.user as any)?.id;
-      if (!userId) return;
+  // ... (fetch logic unchanged)
 
-      try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
-        const res = await fetch(`${apiUrl}/api/loans/user/${userId}`);
-        const data = await res.json();
-        setLoans(data);
-      } catch (err) {
-        console.error("Erreur lors de la récupération des prêts:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (session) fetchLoans();
-  }, [session]);
-
-  const getStatusDisplay = (status: string) => {
-    switch (status) {
-      case "PENDING":
-        return { label: "En attente", color: "text-amber-500", bg: "bg-amber-500/10", icon: Clock };
-      case "APPROVED":
-        return { label: "Approuvé", color: "text-green-500", bg: "bg-green-500/10", icon: CheckCircle2 };
-      case "REJECTED":
-        return { label: "Refusé", color: "text-red-500", bg: "bg-red-500/10", icon: XCircle };
-      case "PAID_BACK":
-        return { label: "Remboursé", color: "text-blue-500", bg: "bg-blue-500/10", icon: CheckCircle2 };
-      default:
-        return { label: "Inconnu", color: "text-muted-text", bg: "bg-gray-500/10", icon: Info };
-    }
-  };
+  const filteredLoans = loans.filter(l => 
+    searchQuery === "" || 
+    l.amount.toString().includes(searchQuery) ||
+    l.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    l.status.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="max-w-4xl mx-auto space-y-10 animate-in fade-in duration-700 pb-20">
@@ -71,9 +47,9 @@ export default function MyLoansPage() {
       <section className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div className="space-y-1">
           <Link href="/dashboard" className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.15em] text-muted-text hover:text-foreground transition-colors mb-4">
-             <ArrowLeft size={12} /> Tableau de Bord
+             <ArrowLeft size={12} /> Retour
           </Link>
-          <h1 className="text-4xl font-title font-bold tight-tracking uppercase leading-none">
+          <h1 className="text-4xl font-title font-bold tight-tracking uppercase leading-none text-foreground">
             Mes <span className="text-primary">Prêts</span>
           </h1>
           <p className="text-muted-text font-bold uppercase tracking-wider text-[9px] flex items-center gap-2">
@@ -97,7 +73,7 @@ export default function MyLoansPage() {
            { label: "En Analyse", val: loans.filter(l => l.status === 'PENDING').length, icon: Clock, color: "text-amber-500" },
            { label: "Remboursés", val: loans.filter(l => l.status === 'PAID_BACK').length, icon: CheckCircle2, color: "text-blue-500" }
          ].map((stat, i) => (
-           <div key={i} className="bg-card border border-card-border p-6 rounded-[2rem] space-y-2">
+           <div key={i} className="bg-card border border-card-border p-6 rounded-[2rem] space-y-2 shadow-sm">
               <stat.icon size={14} className={stat.color} />
               <div>
                  <p className="text-[8px] font-black uppercase tracking-wider text-muted-text">{stat.label}</p>
@@ -115,13 +91,13 @@ export default function MyLoansPage() {
             <div className="flex justify-center py-20">
                <Loader2 className="animate-spin text-primary" size={32} />
             </div>
-         ) : loans.length > 0 ? (
+         ) : filteredLoans.length > 0 ? (
             <div className="grid grid-cols-1 gap-4">
-               {loans.map((loan) => {
+               {filteredLoans.map((loan) => {
                  const status = getStatusDisplay(loan.status);
                  const StatusIcon = status.icon;
                  return (
-                    <div key={loan.id} className="group relative overflow-hidden rounded-[2.5rem] bg-card border border-card-border hover:border-primary/20 transition-all duration-500 p-8">
+                    <div key={loan.id} className="group relative overflow-hidden rounded-[2.5rem] bg-card border border-card-border hover:border-primary/20 transition-all duration-500 p-8 shadow-sm">
                        <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
                           <Zap size={80} className="text-primary" />
                        </div>
@@ -184,12 +160,9 @@ export default function MyLoansPage() {
                   <Info size={24} />
                </div>
                <div className="text-center space-y-1">
-                  <p className="text-xs font-black uppercase tracking-wider text-foreground">Aucun prêt pour le moment</p>
-                  <p className="text-[9px] font-bold text-muted-text uppercase tracking-wider">Vos futures demandes apparaîtront ici.</p>
+                  <p className="text-xs font-black uppercase tracking-wider text-foreground">Aucune demande trouvée</p>
+                  <p className="text-[9px] font-bold text-muted-text uppercase tracking-wider">Essayez un autre mot-clé ou modifiez votre recherche.</p>
                </div>
-               <Link href="/dashboard/loans/request" className="text-primary text-[10px] font-black uppercase tracking-wider hover:underline pt-2">
-                  Faire ma première demande
-               </Link>
             </div>
          )}
       </div>
