@@ -29,7 +29,7 @@ export default function StripeReturnPage() {
           </div>
           <div className="space-y-2">
              <h2 className="text-2xl font-title font-bold uppercase tracking-tighter">Finalisation de la vérification</h2>
-             <p className="text-muted-text text-[10px] font-bold uppercase tracking-[0.2em]">Veuillez patienter quelques instants...</p>
+             <p className="text-muted-text text-[10px] font-bold uppercase tracking-wider">Veuillez patienter quelques instants...</p>
           </div>
         </>
       )}
@@ -43,11 +43,11 @@ export default function StripeReturnPage() {
           <div className="space-y-4">
              <div className="space-y-1">
                 <h2 className="text-3xl font-title font-bold uppercase tracking-tighter">Vérification Réussie</h2>
-                <p className="text-muted-text text-[10px] font-bold uppercase tracking-[0.2em]">Votre compte personnel est maintenant configuré</p>
+                <p className="text-muted-text text-[10px] font-bold uppercase tracking-wider">Votre compte personnel est maintenant configuré</p>
              </div>
              <button 
                onClick={() => router.push("/dashboard/loans/request?step=confirm")}
-               className="px-10 py-4 bg-primary text-white rounded-2xl font-black text-[11px] uppercase tracking-[0.2em] shadow-lg glow-primary"
+               className="px-10 py-4 bg-primary text-white rounded-2xl font-black text-[11px] uppercase tracking-wider shadow-lg glow-primary"
              >
                 Continuer la demande
              </button>

@@ -64,13 +64,13 @@ export default function NotificationsPage() {
       {/* Header */}
       <section className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div className="space-y-1">
-          <Link href="/dashboard" className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.3em] text-muted-text hover:text-foreground transition-colors mb-4">
+          <Link href="/dashboard" className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.15em] text-muted-text hover:text-foreground transition-colors mb-4">
              <ArrowLeft size={12} /> Tableau de Bord
           </Link>
           <h1 className="text-4xl font-title font-bold tight-tracking uppercase leading-none">
             Centre de <span className="text-primary">Notifications</span>
           </h1>
-          <p className="text-muted-text font-bold uppercase tracking-[0.2em] text-[9px] flex items-center gap-2">
+          <p className="text-muted-text font-bold uppercase tracking-wider text-[9px] flex items-center gap-2">
             Restez informé sur vos demandes et échéances
           </p>
         </div>
@@ -94,7 +94,7 @@ export default function NotificationsPage() {
                            {!notif.read && <span className="w-2 h-2 bg-primary rounded-full animate-pulse shrink-0"></span>}
                         </div>
                         <p className="text-[11px] text-muted-text leading-relaxed font-medium">{notif.message}</p>
-                        <p className="text-[9px] text-muted-text font-bold uppercase tracking-widest pt-1">{new Date(notif.createdAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute:'2-digit' })}</p>
+                        <p className="text-[9px] text-muted-text font-bold uppercase tracking-wider pt-1">{new Date(notif.createdAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute:'2-digit' })}</p>
                      </div>
                   </div>
                ))}
@@ -105,8 +105,8 @@ export default function NotificationsPage() {
                   <Bell size={32} />
                </div>
                <div className="space-y-1">
-                  <p className="text-xs font-black uppercase tracking-widest text-foreground">Aucune alerte</p>
-                  <p className="text-[10px] uppercase tracking-widest text-muted-text">Vous êtes totalement à jour.</p>
+                  <p className="text-xs font-black uppercase tracking-wider text-foreground">Aucune alerte</p>
+                  <p className="text-[10px] uppercase tracking-wider text-muted-text">Vous êtes totalement à jour.</p>
                </div>
             </div>
          )}

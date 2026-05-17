@@ -140,14 +140,14 @@ export default function KYCPage() {
               <div className="flex items-center gap-4 p-5 rounded-2xl bg-white/5 border border-card-border group hover:border-primary/30 transition-all">
                 <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-xs">1</div>
                 <div>
-                   <p className="text-xs font-black uppercase tracking-widest text-foreground">Infos & Domicile</p>
+                   <p className="text-xs font-black uppercase tracking-wider text-foreground">Infos & Domicile</p>
                    <p className="text-[10px] text-muted-text font-bold uppercase tracking-tight">Adresse et justificatif</p>
                 </div>
               </div>
               <div className="flex items-center gap-4 p-5 rounded-2xl bg-white/5 border border-card-border opacity-50">
                 <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-foreground/50 font-bold text-xs">2</div>
                 <div>
-                   <p className="text-xs font-black uppercase tracking-widest text-foreground">Identité</p>
+                   <p className="text-xs font-black uppercase tracking-wider text-foreground">Identité</p>
                    <p className="text-[10px] text-muted-text font-bold uppercase tracking-tight">Passeport ou Carte d'Identité</p>
                 </div>
               </div>
@@ -155,7 +155,7 @@ export default function KYCPage() {
 
             <button
               onClick={() => setStep(2)}
-              className="w-full py-5 bg-white text-black font-black rounded-2xl hover:bg-gray-200 transition-all flex items-center justify-center gap-2 group uppercase text-xs tracking-widest shadow-xl shadow-white/5"
+              className="w-full py-5 bg-white text-black font-black rounded-2xl hover:bg-gray-200 transition-all flex items-center justify-center gap-2 group uppercase text-xs tracking-wider shadow-xl shadow-white/5"
             >
               Commencer <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
@@ -172,7 +172,7 @@ export default function KYCPage() {
             <div className="space-y-4 overflow-y-auto max-h-[60vh] pr-2 custom-scrollbar">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-1">
-                    <label className="text-[10px] font-black text-muted-text uppercase tracking-widest ml-1">Naissance</label>
+                    <label className="text-[10px] font-black text-muted-text uppercase tracking-wider ml-1">Naissance</label>
                     <input
                       type="date"
                       required
@@ -182,7 +182,7 @@ export default function KYCPage() {
                     />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-[10px] font-black text-muted-text uppercase tracking-widest ml-1">Document</label>
+                    <label className="text-[10px] font-black text-muted-text uppercase tracking-wider ml-1">Document</label>
                     <select
                       value={formData.idType}
                       onChange={(e) => {
@@ -201,7 +201,7 @@ export default function KYCPage() {
               </div>
 
               <div className="space-y-1">
-                <label className="text-[10px] font-black text-muted-text uppercase tracking-widest ml-1">Adresse complète</label>
+                <label className="text-[10px] font-black text-muted-text uppercase tracking-wider ml-1">Adresse complète</label>
                 <input
                   type="text"
                   required
@@ -214,7 +214,7 @@ export default function KYCPage() {
 
               {/* Justificatif de domicile */}
               <div className="space-y-2">
-                 <label className="text-[10px] font-black text-muted-text uppercase tracking-widest ml-1">Justificatif de domicile</label>
+                 <label className="text-[10px] font-black text-muted-text uppercase tracking-wider ml-1">Justificatif de domicile</label>
                  <input type="file" hidden ref={addressInputRef} accept="image/*,application/pdf" onChange={(e) => handleFileChange(e, 'addressProof')} />
                  <div 
                     onClick={() => addressInputRef.current?.click()}
@@ -223,12 +223,12 @@ export default function KYCPage() {
                     {previews.addressProof ? (
                         <div className="flex items-center gap-2 text-primary">
                             <Check size={16} />
-                            <span className="text-[10px] font-black uppercase tracking-widest">Document chargé</span>
+                            <span className="text-[10px] font-black uppercase tracking-wider">Document chargé</span>
                         </div>
                     ) : (
                         <div className="flex items-center gap-2 text-muted-text">
                             <MapPin size={16} />
-                            <span className="text-[10px] font-black uppercase tracking-widest">Facture ou Quittance</span>
+                            <span className="text-[10px] font-black uppercase tracking-wider">Facture ou Quittance</span>
                         </div>
                     )}
                  </div>
@@ -236,7 +236,7 @@ export default function KYCPage() {
 
               {/* Upload Section ID */}
               <div className="space-y-2">
-                <label className="text-[10px] font-black text-muted-text uppercase tracking-widest ml-1">Identité ({formData.idType === 'id_card' ? 'Recto/Verso' : 'Recto'})</label>
+                <label className="text-[10px] font-black text-muted-text uppercase tracking-wider ml-1">Identité ({formData.idType === 'id_card' ? 'Recto/Verso' : 'Recto'})</label>
                 <div className={`grid ${formData.idType === 'id_card' ? 'grid-cols-2' : 'grid-cols-1'} gap-3`}>
                     <div className="relative group">
                         <input type="file" accept="image/*" hidden ref={rectoInputRef} onChange={(e) => handleFileChange(e, 'recto')} />
@@ -280,7 +280,7 @@ export default function KYCPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-5 bg-primary text-white font-black rounded-2xl hover:opacity-90 transition-all disabled:opacity-50 uppercase text-[10px] tracking-[0.2em] shadow-lg shadow-primary/20 flex items-center justify-center"
+              className="w-full py-5 bg-primary text-white font-black rounded-2xl hover:opacity-90 transition-all disabled:opacity-50 uppercase text-[10px] tracking-wider shadow-lg shadow-primary/20 flex items-center justify-center"
             >
               {loading ? <Loader2 className="animate-spin" size={18} /> : "Finaliser la vérification"}
             </button>
@@ -294,7 +294,7 @@ export default function KYCPage() {
             </div>
             <div className="space-y-2">
               <h2 className="text-xl font-black text-foreground uppercase tracking-tighter">Vérification en cours</h2>
-              <p className="text-muted-text text-[10px] font-bold uppercase tracking-widest px-4 leading-relaxed">Vos documents sont en cours d'analyse. Redirection vers l'étape finale...</p>
+              <p className="text-muted-text text-[10px] font-bold uppercase tracking-wider px-4 leading-relaxed">Vos documents sont en cours d'analyse. Redirection vers l'étape finale...</p>
             </div>
             <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden mt-6 max-w-[150px] mx-auto">
               <div className="h-full bg-green-500 animate-[loading_2.5s_ease-in-out]"></div>

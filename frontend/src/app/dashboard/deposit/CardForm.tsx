@@ -97,7 +97,7 @@ export default function CardForm({ amount, userId, onSuccess }: { amount: number
 
       <div className="space-y-4">
          <div className="space-y-1.5">
-            <label className="text-[10px] font-black text-muted-text uppercase tracking-widest ml-1">Titulaire de la carte</label>
+            <label className="text-[10px] font-black text-muted-text uppercase tracking-wider ml-1">Titulaire de la carte</label>
             <input
               type="text"
               required
@@ -109,7 +109,7 @@ export default function CardForm({ amount, userId, onSuccess }: { amount: number
          </div>
 
          <div className="space-y-1.5">
-            <label className="text-[10px] font-black text-muted-text uppercase tracking-widest ml-1">Numéro de carte</label>
+            <label className="text-[10px] font-black text-muted-text uppercase tracking-wider ml-1">Numéro de carte</label>
             <div className="relative">
                <div className="w-full bg-background border border-card-border rounded-xl py-4 px-5 focus-within:border-primary/50 transition-all shadow-inner">
                   <CardNumberElement options={CARD_ELEMENT_OPTIONS} onChange={handleCardChange} />
@@ -124,13 +124,13 @@ export default function CardForm({ amount, userId, onSuccess }: { amount: number
 
          <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1.5">
-               <label className="text-[10px] font-black text-muted-text uppercase tracking-widest ml-1">Expiration</label>
+               <label className="text-[10px] font-black text-muted-text uppercase tracking-wider ml-1">Expiration</label>
                <div className="w-full bg-background border border-card-border rounded-xl py-4 px-5 focus-within:border-primary/50 transition-all shadow-inner">
                   <CardExpiryElement options={CARD_ELEMENT_OPTIONS} />
                </div>
             </div>
             <div className="space-y-1.5">
-               <label className="text-[10px] font-black text-muted-text uppercase tracking-widest ml-1">Code CVC</label>
+               <label className="text-[10px] font-black text-muted-text uppercase tracking-wider ml-1">Code CVC</label>
                <div className="w-full bg-background border border-card-border rounded-xl py-4 px-5 focus-within:border-primary/50 transition-all shadow-inner">
                   <CardCvcElement options={CARD_ELEMENT_OPTIONS} />
                </div>
@@ -152,7 +152,7 @@ export default function CardForm({ amount, userId, onSuccess }: { amount: number
       <button
         type="submit"
         disabled={loading || !stripe}
-        className="w-full py-5 bg-white text-black font-black text-xs uppercase tracking-[0.4em] rounded-[2rem] hover:bg-gray-200 transition-all disabled:opacity-50 flex items-center justify-center gap-3 shadow-xl shadow-white/5 active:scale-95"
+        className="w-full py-5 bg-white text-black font-black text-xs uppercase tracking-wider rounded-[2rem] hover:bg-gray-200 transition-all disabled:opacity-50 flex items-center justify-center gap-3 shadow-xl shadow-white/5 active:scale-95"
       >
         {loading ? <Loader2 className="animate-spin" size={18} /> : (
           <>
@@ -161,7 +161,7 @@ export default function CardForm({ amount, userId, onSuccess }: { amount: number
         )}
       </button>
 
-      <div className="flex items-center justify-center gap-2 text-[8px] text-gray-700 font-bold uppercase tracking-widest">
+      <div className="flex items-center justify-center gap-2 text-[8px] text-gray-700 font-bold uppercase tracking-wider">
         <ShieldCheck size={12} className="text-green-500" />
         <span>Cryptage SSL 256-bit sécurisé par Stripe</span>
       </div>

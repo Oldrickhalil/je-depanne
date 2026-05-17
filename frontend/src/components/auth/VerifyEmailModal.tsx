@@ -61,7 +61,7 @@ export default function VerifyEmailModal({ isOpen, onClose, email }: VerifyEmail
                <h2 className="text-2xl font-black uppercase tracking-tighter text-foreground leading-none">
                  Vérifiez votre e-mail
                </h2>
-               <p className="text-[11px] text-muted-text font-bold uppercase tracking-[0.2em] leading-relaxed">
+               <p className="text-[11px] text-muted-text font-bold uppercase tracking-wider leading-relaxed">
                  Un lien de vérification a été envoyé à :<br/>
                  <span className="text-primary mt-1 block">{email}</span>
                </p>
@@ -78,7 +78,7 @@ export default function VerifyEmailModal({ isOpen, onClose, email }: VerifyEmail
             <button 
                onClick={handleResend}
                disabled={loading}
-               className="w-full py-4 bg-primary text-white font-black uppercase tracking-[0.2em] text-[10px] rounded-2xl shadow-lg shadow-primary/20 disabled:opacity-30 transition-all flex items-center justify-center gap-3"
+               className="w-full py-4 bg-primary text-white font-black uppercase tracking-wider text-[10px] rounded-2xl shadow-lg shadow-primary/20 disabled:opacity-30 transition-all flex items-center justify-center gap-3"
             >
                {loading ? <Loader2 className="animate-spin" size={18} /> : (
                  <>
@@ -88,13 +88,13 @@ export default function VerifyEmailModal({ isOpen, onClose, email }: VerifyEmail
             </button>
             <button 
                onClick={onClose}
-               className="w-full py-4 text-muted-text hover:text-foreground font-black uppercase tracking-widest text-[9px] transition-colors"
+               className="w-full py-4 text-muted-text hover:text-foreground font-black uppercase tracking-wider text-[9px] transition-colors"
             >
                Fermer
             </button>
          </div>
 
-         <p className="text-center text-[8px] text-muted-text uppercase tracking-widest font-bold">
+         <p className="text-center text-[8px] text-muted-text uppercase tracking-wider font-bold">
             Je Dépanne • Sécurité Bancaire
          </p>
       </div>

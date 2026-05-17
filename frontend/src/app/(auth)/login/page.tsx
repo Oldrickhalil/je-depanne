@@ -73,7 +73,7 @@ export default function LoginPage() {
           <div className="bg-red-500/10 border border-red-500/20 text-red-500 p-4 rounded-2xl flex items-start gap-3 animate-in shake duration-500">
             <AlertCircle size={20} className="shrink-0 mt-0.5" />
             <div className="space-y-1">
-              <p className="text-xs font-black uppercase tracking-widest text-red-500">Erreur d'accès</p>
+              <p className="text-xs font-black uppercase tracking-wider text-red-500">Erreur d'accès</p>
               <p className="text-[10px] font-medium opacity-80 uppercase tracking-tight">{error}</p>
             </div>
           </div>
@@ -128,7 +128,7 @@ export default function LoginPage() {
 
         <div className="relative flex items-center py-2">
           <div className="flex-grow border-t border-card-border"></div>
-          <span className="flex-shrink-0 mx-4 text-muted-text text-[9px] font-black uppercase tracking-widest">OU</span>
+          <span className="flex-shrink-0 mx-4 text-muted-text text-[9px] font-black uppercase tracking-wider">OU</span>
           <div className="flex-grow border-t border-card-border"></div>
         </div>
 
@@ -147,7 +147,7 @@ export default function LoginPage() {
           Se connecter avec Google
         </button>
 
-        <div className="flex flex-col items-center gap-4 text-[10px] font-bold uppercase tracking-widest">
+        <div className="flex flex-col items-center gap-4 text-[10px] font-bold uppercase tracking-wider">
            <p className="text-muted-text">Pas encore de compte ?</p>
            <Link href="/register" className="text-primary hover:underline underline-offset-4">
               Créer un accès premium
@@ -157,7 +157,7 @@ export default function LoginPage() {
 
       <div className="mt-10 bottom-10 flex items-center gap-3 text-gray-700">
          <ShieldCheck size={16} />
-         <p className="text-[10px] font-bold uppercase tracking-[0.4em]">Sécurité Bancaire FINTECH</p>
+         <p className="text-[10px] font-bold uppercase tracking-wider">Sécurité Bancaire FINTECH</p>
       </div>
     </div>
   );

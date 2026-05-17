@@ -109,7 +109,7 @@ export default function DepositPage() {
 
         <form onSubmit={handleSubmit} className="bg-card border border-card-border rounded-3xl p-6 shadow-2xl space-y-5">
           <div>
-            <label className="block text-xs font-bold text-muted-text uppercase tracking-widest mb-2 ml-1">Montant à déposer (€)</label>
+            <label className="block text-xs font-bold text-muted-text uppercase tracking-wider mb-2 ml-1">Montant à déposer (€)</label>
             <div className="relative">
                <input
                 type="number"
@@ -125,7 +125,7 @@ export default function DepositPage() {
           </div>
 
           <div className="space-y-4">
-             <label className="block text-xs font-bold text-muted-text uppercase tracking-widest ml-1">Informations de carte</label>
+             <label className="block text-xs font-bold text-muted-text uppercase tracking-wider ml-1">Informations de carte</label>
              <div className="space-y-3">
                 <input
                   type="text"

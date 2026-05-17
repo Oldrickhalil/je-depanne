@@ -167,20 +167,20 @@ export default function DashboardPage() {
 
                 <div className="flex flex-col gap-4 mt-auto">
                    <div className="flex justify-between items-center">
-                      <p className="text-white/40 font-mono text-[10px] md:text-sm tracking-[0.2em] md:tracking-[0.3em] uppercase tracking-tighter">
+                      <p className="text-white/40 font-mono text-[10px] md:text-sm tracking-wider md:tracking-[0.15em] uppercase tracking-tighter">
                         ID: JD-{(session?.user as any)?.id?.slice(0, 8).toUpperCase() || "XXXXXXX"}
                       </p>
                       {isActivated && (
                         <div className="glass px-3 py-1.5 rounded-xl flex items-center gap-2 border-green-500/20 bg-green-500/10">
                            <ShieldCheck size={12} className="text-green-500" />
-                           <span className="text-[9px] font-black tracking-widest uppercase text-green-500">Activé</span>
+                           <span className="text-[9px] font-black tracking-wider uppercase text-green-500">Activé</span>
                         </div>
                       )}
                    </div>
                    <div className="flex gap-3">
                       <Link 
                         href="/dashboard/deposit"
-                        className="flex-1 text-center py-4 bg-primary text-white rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl hover:opacity-90 transition-all active:scale-95"
+                        className="flex-1 text-center py-4 bg-primary text-white rounded-2xl font-black text-[10px] uppercase tracking-wider shadow-xl hover:opacity-90 transition-all active:scale-95"
                       >
                          Déposer
                       </Link>
@@ -190,7 +190,7 @@ export default function DashboardPage() {
                             else if (!hasObtainedCredit) setShowActivationModal({show: true, action: "no_credit"});
                             else router.push("/dashboard/withdraw");
                          }}
-                         className="flex-1 py-4 bg-white text-black rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl hover:bg-gray-200 transition-all active:scale-95"
+                         className="flex-1 py-4 bg-white text-black rounded-2xl font-black text-[10px] uppercase tracking-wider shadow-xl hover:bg-gray-200 transition-all active:scale-95"
                       >
                          Retirer
                       </button>
@@ -217,9 +217,9 @@ export default function DashboardPage() {
                     <StatusIcon size={32} className={status.color} />
                   </div>
                   <div className="space-y-1">
-                    <p className={`text-xs font-black uppercase tracking-widest ${status.color}`}>{status.label}</p>
+                    <p className={`text-xs font-black uppercase tracking-wider ${status.color}`}>{status.label}</p>
                     {activeLoan && (
-                        <p className="text-[9px] text-muted-text font-bold uppercase tracking-widest leading-relaxed">
+                        <p className="text-[9px] text-muted-text font-bold uppercase tracking-wider leading-relaxed">
                             Demande <span className="text-foreground">#{activeLoan.id.slice(0, 5).toUpperCase()}</span> • {activeLoan.amount} €
                         </p>
                     )}
@@ -297,13 +297,13 @@ export default function DashboardPage() {
                  
                  <div className="space-y-2">
                     <h4 className="text-2xl font-black tracking-tighter uppercase">Niveau 1</h4>
-                    <p className="text-[10px] text-muted-text font-medium max-w-[240px] leading-relaxed mx-auto uppercase tracking-widest">
+                    <p className="text-[10px] text-muted-text font-medium max-w-[240px] leading-relaxed mx-auto uppercase tracking-wider">
                        Remboursez vos premiers prêts pour débloquer des montants plus élevés.
                     </p>
                  </div>
 
                  <div className="w-full space-y-3">
-                    <div className="flex justify-between items-end text-[9px] font-black uppercase tracking-widest text-muted-text">
+                    <div className="flex justify-between items-end text-[9px] font-black uppercase tracking-wider text-muted-text">
                        <span>Score Actuel</span>
                        <span className="text-primary">100 / 1000</span>
                     </div>
@@ -333,7 +333,7 @@ export default function DashboardPage() {
 
             <div className="text-center space-y-2">
                <h2 className="text-2xl font-black uppercase tracking-tighter text-foreground">Action bloquée</h2>
-               <p className="text-[10px] text-muted-text font-bold uppercase tracking-widest leading-relaxed">
+               <p className="text-[10px] text-muted-text font-bold uppercase tracking-wider leading-relaxed">
                  {showActivationModal.action === "no_credit" 
                    ? "Vous devez avoir obtenu au moins un crédit pour débloquer la fonctionnalité de retrait."
                    : `Vous devez activer votre compte pour ${showActivationModal.action === "retirer" ? "effectuer un retrait" : "faire une demande de prêt"}.`
@@ -342,7 +342,7 @@ export default function DashboardPage() {
             </div>
 
             <div className="bg-background p-4 rounded-2xl border border-card-border space-y-2 text-center">
-              <p className="text-[9px] font-black uppercase tracking-widest text-muted-text">Prochaine étape requise</p>
+              <p className="text-[9px] font-black uppercase tracking-wider text-muted-text">Prochaine étape requise</p>
               <p className="text-sm font-bold text-foreground uppercase tracking-tight">
                 {showActivationModal.action === "no_credit" 
                   ? "Faire une demande de prêt"
@@ -360,7 +360,7 @@ export default function DashboardPage() {
                   router.push(!freshStatus?.kycVerified ? "/dashboard/onboarding/kyc" : (!freshStatus?.hasDeposited ? "/dashboard/onboarding/deposit" : "/dashboard/onboarding/pwa"));
                 }
               }}
-              className="w-full py-4 bg-primary text-white font-black rounded-2xl hover:bg-primary/90 transition-all uppercase text-[10px] tracking-widest shadow-lg shadow-primary/20"
+              className="w-full py-4 bg-primary text-white font-black rounded-2xl hover:bg-primary/90 transition-all uppercase text-[10px] tracking-wider shadow-lg shadow-primary/20"
             >
               {showActivationModal.action === "no_credit" ? "Aller à la demande" : "Continuer l'activation"}
             </button>

@@ -77,13 +77,13 @@ export default function TransactionsPage() {
       {/* Header */}
       <section className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div className="space-y-1">
-          <Link href="/dashboard" className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.3em] text-muted-text hover:text-foreground transition-colors mb-4">
+          <Link href="/dashboard" className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.15em] text-muted-text hover:text-foreground transition-colors mb-4">
              <ArrowLeft size={12} /> Tableau de Bord
           </Link>
           <h1 className="text-4xl font-title font-bold tight-tracking uppercase leading-none">
             Historique <span className="text-primary">Financier</span>
           </h1>
-          <p className="text-muted-text font-bold uppercase tracking-[0.2em] text-[9px] flex items-center gap-2">
+          <p className="text-muted-text font-bold uppercase tracking-wider text-[9px] flex items-center gap-2">
             Traçabilité de vos fonds en temps réel
           </p>
         </div>
@@ -91,19 +91,19 @@ export default function TransactionsPage() {
         <div className="flex bg-card p-1 rounded-2xl border border-card-border">
            <button 
              onClick={() => setFilter('ALL')}
-             className={`px-4 py-2.5 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all ${filter === 'ALL' ? 'bg-white/10 text-white' : 'text-muted-text hover:text-white'}`}
+             className={`px-4 py-2.5 rounded-xl text-[9px] font-black uppercase tracking-wider transition-all ${filter === 'ALL' ? 'bg-white/10 text-white' : 'text-muted-text hover:text-white'}`}
            >
              Tout
            </button>
            <button 
              onClick={() => setFilter('IN')}
-             className={`px-4 py-2.5 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all flex items-center gap-1 ${filter === 'IN' ? 'bg-green-500/20 text-green-500' : 'text-muted-text hover:text-white'}`}
+             className={`px-4 py-2.5 rounded-xl text-[9px] font-black uppercase tracking-wider transition-all flex items-center gap-1 ${filter === 'IN' ? 'bg-green-500/20 text-green-500' : 'text-muted-text hover:text-white'}`}
            >
              <ArrowDownLeft size={12} /> Entrées
            </button>
            <button 
              onClick={() => setFilter('OUT')}
-             className={`px-4 py-2.5 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all flex items-center gap-1 ${filter === 'OUT' ? 'bg-red-500/20 text-red-500' : 'text-muted-text hover:text-white'}`}
+             className={`px-4 py-2.5 rounded-xl text-[9px] font-black uppercase tracking-wider transition-all flex items-center gap-1 ${filter === 'OUT' ? 'bg-red-500/20 text-red-500' : 'text-muted-text hover:text-white'}`}
            >
              <ArrowUpRight size={12} /> Sorties
            </button>
@@ -129,14 +129,14 @@ export default function TransactionsPage() {
                             </div>
                             <div>
                                 <p className="text-sm font-black uppercase tracking-tight text-foreground">{details.label}</p>
-                                <p className="text-[9px] text-muted-text font-bold uppercase tracking-[0.2em]">{new Date(t.createdAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute:'2-digit' })} • ID: {t.id.slice(0, 6)}</p>
+                                <p className="text-[9px] text-muted-text font-bold uppercase tracking-wider">{new Date(t.createdAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute:'2-digit' })} • ID: {t.id.slice(0, 6)}</p>
                             </div>
                         </div>
                         <div className="text-right">
                            <p className={`text-lg font-black tracking-tighter ${details.color}`}>
                                {details.sign}{t.amount.toFixed(2)} €
                            </p>
-                           <p className="text-[8px] font-black uppercase tracking-widest text-muted-text mt-1">{t.status}</p>
+                           <p className="text-[8px] font-black uppercase tracking-wider text-muted-text mt-1">{t.status}</p>
                         </div>
                     </div>
                  );
@@ -148,8 +148,8 @@ export default function TransactionsPage() {
                   <CreditCard size={24} />
                </div>
                <div className="text-center space-y-1">
-                  <p className="text-xs font-black uppercase tracking-widest text-foreground">Aucune transaction</p>
-                  <p className="text-[9px] font-bold text-muted-text uppercase tracking-widest">Votre historique est vide.</p>
+                  <p className="text-xs font-black uppercase tracking-wider text-foreground">Aucune transaction</p>
+                  <p className="text-[9px] font-bold text-muted-text uppercase tracking-wider">Votre historique est vide.</p>
                </div>
             </div>
          )}

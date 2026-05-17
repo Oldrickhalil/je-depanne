@@ -78,7 +78,7 @@ export default function PinNotificationPrompt({ hasPin }: { hasPin: boolean }) {
            </div>
            <button 
               onClick={() => setShowSetup(true)}
-              className="px-6 py-3 bg-amber-500 text-white font-black text-[10px] uppercase tracking-widest rounded-2xl hover:bg-amber-400 transition-all flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 shrink-0"
+              className="px-6 py-3 bg-amber-500 text-white font-black text-[10px] uppercase tracking-wider rounded-2xl hover:bg-amber-400 transition-all flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 shrink-0"
            >
               Configurer
            </button>
@@ -98,7 +98,7 @@ export default function PinNotificationPrompt({ hasPin }: { hasPin: boolean }) {
                  <h2 className="text-2xl font-black uppercase tracking-tighter text-foreground">
                    {step === "create" ? "Créer un PIN" : "Confirmer le PIN"}
                  </h2>
-                 <p className="text-[10px] text-muted-text uppercase tracking-widest">
+                 <p className="text-[10px] text-muted-text uppercase tracking-wider">
                    Code à 4 chiffres obligatoire
                  </p>
               </div>
@@ -127,7 +127,7 @@ export default function PinNotificationPrompt({ hasPin }: { hasPin: boolean }) {
                  ))}
                  <button 
                     onClick={() => setShowSetup(false)}
-                    className="h-16 rounded-2xl bg-red-500/10 text-red-500 text-[10px] font-black uppercase tracking-widest hover:bg-red-500/20 active:scale-95 transition-all"
+                    className="h-16 rounded-2xl bg-red-500/10 text-red-500 text-[10px] font-black uppercase tracking-wider hover:bg-red-500/20 active:scale-95 transition-all"
                  >
                     Annuler
                  </button>
@@ -145,7 +145,7 @@ export default function PinNotificationPrompt({ hasPin }: { hasPin: boolean }) {
                        if (step === "create") setPin(pin.slice(0, -1));
                        if (step === "confirm") setConfirmPin(confirmPin.slice(0, -1));
                     }}
-                    className="h-16 rounded-2xl bg-background border border-card-border text-sm font-black uppercase tracking-widest hover:bg-white/10 active:scale-95 transition-all text-foreground"
+                    className="h-16 rounded-2xl bg-background border border-card-border text-sm font-black uppercase tracking-wider hover:bg-white/10 active:scale-95 transition-all text-foreground"
                  >
                     Effacer
                  </button>
@@ -157,7 +157,7 @@ export default function PinNotificationPrompt({ hasPin }: { hasPin: boolean }) {
                     if (step === "create") setStep("confirm");
                     else handleSetPin();
                  }}
-                 className="w-full py-5 bg-amber-500 text-black font-black uppercase tracking-[0.2em] text-[10px] rounded-2xl shadow-lg shadow-amber-500/20 disabled:opacity-30 transition-all flex items-center justify-center"
+                 className="w-full py-5 bg-amber-500 text-black font-black uppercase tracking-wider text-[10px] rounded-2xl shadow-lg shadow-amber-500/20 disabled:opacity-30 transition-all flex items-center justify-center"
               >
                  {loading ? <Loader2 className="animate-spin" size={18} /> : (step === "create" ? "Continuer" : "Valider le PIN")}
               </button>

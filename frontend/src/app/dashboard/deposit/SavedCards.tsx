@@ -79,7 +79,7 @@ export default function SavedCards({
              </div>
              <div>
                 <p className="text-sm font-black text-foreground uppercase tracking-tight">•••• {pm.card.last4}</p>
-                <p className="text-[10px] text-muted-text font-bold uppercase tracking-widest mt-0.5">Expire: {pm.card.exp_month}/{pm.card.exp_year}</p>
+                <p className="text-[10px] text-muted-text font-bold uppercase tracking-wider mt-0.5">Expire: {pm.card.exp_month}/{pm.card.exp_year}</p>
              </div>
           </div>
           
@@ -101,7 +101,7 @@ export default function SavedCards({
         className="w-full flex items-center justify-center gap-3 p-5 rounded-2xl border border-dashed border-card-border hover:border-primary/50 text-muted-text hover:text-primary transition-all group"
       >
          <Plus size={16} className="group-hover:scale-110 transition-transform" />
-         <span className="text-[10px] font-black uppercase tracking-[0.2em]">Utiliser une autre carte</span>
+         <span className="text-[10px] font-black uppercase tracking-wider">Utiliser une autre carte</span>
       </button>
     </div>
   );

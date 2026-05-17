@@ -71,7 +71,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <input 
                  type="text" 
                  placeholder="Rechercher..." 
-                 className="w-full pl-10 pr-4 py-2.5 bg-card border border-card-border rounded-[1rem] text-[11px] font-bold uppercase tracking-widest text-foreground placeholder-muted-text focus:outline-none focus:border-primary/50 transition-colors shadow-sm"
+                 className="w-full pl-10 pr-4 py-2.5 bg-card border border-card-border rounded-[1rem] text-[11px] font-bold uppercase tracking-wider text-foreground placeholder-muted-text focus:outline-none focus:border-primary/50 transition-colors shadow-sm"
               />
            </div>
 

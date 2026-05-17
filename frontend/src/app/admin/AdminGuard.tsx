@@ -36,7 +36,7 @@ export default function AdminGuard({ children }: { children: React.ReactNode }) 
     return (
       <div className="min-h-screen bg-[#050505] flex flex-col items-center justify-center space-y-4">
         <Loader2 className="animate-spin text-amber-500" size={40} />
-        <p className="text-[10px] text-gray-500 font-bold uppercase tracking-[0.3em]">Vérification des accès Admin...</p>
+        <p className="text-[10px] text-gray-500 font-bold uppercase tracking-[0.15em]">Vérification des accès Admin...</p>
       </div>
     );
   }

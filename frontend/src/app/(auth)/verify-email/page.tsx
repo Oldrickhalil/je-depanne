@@ -52,7 +52,7 @@ function VerifyEmailContent() {
            </div>
            <div className="space-y-2">
               <h1 className="text-2xl font-black uppercase tracking-tighter">Vérification...</h1>
-              <p className="text-[10px] text-muted-text font-bold uppercase tracking-widest">Nous activons votre compte</p>
+              <p className="text-[10px] text-muted-text font-bold uppercase tracking-wider">Nous activons votre compte</p>
            </div>
         </div>
       )}
@@ -64,13 +64,13 @@ function VerifyEmailContent() {
            </div>
            <div className="space-y-3">
               <h1 className="text-3xl font-black uppercase tracking-tighter text-foreground">Bravo !</h1>
-              <p className="text-xs text-muted-text font-bold uppercase tracking-widest leading-relaxed px-4">
+              <p className="text-xs text-muted-text font-bold uppercase tracking-wider leading-relaxed px-4">
                 {message}
               </p>
            </div>
            <Link 
              href="/login"
-             className="flex items-center justify-center gap-3 w-full py-5 bg-primary text-white font-black text-xs uppercase tracking-[0.2em] rounded-2xl shadow-xl shadow-primary/20 hover:bg-primary/90 transition-all active:scale-95"
+             className="flex items-center justify-center gap-3 w-full py-5 bg-primary text-white font-black text-xs uppercase tracking-wider rounded-2xl shadow-xl shadow-primary/20 hover:bg-primary/90 transition-all active:scale-95"
            >
              Se connecter <ArrowRight size={18} />
            </Link>
@@ -84,20 +84,20 @@ function VerifyEmailContent() {
            </div>
            <div className="space-y-3">
               <h1 className="text-2xl font-black uppercase tracking-tighter text-foreground">Erreur</h1>
-              <p className="text-xs text-red-500 font-bold uppercase tracking-widest leading-relaxed px-4">
+              <p className="text-xs text-red-500 font-bold uppercase tracking-wider leading-relaxed px-4">
                 {message}
               </p>
            </div>
            <Link 
              href="/login"
-             className="flex items-center justify-center gap-3 w-full py-5 bg-background border border-card-border text-foreground font-black text-xs uppercase tracking-[0.2em] rounded-2xl hover:bg-white/5 transition-all"
+             className="flex items-center justify-center gap-3 w-full py-5 bg-background border border-card-border text-foreground font-black text-xs uppercase tracking-wider rounded-2xl hover:bg-white/5 transition-all"
            >
              Retour à l'accueil
            </Link>
         </div>
       )}
 
-      <p className="text-center text-[8px] text-gray-700 font-bold uppercase tracking-[0.4em]">
+      <p className="text-center text-[8px] text-gray-700 font-bold uppercase tracking-wider">
          JE DÉPANNE • SÉCURITÉ BANCAIRE
       </p>
     </div>

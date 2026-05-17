@@ -145,7 +145,7 @@ export default function AppLock({ children }: { children: React.ReactNode }) {
                <h1 className="text-2xl font-black uppercase tracking-tighter text-foreground">
                  Bienvenue
                </h1>
-               <p className="text-[11px] text-muted-text font-bold uppercase tracking-[0.2em]">
+               <p className="text-[11px] text-muted-text font-bold uppercase tracking-wider">
                  Saisissez votre code PIN
                </p>
             </div>
@@ -184,7 +184,7 @@ export default function AppLock({ children }: { children: React.ReactNode }) {
                onClick={() => window.location.href = "/login"}
                className="h-20 rounded-[2rem] text-muted-text hover:text-foreground active:scale-95 transition-all flex flex-col items-center justify-center gap-1"
             >
-               <span className="text-[9px] font-black uppercase tracking-widest">Oublié ?</span>
+               <span className="text-[9px] font-black uppercase tracking-wider">Oublié ?</span>
             </button>
             
             <button 
@@ -203,7 +203,7 @@ export default function AppLock({ children }: { children: React.ReactNode }) {
                   setError(false);
                   setPin(pin.slice(0, -1));
                }}
-               className="h-20 rounded-[2rem] text-muted-text hover:text-foreground active:scale-95 transition-all flex items-center justify-center text-sm font-black uppercase tracking-widest"
+               className="h-20 rounded-[2rem] text-muted-text hover:text-foreground active:scale-95 transition-all flex items-center justify-center text-sm font-black uppercase tracking-wider"
             >
                DEL
             </button>
@@ -212,7 +212,7 @@ export default function AppLock({ children }: { children: React.ReactNode }) {
          {loading && (
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-card/90 backdrop-blur-md p-6 rounded-3xl shadow-2xl flex flex-col items-center gap-4">
                <Loader2 className="animate-spin text-primary" size={32} />
-               <p className="text-[10px] font-bold uppercase tracking-widest text-muted-text">Vérification...</p>
+               <p className="text-[10px] font-bold uppercase tracking-wider text-muted-text">Vérification...</p>
             </div>
          )}
       </div>

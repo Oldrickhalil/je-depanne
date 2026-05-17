@@ -55,14 +55,14 @@ export default function AdminLoginPage() {
           <h1 className="text-4xl font-title font-black tight-tracking uppercase text-white">
             Console <span className="text-amber-500">Admin</span>
           </h1>
-          <p className="text-gray-500 text-[10px] font-bold uppercase tracking-[0.3em]">Accès Restreint • Système Sécurisé</p>
+          <p className="text-gray-500 text-[10px] font-bold uppercase tracking-[0.15em]">Accès Restreint • Système Sécurisé</p>
         </div>
 
         {error && (
           <div className="bg-red-500/10 border border-red-500/20 text-red-500 p-4 rounded-2xl flex items-start gap-3 animate-in shake duration-500">
             <AlertCircle size={20} className="shrink-0 mt-0.5" />
             <div className="space-y-1">
-              <p className="text-xs font-black uppercase tracking-widest">Échec d'Authentification</p>
+              <p className="text-xs font-black uppercase tracking-wider">Échec d'Authentification</p>
               <p className="text-[10px] font-medium opacity-80 uppercase tracking-tight">{error}</p>
             </div>
           </div>
@@ -105,7 +105,7 @@ export default function AdminLoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-5 bg-amber-500 text-black font-black text-xs uppercase tracking-[0.2em] rounded-2xl hover:bg-amber-400 transition-all flex items-center justify-center gap-3 shadow-xl shadow-amber-500/10 active:scale-95 disabled:opacity-50"
+            className="w-full py-5 bg-amber-500 text-black font-black text-xs uppercase tracking-wider rounded-2xl hover:bg-amber-400 transition-all flex items-center justify-center gap-3 shadow-xl shadow-amber-500/10 active:scale-95 disabled:opacity-50"
           >
             {loading ? <Loader2 className="animate-spin" size={18} /> : (
               <>
@@ -115,14 +115,14 @@ export default function AdminLoginPage() {
           </button>
         </form>
 
-        <p className="text-center text-[9px] text-gray-700 font-bold uppercase tracking-[0.4em] pt-8">
+        <p className="text-center text-[9px] text-gray-700 font-bold uppercase tracking-wider pt-8">
            JE DÉPANNE v1.0 • ADMIN PORTAL
         </p>
       </div>
 
       <div className="absolute bottom-10 flex items-center gap-3 text-gray-800">
          <ShieldCheck size={16} />
-         <p className="text-[10px] font-bold uppercase tracking-[0.2em]">Protection de Niveau Bancaire</p>
+         <p className="text-[10px] font-bold uppercase tracking-wider">Protection de Niveau Bancaire</p>
       </div>
     </div>
   );

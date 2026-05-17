@@ -83,7 +83,7 @@ export default function OnboardingChecklist({ freshStatus }: { freshStatus?: any
               </div>
               <div>
                 <h3 className="text-xs font-bold text-foreground uppercase tracking-tight">{step.label}</h3>
-                <p className={`text-[9px] font-black uppercase tracking-widest ${step.color} opacity-80 mt-0.5`}>{step.desc}</p>
+                <p className={`text-[9px] font-black uppercase tracking-wider ${step.color} opacity-80 mt-0.5`}>{step.desc}</p>
               </div>
             </div>
             <div className={`w-8 h-8 rounded-full bg-background flex items-center justify-center ${step.color} group-hover:translate-x-1 transition-transform shrink-0`}>

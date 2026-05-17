@@ -70,20 +70,20 @@ export default function MyLoansPage() {
       {/* Header */}
       <section className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div className="space-y-1">
-          <Link href="/dashboard" className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.3em] text-muted-text hover:text-foreground transition-colors mb-4">
+          <Link href="/dashboard" className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.15em] text-muted-text hover:text-foreground transition-colors mb-4">
              <ArrowLeft size={12} /> Tableau de Bord
           </Link>
           <h1 className="text-4xl font-title font-bold tight-tracking uppercase leading-none">
             Mes <span className="text-primary">Prêts</span>
           </h1>
-          <p className="text-muted-text font-bold uppercase tracking-[0.2em] text-[9px] flex items-center gap-2">
+          <p className="text-muted-text font-bold uppercase tracking-wider text-[9px] flex items-center gap-2">
             Historique complet de vos financements
           </p>
         </div>
         
         <Link 
           href="/dashboard/loans/request"
-          className="px-6 py-3 bg-white text-black rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl hover:bg-gray-200 transition-all flex items-center gap-2"
+          className="px-6 py-3 bg-white text-black rounded-2xl font-black text-[10px] uppercase tracking-wider shadow-xl hover:bg-gray-200 transition-all flex items-center gap-2"
         >
           <Zap size={14} fill="currentColor" /> Nouveau Prêt
         </Link>
@@ -100,7 +100,7 @@ export default function MyLoansPage() {
            <div key={i} className="bg-card border border-card-border p-6 rounded-[2rem] space-y-2">
               <stat.icon size={14} className={stat.color} />
               <div>
-                 <p className="text-[8px] font-black uppercase tracking-widest text-muted-text">{stat.label}</p>
+                 <p className="text-[8px] font-black uppercase tracking-wider text-muted-text">{stat.label}</p>
                  <p className="text-xl font-black tracking-tighter text-foreground">{stat.val}</p>
               </div>
            </div>
@@ -109,7 +109,7 @@ export default function MyLoansPage() {
 
       {/* Main List */}
       <div className="space-y-6">
-         <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-text pl-2">Détails des demandes</h3>
+         <h3 className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-text pl-2">Détails des demandes</h3>
          
          {loading ? (
             <div className="flex justify-center py-20">
@@ -134,15 +134,15 @@ export default function MyLoansPage() {
                              <div>
                                 <div className="flex items-center gap-3 mb-1">
                                    <p className="text-lg font-black uppercase tracking-tight text-foreground">{loan.amount} €</p>
-                                   <span className={`text-[8px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full ${status.bg} ${status.color}`}>
+                                   <span className={`text-[8px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full ${status.bg} ${status.color}`}>
                                       {status.label}
                                    </span>
                                 </div>
                                 <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
-                                   <div className="flex items-center gap-1.5 text-[9px] font-bold text-muted-text uppercase tracking-widest">
+                                   <div className="flex items-center gap-1.5 text-[9px] font-bold text-muted-text uppercase tracking-wider">
                                       <Calendar size={12} /> {new Date(loan.createdAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
                                    </div>
-                                   <div className="flex items-center gap-1.5 text-[9px] font-bold text-muted-text uppercase tracking-widest">
+                                   <div className="flex items-center gap-1.5 text-[9px] font-bold text-muted-text uppercase tracking-wider">
                                       <Clock size={12} /> {loan.termMonths} mois
                                    </div>
                                 </div>
@@ -151,15 +151,15 @@ export default function MyLoansPage() {
 
                           <div className="flex items-center gap-10">
                              <div className="space-y-1">
-                                <p className="text-[8px] font-black text-muted-text uppercase tracking-widest">ID Demande</p>
+                                <p className="text-[8px] font-black text-muted-text uppercase tracking-wider">ID Demande</p>
                                 <p className="text-[10px] font-mono font-bold text-muted-text">#JD-{loan.id.slice(0, 8).toUpperCase()}</p>
                              </div>
                              <div className="space-y-1 text-right">
-                                <p className="text-[8px] font-black text-muted-text uppercase tracking-widest">Taux</p>
+                                <p className="text-[8px] font-black text-muted-text uppercase tracking-wider">Taux</p>
                                 <p className="text-[10px] font-bold text-foreground">{(loan.interestRate * 100).toFixed(1)}% Fixe</p>
                              </div>
                              <div className="space-y-1 text-right">
-                                <p className="text-[8px] font-black text-muted-text uppercase tracking-widest">Total à Rembourser</p>
+                                <p className="text-[8px] font-black text-muted-text uppercase tracking-wider">Total à Rembourser</p>
                                 <p className="text-sm font-black text-primary tracking-tighter">{(loan.amount * (1 + loan.interestRate)).toFixed(2)} €</p>
                              </div>
                           </div>
@@ -167,7 +167,7 @@ export default function MyLoansPage() {
                              <div className="mt-6 md:mt-0 pt-6 md:pt-0 border-t md:border-t-0 border-card-border md:pl-6 md:border-l flex justify-end">
                                 <Link 
                                    href="/dashboard/schedule"
-                                   className="px-6 py-3 bg-white text-black font-black text-[10px] uppercase tracking-widest rounded-2xl hover:bg-gray-200 transition-all shadow-xl active:scale-95"
+                                   className="px-6 py-3 bg-white text-black font-black text-[10px] uppercase tracking-wider rounded-2xl hover:bg-gray-200 transition-all shadow-xl active:scale-95"
                                 >
                                    Rembourser
                                 </Link>
@@ -184,10 +184,10 @@ export default function MyLoansPage() {
                   <Info size={24} />
                </div>
                <div className="text-center space-y-1">
-                  <p className="text-xs font-black uppercase tracking-widest text-foreground">Aucun prêt pour le moment</p>
-                  <p className="text-[9px] font-bold text-muted-text uppercase tracking-widest">Vos futures demandes apparaîtront ici.</p>
+                  <p className="text-xs font-black uppercase tracking-wider text-foreground">Aucun prêt pour le moment</p>
+                  <p className="text-[9px] font-bold text-muted-text uppercase tracking-wider">Vos futures demandes apparaîtront ici.</p>
                </div>
-               <Link href="/dashboard/loans/request" className="text-primary text-[10px] font-black uppercase tracking-widest hover:underline pt-2">
+               <Link href="/dashboard/loans/request" className="text-primary text-[10px] font-black uppercase tracking-wider hover:underline pt-2">
                   Faire ma première demande
                </Link>
             </div>

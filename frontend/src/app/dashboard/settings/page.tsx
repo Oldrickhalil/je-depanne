@@ -161,13 +161,13 @@ export default function SettingsPage() {
       
       <section className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div className="space-y-1">
-          <Link href="/dashboard/profile" className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.3em] text-muted-text hover:text-foreground transition-colors mb-4">
+          <Link href="/dashboard/profile" className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.15em] text-muted-text hover:text-foreground transition-colors mb-4">
              <ArrowLeft size={12} /> Retour
           </Link>
           <h1 className="text-4xl font-title font-bold tight-tracking uppercase leading-none text-foreground">
             Paramètres
           </h1>
-          <p className="text-muted-text font-bold uppercase tracking-[0.2em] text-[9px]">Gérez vos préférences et votre sécurité</p>
+          <p className="text-muted-text font-bold uppercase tracking-wider text-[9px]">Gérez vos préférences et votre sécurité</p>
         </div>
       </section>
 
@@ -175,20 +175,20 @@ export default function SettingsPage() {
          <div className="md:col-span-4 space-y-2">
             <button 
                onClick={() => setActiveTab('notifications')}
-               className={`w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-bold uppercase tracking-widest text-[10px] transition-all ${activeTab === 'notifications' ? 'bg-white/10 text-white' : 'text-muted-text hover:bg-white/5'}`}
+               className={`w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-bold uppercase tracking-wider text-[10px] transition-all ${activeTab === 'notifications' ? 'bg-white/10 text-white' : 'text-muted-text hover:bg-white/5'}`}
             >
                <Bell size={16} className={activeTab === 'notifications' ? "text-primary" : ""} />
                Notifications
             </button>
             <button 
                onClick={() => setActiveTab('payments')}
-               className={`w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-bold uppercase tracking-widest text-[10px] transition-all ${activeTab === 'payments' ? 'bg-white/10 text-white' : 'text-muted-text hover:bg-white/5'}`}
+               className={`w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-bold uppercase tracking-wider text-[10px] transition-all ${activeTab === 'payments' ? 'bg-white/10 text-white' : 'text-muted-text hover:bg-white/5'}`}
             >
                <CreditCard size={16} className={activeTab === 'payments' ? "text-primary" : ""} />
                Moyens de paiement
             </button>
             <button 
-               className="w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-bold uppercase tracking-widest text-[10px] transition-all text-muted-text hover:bg-white/5"
+               className="w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-bold uppercase tracking-wider text-[10px] transition-all text-muted-text hover:bg-white/5"
             >
                <ShieldAlert size={16} />
                Confidentialité
@@ -200,8 +200,8 @@ export default function SettingsPage() {
             {activeTab === 'notifications' && (
               <div className="bg-card border border-card-border rounded-[2.5rem] p-8 space-y-8 animate-in fade-in slide-in-from-right-4 duration-500 shadow-sm">
                  <div className="space-y-1 border-b border-card-border pb-6">
-                    <h3 className="font-title font-bold text-lg tracking-widest uppercase text-foreground">Alertes</h3>
-                    <p className="text-[10px] text-muted-text font-bold uppercase tracking-widest">Gérez vos canaux de communication</p>
+                    <h3 className="font-title font-bold text-lg tracking-wider uppercase text-foreground">Alertes</h3>
+                    <p className="text-[10px] text-muted-text font-bold uppercase tracking-wider">Gérez vos canaux de communication</p>
                  </div>
                  
                  <div className="space-y-6">
@@ -226,12 +226,12 @@ export default function SettingsPage() {
                   <div className="bg-card border border-card-border rounded-[2.5rem] p-8 space-y-8 shadow-sm">
                      <div className="flex items-center justify-between border-b border-card-border pb-6">
                         <div className="space-y-1">
-                           <h3 className="font-title font-bold text-lg tracking-widest uppercase text-foreground">Mes Cartes</h3>
-                           <p className="text-[10px] text-muted-text font-bold uppercase tracking-widest">Cartes sauvegardées via Stripe</p>
+                           <h3 className="font-title font-bold text-lg tracking-wider uppercase text-foreground">Mes Cartes</h3>
+                           <p className="text-[10px] text-muted-text font-bold uppercase tracking-wider">Cartes sauvegardées via Stripe</p>
                         </div>
                         <button 
                            onClick={() => setShowAddCard(true)}
-                           className="px-4 py-2 bg-primary text-white text-[8px] font-black uppercase tracking-widest rounded-xl hover:bg-primary/90 transition-all flex items-center gap-2 shadow-lg shadow-primary/20"
+                           className="px-4 py-2 bg-primary text-white text-[8px] font-black uppercase tracking-wider rounded-xl hover:bg-primary/90 transition-all flex items-center gap-2 shadow-lg shadow-primary/20"
                         >
                            <Plus size={12} /> Ajouter une carte
                         </button>
@@ -262,13 +262,13 @@ export default function SettingsPage() {
                               </div>
                            ))
                         ) : (
-                           <div className="py-10 text-center text-muted-text uppercase text-[10px] font-black tracking-widest">Aucune carte enregistrée</div>
+                           <div className="py-10 text-center text-muted-text uppercase text-[10px] font-black tracking-wider">Aucune carte enregistrée</div>
                         )}
                         
                         <button 
                            onClick={openStripePortal}
                            disabled={isOpeningPortal}
-                           className="w-full py-3 text-[8px] font-black text-muted-text uppercase tracking-widest hover:text-foreground transition-colors flex items-center justify-center gap-2"
+                           className="w-full py-3 text-[8px] font-black text-muted-text uppercase tracking-wider hover:text-foreground transition-colors flex items-center justify-center gap-2"
                         >
                            {isOpeningPortal && <Loader2 size={10} className="animate-spin" />} Accéder au portail de facturation Stripe
                         </button>
@@ -279,20 +279,20 @@ export default function SettingsPage() {
 
             <div className="bg-card border border-card-border rounded-[2.5rem] p-8 space-y-8 shadow-sm">
                <div className="space-y-1 border-b border-card-border pb-6">
-                  <h3 className="font-title font-bold text-lg tracking-widest uppercase text-foreground">Sécurité</h3>
-                  <p className="text-[10px] text-muted-text font-bold uppercase tracking-widest">Accès et authentification</p>
+                  <h3 className="font-title font-bold text-lg tracking-wider uppercase text-foreground">Sécurité</h3>
+                  <p className="text-[10px] text-muted-text font-bold uppercase tracking-wider">Accès et authentification</p>
                </div>
                <div className="space-y-6">
                   <div className="flex items-center justify-between">
                      <p className="text-sm font-bold text-foreground uppercase tracking-tight">Mot de passe</p>
-                     <button onClick={() => { setPendingAction("password"); setShowPinModal(true); }} className="px-4 py-2 bg-white/5 text-foreground text-[9px] font-black uppercase tracking-widest rounded-xl hover:bg-white/10 transition-colors">Modifier</button>
+                     <button onClick={() => { setPendingAction("password"); setShowPinModal(true); }} className="px-4 py-2 bg-white/5 text-foreground text-[9px] font-black uppercase tracking-wider rounded-xl hover:bg-white/10 transition-colors">Modifier</button>
                   </div>
                </div>
             </div>
 
             <div className="bg-card border border-card-border rounded-[2.5rem] p-8 space-y-8">
                <div className="space-y-1 border-b border-card-border pb-6">
-                  <h3 className="font-title font-bold text-lg tracking-widest uppercase text-foreground">Préférences</h3>
+                  <h3 className="font-title font-bold text-lg tracking-wider uppercase text-foreground">Préférences</h3>
                </div>
                <div className="flex items-center justify-between p-4 bg-background border border-card-border rounded-2xl">
                   <div className="flex items-center gap-4">

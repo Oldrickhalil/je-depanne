@@ -123,7 +123,7 @@ export default function OnboardingIntro() {
            
            <button 
              onClick={skip}
-             className="w-full py-4 text-muted-text font-bold text-xs uppercase tracking-[0.2em] mt-4 hover:text-foreground transition-colors"
+             className="w-full py-4 text-muted-text font-bold text-xs uppercase tracking-wider mt-4 hover:text-foreground transition-colors"
            >
               Ignorer pour l'instant
            </button>
@@ -131,7 +131,7 @@ export default function OnboardingIntro() {
       </div>
 
       <footer className="absolute bottom-10 flex flex-col items-center gap-2">
-         <p className="text-[10px] text-gray-700 font-bold uppercase tracking-[0.4em]">JE DÉPANNE • ONBOARDING PREMIUM</p>
+         <p className="text-[10px] text-gray-700 font-bold uppercase tracking-wider">JE DÉPANNE • ONBOARDING PREMIUM</p>
       </footer>
     </div>
   );

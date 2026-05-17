@@ -111,7 +111,7 @@ export default function DepositPage() {
           </div>
           <div>
             <h2 className="text-3xl font-black uppercase text-foreground mb-2 tracking-tighter">Dépôt Réussi !</h2>
-            <p className="text-xs text-muted-text font-bold uppercase tracking-widest leading-relaxed mb-6">
+            <p className="text-xs text-muted-text font-bold uppercase tracking-wider leading-relaxed mb-6">
               Votre compte a été crédité avec succès. <br/>
               {isFirstDeposit && <span className="text-primary mt-2 block">Bonus de bienvenue ajouté !</span>}
             </p>
@@ -131,7 +131,7 @@ export default function DepositPage() {
         {/* Left Side: Info */}
         <div className="space-y-8 md:sticky md:top-24">
            <div className="space-y-4">
-              <Link href="/dashboard" className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.3em] text-muted-text hover:text-foreground transition-colors mb-4">
+              <Link href="/dashboard" className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.15em] text-muted-text hover:text-foreground transition-colors mb-4">
                  <ArrowLeft size={12} /> Retour
               </Link>
               <div className="w-16 h-16 bg-primary/10 rounded-[2rem] flex items-center justify-center mb-6">
@@ -149,11 +149,11 @@ export default function DepositPage() {
 
            <div className="grid grid-cols-2 gap-4">
               <div className="p-4 rounded-2xl bg-card border border-card-border space-y-1">
-                 <p className="text-[8px] font-black uppercase text-muted-text tracking-widest">Sécurité</p>
+                 <p className="text-[8px] font-black uppercase text-muted-text tracking-wider">Sécurité</p>
                  <p className="text-[10px] font-bold text-foreground uppercase">3D Secure 2.0</p>
               </div>
               <div className="p-4 rounded-2xl bg-card border border-card-border space-y-1">
-                 <p className="text-[8px] font-black uppercase text-muted-text tracking-widest">Rapidité</p>
+                 <p className="text-[8px] font-black uppercase text-muted-text tracking-wider">Rapidité</p>
                  <p className="text-[10px] font-bold text-foreground uppercase">Instantané</p>
               </div>
            </div>
@@ -164,7 +164,7 @@ export default function DepositPage() {
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-transparent"></div>
           
           <div className="space-y-3">
-            <label className="block text-[10px] font-black text-muted-text uppercase tracking-widest ml-1 text-center">Montant du dépôt</label>
+            <label className="block text-[10px] font-black text-muted-text uppercase tracking-wider ml-1 text-center">Montant du dépôt</label>
             <div className="relative">
                <input
                 type="number"
@@ -177,7 +177,7 @@ export default function DepositPage() {
               />
               <span className="absolute right-8 top-1/2 -translate-y-1/2 text-muted-text font-black text-xl">€</span>
             </div>
-            {isFirstDeposit && <p className="text-[9px] text-primary font-black uppercase tracking-widest text-center">Dépôt min. 20€ pour le bonus</p>}
+            {isFirstDeposit && <p className="text-[9px] text-primary font-black uppercase tracking-wider text-center">Dépôt min. 20€ pour le bonus</p>}
           </div>
 
           <div className="w-full h-px bg-card-border"></div>
@@ -192,7 +192,7 @@ export default function DepositPage() {
           {userId && (
             mode === 'selection' ? (
               <div className="space-y-6">
-                <label className="block text-[9px] font-black text-muted-text uppercase tracking-[0.2em] ml-1">Choisir une carte</label>
+                <label className="block text-[9px] font-black text-muted-text uppercase tracking-wider ml-1">Choisir une carte</label>
                 <SavedCards 
                   userId={userId} 
                   selectedId={selectedPmId} 
@@ -203,7 +203,7 @@ export default function DepositPage() {
                 <button
                   onClick={handleSavedCardPay}
                   disabled={!selectedPmId || paying || parseFloat(amount) < (isFirstDeposit ? 20 : 10)}
-                  className="w-full py-5 bg-white text-black font-black text-xs uppercase tracking-[0.4em] rounded-[2rem] hover:bg-gray-200 transition-all disabled:opacity-50 flex items-center justify-center gap-3 shadow-xl active:scale-95"
+                  className="w-full py-5 bg-white text-black font-black text-xs uppercase tracking-wider rounded-[2rem] hover:bg-gray-200 transition-all disabled:opacity-50 flex items-center justify-center gap-3 shadow-xl active:scale-95"
                 >
                   {paying ? <Loader2 className="animate-spin" size={18} /> : (
                     <>
@@ -215,8 +215,8 @@ export default function DepositPage() {
             ) : (
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
-                   <label className="block text-[9px] font-black text-muted-text uppercase tracking-[0.2em] ml-1">Nouvelle Carte</label>
-                   <button onClick={() => setMode('selection')} className="text-[9px] font-black text-primary uppercase tracking-widest hover:underline">Voir mes cartes</button>
+                   <label className="block text-[9px] font-black text-muted-text uppercase tracking-wider ml-1">Nouvelle Carte</label>
+                   <button onClick={() => setMode('selection')} className="text-[9px] font-black text-primary uppercase tracking-wider hover:underline">Voir mes cartes</button>
                 </div>
                 <StripePayment 
                   amount={parseFloat(amount) || 0} 
@@ -227,7 +227,7 @@ export default function DepositPage() {
             )
           )}
           
-          <div className="flex items-center justify-center gap-2 text-[8px] text-gray-700 font-bold uppercase tracking-widest">
+          <div className="flex items-center justify-center gap-2 text-[8px] text-gray-700 font-bold uppercase tracking-wider">
             <ShieldCheck size={12} className="text-green-500" />
             <span>Cryptage SSL 256-bit sécurisé par Stripe</span>
           </div>

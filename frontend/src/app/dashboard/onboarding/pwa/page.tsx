@@ -103,14 +103,14 @@ export default function PWAPage() {
               </ol>
             </div>
             
-            <p className="text-center text-[10px] text-muted-text uppercase tracking-widest font-bold animate-pulse">
+            <p className="text-center text-[10px] text-muted-text uppercase tracking-wider font-bold animate-pulse">
                En attente d'ouverture depuis l'écran d'accueil...
             </p>
             
             {/* Fallback silencieux caché ou discret au cas où la détection plante sur de vieux iOS */}
             <button
               onClick={markAsInstalled}
-              className="w-full py-4 text-muted-text font-bold text-[10px] uppercase tracking-widest hover:text-foreground transition-all opacity-50"
+              className="w-full py-4 text-muted-text font-bold text-[10px] uppercase tracking-wider hover:text-foreground transition-all opacity-50"
             >
               Je l'ai déjà fait (Forcer)
             </button>
@@ -138,7 +138,7 @@ export default function PWAPage() {
           </div>
         )}
 
-        <div className="flex items-center justify-center gap-2 text-[10px] text-muted-text font-bold uppercase tracking-widest">
+        <div className="flex items-center justify-center gap-2 text-[10px] text-muted-text font-bold uppercase tracking-wider">
           <CheckCircle2 className="w-3 h-3" />
           <span>Sécurisé & Optimisé</span>
         </div>

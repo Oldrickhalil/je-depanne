@@ -104,7 +104,7 @@ export default function PinOnboardingPage() {
                     setPin("");
                  }
               }}
-              className="h-16 rounded-2xl bg-red-500/10 text-red-500 text-[10px] font-black uppercase tracking-widest hover:bg-red-500/20 active:scale-95 transition-all"
+              className="h-16 rounded-2xl bg-red-500/10 text-red-500 text-[10px] font-black uppercase tracking-wider hover:bg-red-500/20 active:scale-95 transition-all"
            >
               Effacer
            </button>

@@ -24,7 +24,7 @@ export default function ProfileMenuPage() {
            <h1 className="text-3xl font-title font-bold tight-tracking uppercase leading-none text-foreground">
              {firstName} <span className="text-primary">{lastName}</span>
            </h1>
-           <p className="text-muted-text font-bold uppercase tracking-[0.2em] text-[10px] mt-2">
+           <p className="text-muted-text font-bold uppercase tracking-wider text-[10px] mt-2">
              {session?.user?.email}
            </p>
         </div>
@@ -42,7 +42,7 @@ export default function ProfileMenuPage() {
                </div>
                <div className="text-left">
                   <p className="text-sm font-bold text-foreground uppercase tracking-tight">Mon Profil</p>
-                  <p className="text-[9px] text-muted-text uppercase tracking-widest mt-0.5">Informations personnelles & bancaires</p>
+                  <p className="text-[9px] text-muted-text uppercase tracking-wider mt-0.5">Informations personnelles & bancaires</p>
                </div>
             </div>
             <ChevronRight size={18} className="text-muted-text group-hover:text-primary transition-colors" />
@@ -58,7 +58,7 @@ export default function ProfileMenuPage() {
                </div>
                <div className="text-left">
                   <p className="text-sm font-bold text-foreground uppercase tracking-tight">Paramètres</p>
-                  <p className="text-[9px] text-muted-text uppercase tracking-widest mt-0.5">Sécurité, Thème, Notifications</p>
+                  <p className="text-[9px] text-muted-text uppercase tracking-wider mt-0.5">Sécurité, Thème, Notifications</p>
                </div>
             </div>
             <ChevronRight size={18} className="text-muted-text group-hover:text-primary transition-colors" />
@@ -74,7 +74,7 @@ export default function ProfileMenuPage() {
                </div>
                <div className="text-left">
                   <p className="text-sm font-bold text-foreground uppercase tracking-tight">Confidentialité</p>
-                  <p className="text-[9px] text-muted-text uppercase tracking-widest mt-0.5">Gestion de vos données</p>
+                  <p className="text-[9px] text-muted-text uppercase tracking-wider mt-0.5">Gestion de vos données</p>
                </div>
             </div>
             <ChevronRight size={18} className="text-muted-text group-hover:text-foreground transition-colors" />
@@ -90,7 +90,7 @@ export default function ProfileMenuPage() {
                </div>
                <div className="text-left">
                   <p className="text-sm font-bold text-foreground uppercase tracking-tight">À Propos</p>
-                  <p className="text-[9px] text-muted-text uppercase tracking-widest mt-0.5">Mentions légales & CGU</p>
+                  <p className="text-[9px] text-muted-text uppercase tracking-wider mt-0.5">Mentions légales & CGU</p>
                </div>
             </div>
             <ChevronRight size={18} className="text-muted-text group-hover:text-foreground transition-colors" />
@@ -104,11 +104,11 @@ export default function ProfileMenuPage() {
             className="w-full group flex items-center justify-center gap-3 p-5 rounded-[1.5rem] bg-red-500/5 border border-red-500/10 hover:bg-red-500 hover:text-white transition-all shadow-sm text-red-500"
          >
             <LogOut size={18} className="group-hover:scale-110 transition-transform" />
-            <span className="text-[11px] font-black uppercase tracking-widest">Se Déconnecter</span>
+            <span className="text-[11px] font-black uppercase tracking-wider">Se Déconnecter</span>
          </button>
       </section>
       
-      <p className="text-center text-[9px] text-muted-text uppercase tracking-[0.3em] pt-8">
+      <p className="text-center text-[9px] text-muted-text uppercase tracking-[0.15em] pt-8">
         Je Dépanne • Version 1.0.0
       </p>
     </div>

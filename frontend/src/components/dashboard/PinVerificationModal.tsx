@@ -84,7 +84,7 @@ export default function PinVerificationModal({ isOpen, onClose, onSuccess, title
                <h2 className="text-xl font-black uppercase tracking-tighter text-foreground">
                  {title}
                </h2>
-               <p className="text-[10px] text-muted-text font-bold uppercase tracking-[0.2em] px-4">
+               <p className="text-[10px] text-muted-text font-bold uppercase tracking-wider px-4">
                  {description}
                </p>
             </div>
@@ -104,7 +104,7 @@ export default function PinVerificationModal({ isOpen, onClose, onSuccess, title
          </div>
 
          {error && (
-            <p className="text-center text-red-500 text-[9px] font-black uppercase tracking-widest animate-bounce mb-4">
+            <p className="text-center text-red-500 text-[9px] font-black uppercase tracking-wider animate-bounce mb-4">
                Code PIN incorrect
             </p>
          )}
@@ -126,7 +126,7 @@ export default function PinVerificationModal({ isOpen, onClose, onSuccess, title
             
             <button 
                onClick={onClose}
-               className="h-16 rounded-[1.5rem] text-muted-text hover:text-foreground active:scale-95 transition-all flex items-center justify-center text-[9px] font-black uppercase tracking-widest"
+               className="h-16 rounded-[1.5rem] text-muted-text hover:text-foreground active:scale-95 transition-all flex items-center justify-center text-[9px] font-black uppercase tracking-wider"
             >
                Annuler
             </button>
@@ -147,7 +147,7 @@ export default function PinVerificationModal({ isOpen, onClose, onSuccess, title
                   setError(false);
                   setPin(pin.slice(0, -1));
                }}
-               className="h-16 rounded-[1.5rem] text-muted-text hover:text-foreground active:scale-95 transition-all flex items-center justify-center text-sm font-black uppercase tracking-widest"
+               className="h-16 rounded-[1.5rem] text-muted-text hover:text-foreground active:scale-95 transition-all flex items-center justify-center text-sm font-black uppercase tracking-wider"
             >
                DEL
             </button>
@@ -156,7 +156,7 @@ export default function PinVerificationModal({ isOpen, onClose, onSuccess, title
          {loading && (
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-card/90 backdrop-blur-md p-6 rounded-3xl shadow-2xl flex flex-col items-center gap-4">
                <Loader2 className="animate-spin text-primary" size={32} />
-               <p className="text-[10px] font-bold uppercase tracking-widest text-muted-text">Vérification...</p>
+               <p className="text-[10px] font-bold uppercase tracking-wider text-muted-text">Vérification...</p>
             </div>
          )}
       </div>

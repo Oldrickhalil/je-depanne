@@ -102,7 +102,7 @@ export default function PushNotificationPrompt() {
           <button 
              onClick={subscribeUser}
              disabled={loading}
-             className="px-6 py-3 bg-primary text-white font-black text-[10px] uppercase tracking-widest rounded-2xl hover:bg-primary/90 transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20"
+             className="px-6 py-3 bg-primary text-white font-black text-[10px] uppercase tracking-wider rounded-2xl hover:bg-primary/90 transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20"
           >
              {loading ? <Loader2 size={14} className="animate-spin" /> : "Activer"}
           </button>

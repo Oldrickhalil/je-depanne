@@ -124,7 +124,7 @@ export default function WithdrawPage() {
           </div>
           <div>
             <h2 className="text-3xl font-black uppercase text-foreground mb-2 tracking-tighter">Retrait Initié</h2>
-            <p className="text-muted-text text-xs font-bold uppercase tracking-widest leading-relaxed mb-6">
+            <p className="text-muted-text text-xs font-bold uppercase tracking-wider leading-relaxed mb-6">
               Votre transfert de {amount} € vers le compte {bankName} est en cours de traitement par Stripe.
             </p>
           </div>
@@ -160,12 +160,12 @@ export default function WithdrawPage() {
           </div>
 
           <div className="bg-background p-6 rounded-3xl border border-card-border space-y-2">
-             <p className="text-[10px] font-black uppercase tracking-widest text-muted-text">Solde Disponible</p>
+             <p className="text-[10px] font-black uppercase tracking-wider text-muted-text">Solde Disponible</p>
              <p className="text-3xl font-black text-foreground">{freshStatus?.balance?.toFixed(2) || "0.00"} €</p>
           </div>
 
           <div className="space-y-4 pt-4">
-            <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-muted-text">
+            <div className="flex items-center gap-3 text-[10px] font-black uppercase tracking-wider text-muted-text">
               <ShieldCheck className="w-5 h-5 text-primary" />
               <span>Transfert Sécurisé Stripe</span>
             </div>
@@ -174,13 +174,13 @@ export default function WithdrawPage() {
 
         <form onSubmit={handleSubmit} className="bg-card border border-card-border rounded-[2.5rem] p-8 shadow-2xl space-y-6">
           {error && (
-            <div className="bg-red-500/10 text-red-500 p-4 rounded-xl text-xs font-bold uppercase tracking-widest text-center border border-red-500/20">
+            <div className="bg-red-500/10 text-red-500 p-4 rounded-xl text-xs font-bold uppercase tracking-wider text-center border border-red-500/20">
               {error}
             </div>
           )}
 
           <div className="space-y-2">
-            <label className="block text-[10px] font-black text-muted-text uppercase tracking-widest ml-1">Montant à retirer</label>
+            <label className="block text-[10px] font-black text-muted-text uppercase tracking-wider ml-1">Montant à retirer</label>
             <div className="relative">
                <input
                 type="number"
@@ -194,7 +194,7 @@ export default function WithdrawPage() {
               />
               <span className="absolute right-6 top-1/2 -translate-y-1/2 text-muted-text font-black">€</span>
             </div>
-            <p className="text-[9px] text-muted-text font-black uppercase tracking-widest mt-2 flex justify-between">
+            <p className="text-[9px] text-muted-text font-black uppercase tracking-wider mt-2 flex justify-between">
               <span>Min. 10 €</span>
               <button 
                  type="button" 
@@ -207,7 +207,7 @@ export default function WithdrawPage() {
           </div>
 
           <div className="space-y-4 pt-4 border-t border-card-border">
-             <label className="block text-[9px] font-black text-muted-text uppercase tracking-[0.2em] ml-1">Informations Bancaires (Bénéficiaire)</label>
+             <label className="block text-[9px] font-black text-muted-text uppercase tracking-wider ml-1">Informations Bancaires (Bénéficiaire)</label>
              <div className="space-y-3">
                 <div className="relative">
                   <input
@@ -232,13 +232,13 @@ export default function WithdrawPage() {
                   <CreditCard className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-700" />
                 </div>
              </div>
-             <p className="text-[8px] font-black uppercase tracking-widest text-muted-text text-center">Ces informations seront sauvegardées dans vos paramètres.</p>
+             <p className="text-[8px] font-black uppercase tracking-wider text-muted-text text-center">Ces informations seront sauvegardées dans vos paramètres.</p>
           </div>
 
           <button
             type="submit"
             disabled={loading || !amount || parseFloat(amount) < 10 || parseFloat(amount) > (freshStatus?.balance || 0)}
-            className="w-full py-5 bg-white text-black font-black text-xs uppercase tracking-[0.4em] rounded-[2rem] hover:bg-gray-200 transition-all disabled:opacity-50 flex items-center justify-center gap-3 shadow-xl active:scale-95"
+            className="w-full py-5 bg-white text-black font-black text-xs uppercase tracking-wider rounded-[2rem] hover:bg-gray-200 transition-all disabled:opacity-50 flex items-center justify-center gap-3 shadow-xl active:scale-95"
           >
             {loading ? <Loader2 className="animate-spin" size={18} /> : (
               <>

@@ -259,7 +259,7 @@ export default function AdminDashboard() {
               <h1 className="text-3xl font-title font-bold tight-tracking uppercase">
                  Console <span className="text-amber-500">Admin</span>
               </h1>
-              <p className="text-[9px] text-muted-text font-black uppercase tracking-[0.3em]">
+              <p className="text-[9px] text-muted-text font-black uppercase tracking-[0.15em]">
                 {view === 'loans' ? 'Gestion des Prêts' : (view === 'users' ? 'Base Utilisateurs' : (view === 'withdrawals' ? 'Demandes de Retraits' : (view === 'settings' ? 'Paramètres Système' : 'Journal d\'Activité')))}
               </p>
            </div>
@@ -291,7 +291,7 @@ export default function AdminDashboard() {
              <div key={i} className="bg-card border border-card-border p-5 rounded-[2rem] space-y-3 shadow-sm">
                 <stat.icon size={16} className={stat.color} />
                 <div>
-                   <p className="text-[8px] font-black uppercase tracking-widest text-muted-text">{stat.label}</p>
+                   <p className="text-[8px] font-black uppercase tracking-wider text-muted-text">{stat.label}</p>
                    <p className="text-xl font-black tracking-tighter text-foreground">{stat.val}</p>
                 </div>
              </div>
@@ -307,7 +307,7 @@ export default function AdminDashboard() {
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Rechercher un dossier..." 
-                  className="bg-card border border-card-border rounded-2xl py-4 pl-10 pr-6 text-[10px] font-bold uppercase tracking-widest focus:outline-none focus:ring-1 focus:ring-primary/50 transition-all w-full text-foreground shadow-sm"
+                  className="bg-card border border-card-border rounded-2xl py-4 pl-10 pr-6 text-[10px] font-bold uppercase tracking-wider focus:outline-none focus:ring-1 focus:ring-primary/50 transition-all w-full text-foreground shadow-sm"
                 />
              </div>
            )}
@@ -326,12 +326,12 @@ export default function AdminDashboard() {
                            </div>
                            <div>
                               <p className="text-sm font-black uppercase tracking-tight text-foreground">{loan.user.firstName}</p>
-                              <p className="text-[9px] text-muted-text font-bold uppercase tracking-[0.2em]">{loan.user.email}</p>
+                              <p className="text-[9px] text-muted-text font-bold uppercase tracking-wider">{loan.user.email}</p>
                            </div>
                         </div>
 
                         <div className="flex items-center gap-4">
-                           <div className={`text-[8px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full ${
+                           <div className={`text-[8px] font-black uppercase tracking-wider px-3 py-1.5 rounded-full ${
                               loan.status === 'PENDING' ? 'bg-amber-500/10 text-amber-500' :
                               loan.status === 'APPROVED' ? 'bg-green-500/10 text-green-500' :
                               'bg-red-500/10 text-red-500'
@@ -346,7 +346,7 @@ export default function AdminDashboard() {
                            )}
                            <button 
                               onClick={() => setSelectedLoan(loan)}
-                              className="px-4 py-2 bg-foreground/5 text-muted-text text-[8px] font-black uppercase tracking-widest rounded-lg hover:bg-white/10 hover:text-foreground transition-all"
+                              className="px-4 py-2 bg-foreground/5 text-muted-text text-[8px] font-black uppercase tracking-wider rounded-lg hover:bg-white/10 hover:text-foreground transition-all"
                            >
                               Détails
                            </button>
@@ -354,7 +354,7 @@ export default function AdminDashboard() {
                      </div>
                    ))
                  ) : (
-                   <div className="py-20 text-center text-muted-text uppercase text-[10px] font-black tracking-widest">Aucune demande trouvée</div>
+                   <div className="py-20 text-center text-muted-text uppercase text-[10px] font-black tracking-wider">Aucune demande trouvée</div>
                  )
                ) : view === 'users' ? (
                  filteredUsers.map((user) => (
@@ -365,15 +365,15 @@ export default function AdminDashboard() {
                          </div>
                          <div>
                             <p className="text-sm font-black uppercase tracking-tight text-foreground">{user.firstName} {user.lastName}</p>
-                            <p className="text-[9px] text-muted-text font-bold uppercase tracking-[0.2em]">{user.email}</p>
+                            <p className="text-[9px] text-muted-text font-bold uppercase tracking-wider">{user.email}</p>
                          </div>
                       </div>
 
                       <div className="flex flex-wrap items-center gap-4">
                          <div className="flex gap-2">
-                            <span className={`text-[8px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full ${user.kycVerified ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'}`}>KYC</span>
-                            <span className={`text-[8px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full ${user.hasDeposited ? 'bg-green-500/10 text-green-500' : 'bg-gray-500/10 text-muted-text'}`}>Dépôt</span>
-                            <span className={`text-[8px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full ${user.isInstalled ? 'bg-green-500/10 text-green-500' : 'bg-gray-500/10 text-muted-text'}`}>PWA</span>
+                            <span className={`text-[8px] font-black uppercase tracking-wider px-3 py-1.5 rounded-full ${user.kycVerified ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'}`}>KYC</span>
+                            <span className={`text-[8px] font-black uppercase tracking-wider px-3 py-1.5 rounded-full ${user.hasDeposited ? 'bg-green-500/10 text-green-500' : 'bg-gray-500/10 text-muted-text'}`}>Dépôt</span>
+                            <span className={`text-[8px] font-black uppercase tracking-wider px-3 py-1.5 rounded-full ${user.isInstalled ? 'bg-green-500/10 text-green-500' : 'bg-gray-500/10 text-muted-text'}`}>PWA</span>
                          </div>
                          
                          <div className="flex items-center gap-4 pl-4 border-l border-card-border">
@@ -383,7 +383,7 @@ export default function AdminDashboard() {
                             </div>
                             <button 
                                 onClick={() => setSelectedKycUser(user)}
-                                className={`px-4 py-2 text-[8px] font-black uppercase tracking-widest rounded-lg transition-all ${user.kycVerified ? 'bg-foreground/5 text-muted-text hover:bg-white/10 hover:text-foreground' : 'bg-amber-500/20 text-amber-500 hover:bg-amber-500 hover:text-white'}`}
+                                className={`px-4 py-2 text-[8px] font-black uppercase tracking-wider rounded-lg transition-all ${user.kycVerified ? 'bg-foreground/5 text-muted-text hover:bg-white/10 hover:text-foreground' : 'bg-amber-500/20 text-amber-500 hover:bg-amber-500 hover:text-white'}`}
                             >
                                 {user.kycVerified ? "Voir Docs" : "Examiner KYC"}
                             </button>
@@ -404,12 +404,12 @@ export default function AdminDashboard() {
                                 <p className="text-sm font-black uppercase tracking-tight text-foreground">{tx.wallet.user.firstName} {tx.wallet.user.lastName}</p>
                                 <span className="text-lg font-black text-primary">-{tx.amount}€</span>
                              </div>
-                             <p className="text-[9px] text-muted-text font-bold uppercase tracking-[0.2em]">{tx.wallet.user.bankName} • {tx.wallet.user.iban}</p>
+                             <p className="text-[9px] text-muted-text font-bold uppercase tracking-wider">{tx.wallet.user.bankName} • {tx.wallet.user.iban}</p>
                           </div>
                        </div>
 
                        <div className="flex items-center gap-4">
-                          <div className={`text-[8px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full ${
+                          <div className={`text-[8px] font-black uppercase tracking-wider px-3 py-1.5 rounded-full ${
                              tx.status === 'PENDING' ? 'bg-amber-500/10 text-amber-500' :
                              tx.status === 'COMPLETED' ? 'bg-green-500/10 text-green-500' :
                              'bg-red-500/10 text-red-500'
@@ -418,24 +418,24 @@ export default function AdminDashboard() {
                           </div>
                           {tx.status === 'PENDING' && (
                             <div className="flex gap-2">
-                              <button onClick={() => updateTransactionStatus(tx.id, 'COMPLETED')} className="px-4 py-2 bg-green-500 text-white text-[8px] font-black uppercase tracking-widest rounded-lg hover:bg-green-600 transition-all shadow-lg shadow-green-500/20">Valider</button>
-                              <button onClick={() => updateTransactionStatus(tx.id, 'FAILED')} className="px-4 py-2 bg-red-500/10 text-red-500 text-[8px] font-black uppercase tracking-widest rounded-lg hover:bg-red-500 hover:text-white transition-all">Refuser</button>
+                              <button onClick={() => updateTransactionStatus(tx.id, 'COMPLETED')} className="px-4 py-2 bg-green-500 text-white text-[8px] font-black uppercase tracking-wider rounded-lg hover:bg-green-600 transition-all shadow-lg shadow-green-500/20">Valider</button>
+                              <button onClick={() => updateTransactionStatus(tx.id, 'FAILED')} className="px-4 py-2 bg-red-500/10 text-red-500 text-[8px] font-black uppercase tracking-wider rounded-lg hover:bg-red-500 hover:text-white transition-all">Refuser</button>
                             </div>
                           )}
-                          <p className="text-[9px] text-muted-text font-bold uppercase tracking-widest">{new Date(tx.createdAt).toLocaleDateString('fr-FR')}</p>
+                          <p className="text-[9px] text-muted-text font-bold uppercase tracking-wider">{new Date(tx.createdAt).toLocaleDateString('fr-FR')}</p>
                        </div>
                     </div>
                   ))
                  ) : (
-                   <div className="py-20 text-center text-muted-text uppercase text-[10px] font-black tracking-widest">Aucun retrait trouvé</div>
+                   <div className="py-20 text-center text-muted-text uppercase text-[10px] font-black tracking-wider">Aucun retrait trouvé</div>
                  )
                ) : view === 'activity' ? (
                 <div className="space-y-6 animate-in slide-in-from-bottom-4 duration-500">
                    <div className="flex items-center justify-between border-b border-card-border pb-4">
-                      <h3 className="font-title font-bold text-lg tracking-widest uppercase text-foreground">Activité en Direct</h3>
+                      <h3 className="font-title font-bold text-lg tracking-wider uppercase text-foreground">Activité en Direct</h3>
                       <div className="flex items-center gap-2 text-green-500 animate-pulse">
                          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                         <span className="text-[8px] font-black uppercase tracking-widest">Live</span>
+                         <span className="text-[8px] font-black uppercase tracking-wider">Live</span>
                       </div>
                    </div>
 
@@ -463,7 +463,7 @@ export default function AdminDashboard() {
                              <div className="bg-card border border-card-border rounded-[1.5rem] p-5 flex-1 shadow-sm group-hover:border-primary/20 transition-all">
                                 <div className="flex justify-between items-start mb-1">
                                    <h4 className="text-xs font-black uppercase tracking-tight text-foreground">{act.title}</h4>
-                                   <span className="text-[8px] font-bold text-muted-text uppercase tracking-widest">{new Date(act.createdAt).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</span>
+                                   <span className="text-[8px] font-bold text-muted-text uppercase tracking-wider">{new Date(act.createdAt).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</span>
                                 </div>
                                 <p className="text-[10px] text-muted-text font-medium leading-relaxed mb-3">{act.message}</p>
                                 {act.user && (
@@ -471,14 +471,14 @@ export default function AdminDashboard() {
                                      <div className="w-5 h-5 rounded-full bg-white/5 flex items-center justify-center text-primary text-[8px] font-black">
                                         {act.user.firstName.charAt(0)}
                                      </div>
-                                     <p className="text-[8px] font-bold text-gray-500 uppercase tracking-widest">{act.user.firstName} {act.user.lastName} • {act.user.email}</p>
+                                     <p className="text-[8px] font-bold text-gray-500 uppercase tracking-wider">{act.user.firstName} {act.user.lastName} • {act.user.email}</p>
                                   </div>
                                 )}
                              </div>
                           </div>
                         ))
                       ) : (
-                        <div className="py-20 text-center text-muted-text uppercase text-[10px] font-black tracking-widest">Aucune activité enregistrée</div>
+                        <div className="py-20 text-center text-muted-text uppercase text-[10px] font-black tracking-wider">Aucune activité enregistrée</div>
                       )}
                    </div>
                 </div>
@@ -488,22 +488,22 @@ export default function AdminDashboard() {
                     <div className="bg-gradient-to-br from-amber-500/10 to-transparent border border-amber-500/20 rounded-[2.5rem] p-8 space-y-4 shadow-sm">
                        <div className="flex items-center gap-3">
                           <BellRing className="text-amber-500" size={20} />
-                          <h3 className="font-title font-bold text-lg tracking-widest uppercase text-foreground">Alertes Admin</h3>
+                          <h3 className="font-title font-bold text-lg tracking-wider uppercase text-foreground">Alertes Admin</h3>
                        </div>
-                       <p className="text-[10px] text-muted-text font-bold uppercase tracking-widest leading-relaxed">Activez les notifications pour être alerté en temps réel dès qu'un utilisateur effectue un dépôt ou une demande de retrait.</p>
+                       <p className="text-[10px] text-muted-text font-bold uppercase tracking-wider leading-relaxed">Activez les notifications pour être alerté en temps réel dès qu'un utilisateur effectue un dépôt ou une demande de retrait.</p>
                        <PushNotificationPrompt />
                     </div>
 
                     <form onSubmit={handleUpdateSettings} className="space-y-6">
                        <div className="bg-card border border-card-border rounded-[2.5rem] p-8 space-y-8 shadow-sm">
                           <div className="space-y-1 border-b border-card-border pb-6">
-                             <h3 className="font-title font-bold text-lg tracking-widest uppercase text-foreground">Configuration Système</h3>
-                             <p className="text-[10px] text-muted-text font-bold uppercase tracking-widest">Pilotez les règles de la plateforme</p>
+                             <h3 className="font-title font-bold text-lg tracking-wider uppercase text-foreground">Configuration Système</h3>
+                             <p className="text-[10px] text-muted-text font-bold uppercase tracking-wider">Pilotez les règles de la plateforme</p>
                           </div>
 
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                              <div className="space-y-2">
-                                <label className="text-[10px] font-black text-muted-text uppercase tracking-widest ml-1">Taux d'Intérêt (ex: 0.03 pour 3%)</label>
+                                <label className="text-[10px] font-black text-muted-text uppercase tracking-wider ml-1">Taux d'Intérêt (ex: 0.03 pour 3%)</label>
                                 <input 
                                    type="number" 
                                    step="0.01"
@@ -513,7 +513,7 @@ export default function AdminDashboard() {
                                 />
                              </div>
                              <div className="space-y-2">
-                                <label className="text-[10px] font-black text-muted-text uppercase tracking-widest ml-1">Bonus de Bienvenue (€)</label>
+                                <label className="text-[10px] font-black text-muted-text uppercase tracking-wider ml-1">Bonus de Bienvenue (€)</label>
                                 <input 
                                    type="number" 
                                    value={settings.welcomeBonus}
@@ -522,7 +522,7 @@ export default function AdminDashboard() {
                                 />
                              </div>
                              <div className="space-y-2">
-                                <label className="text-[10px] font-black text-muted-text uppercase tracking-widest ml-1">Dépôt Minimum (€)</label>
+                                <label className="text-[10px] font-black text-muted-text uppercase tracking-wider ml-1">Dépôt Minimum (€)</label>
                                 <input 
                                    type="number" 
                                    value={settings.minDeposit}
@@ -532,7 +532,7 @@ export default function AdminDashboard() {
                              </div>
                              <div className="flex items-center justify-between p-4 bg-background border border-card-border rounded-2xl shadow-inner">
                                 <div>
-                                   <p className="text-[10px] font-black text-muted-text uppercase tracking-widest">Mode Maintenance</p>
+                                   <p className="text-[10px] font-black text-muted-text uppercase tracking-wider">Mode Maintenance</p>
                                    <p className="text-xs font-bold text-foreground">{settings.maintenanceMode ? 'Activé' : 'Désactivé'}</p>
                                 </div>
                                 <button 
@@ -548,7 +548,7 @@ export default function AdminDashboard() {
                           <button 
                              type="submit"
                              disabled={updatingSettings}
-                             className="w-full py-5 bg-amber-500 text-black font-black uppercase tracking-[0.2em] text-[11px] rounded-2xl shadow-xl shadow-amber-500/20 hover:bg-amber-400 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
+                             className="w-full py-5 bg-amber-500 text-black font-black uppercase tracking-wider text-[11px] rounded-2xl shadow-xl shadow-amber-500/20 hover:bg-amber-400 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
                           >
                              {updatingSettings ? <Loader2 className="animate-spin" size={18} /> : (
                                <>
@@ -580,7 +580,7 @@ export default function AdminDashboard() {
               <span className="absolute inset-0 bg-amber-500/10 blur-lg rounded-full"></span>
             )}
             <Zap size={18} fill={view === 'loans' ? 'currentColor' : 'none'} className="relative z-10 transition-transform group-active:scale-90" />
-            <span className="text-[7px] font-black uppercase tracking-widest relative z-10">Prêts</span>
+            <span className="text-[7px] font-black uppercase tracking-wider relative z-10">Prêts</span>
           </button>
 
           <button 
@@ -596,7 +596,7 @@ export default function AdminDashboard() {
                <Banknote size={18} fill={view === 'withdrawals' ? 'currentColor' : 'none'} className="transition-transform group-active:scale-90" />
                {pendingWithdrawals.length > 0 && <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 text-white text-[7px] flex items-center justify-center rounded-full font-black animate-pulse shadow-lg">{pendingWithdrawals.length}</span>}
             </div>
-            <span className="text-[7px] font-black uppercase tracking-widest relative z-10">Retraits</span>
+            <span className="text-[7px] font-black uppercase tracking-wider relative z-10">Retraits</span>
           </button>
 
           <button 
@@ -609,7 +609,7 @@ export default function AdminDashboard() {
               <span className="absolute inset-0 bg-amber-500/10 blur-lg rounded-full"></span>
             )}
             <Clock size={18} fill={view === 'activity' ? 'currentColor' : 'none'} className="relative z-10 transition-transform group-active:scale-90" />
-            <span className="text-[7px] font-black uppercase tracking-widest relative z-10">Live</span>
+            <span className="text-[7px] font-black uppercase tracking-wider relative z-10">Live</span>
           </button>
 
           <button 
@@ -622,7 +622,7 @@ export default function AdminDashboard() {
               <span className="absolute inset-0 bg-amber-500/10 blur-lg rounded-full"></span>
             )}
             <Users size={18} fill={view === 'users' ? 'currentColor' : 'none'} className="relative z-10 transition-transform group-active:scale-90" />
-            <span className="text-[7px] font-black uppercase tracking-widest relative z-10">Clients</span>
+            <span className="text-[7px] font-black uppercase tracking-wider relative z-10">Clients</span>
           </button>
 
           <button 
@@ -635,7 +635,7 @@ export default function AdminDashboard() {
               <span className="absolute inset-0 bg-amber-500/10 blur-lg rounded-full"></span>
             )}
             <Settings size={18} fill={view === 'settings' ? 'currentColor' : 'none'} className="relative z-10 transition-transform group-active:scale-90" />
-            <span className="text-[7px] font-black uppercase tracking-widest relative z-10">Réglages</span>
+            <span className="text-[7px] font-black uppercase tracking-wider relative z-10">Réglages</span>
           </button>
         </nav>
       </div>
@@ -653,23 +653,23 @@ export default function AdminDashboard() {
             
             <div className="space-y-2">
                <h2 className="text-3xl font-black uppercase tracking-tighter text-foreground">Dossier KYC</h2>
-               <p className="text-xs text-muted-text font-bold uppercase tracking-[0.2em]">Client: {selectedKycUser.firstName} {selectedKycUser.lastName} • {selectedKycUser.email}</p>
+               <p className="text-xs text-muted-text font-bold uppercase tracking-wider">Client: {selectedKycUser.firstName} {selectedKycUser.lastName} • {selectedKycUser.email}</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                <div className="space-y-6">
                   <div className="bg-background p-6 rounded-3xl border border-card-border space-y-4 shadow-inner">
-                     <p className="text-[9px] font-black uppercase tracking-widest text-muted-text">Informations Déclarées</p>
+                     <p className="text-[9px] font-black uppercase tracking-wider text-muted-text">Informations Déclarées</p>
                      <div>
-                        <p className="text-[10px] text-muted-text uppercase tracking-widest">Document</p>
+                        <p className="text-[10px] text-muted-text uppercase tracking-wider">Document</p>
                         <p className="text-base font-bold text-foreground">{selectedKycUser.idType === 'passport' ? 'Passeport' : 'Carte d\'Identité'}</p>
                      </div>
                      <div>
-                        <p className="text-[10px] text-muted-text uppercase tracking-widest">Date de naissance</p>
+                        <p className="text-[10px] text-muted-text uppercase tracking-wider">Date de naissance</p>
                         <p className="text-base font-bold text-foreground">{selectedKycUser.birthDate ? new Date(selectedKycUser.birthDate).toLocaleDateString('fr-FR') : 'Non renseigné'}</p>
                      </div>
                      <div>
-                        <p className="text-[10px] text-muted-text uppercase tracking-widest">Adresse Déclarée</p>
+                        <p className="text-[10px] text-muted-text uppercase tracking-wider">Adresse Déclarée</p>
                         <p className="text-sm font-bold leading-relaxed text-foreground">{selectedKycUser.address || 'Non renseigné'}</p>
                      </div>
                   </div>
@@ -680,7 +680,7 @@ export default function AdminDashboard() {
                            updateKycStatus(selectedKycUser.id, true);
                            setSelectedKycUser(null);
                         }}
-                        className="w-full py-5 bg-green-500 text-white font-black rounded-2xl hover:bg-green-600 transition-all uppercase text-xs tracking-widest shadow-lg shadow-green-500/20 flex items-center justify-center gap-2"
+                        className="w-full py-5 bg-green-500 text-white font-black rounded-2xl hover:bg-green-600 transition-all uppercase text-xs tracking-wider shadow-lg shadow-green-500/20 flex items-center justify-center gap-2"
                      >
                         <CheckCircle2 size={20} /> Approuver le dossier
                      </button>
@@ -692,7 +692,7 @@ export default function AdminDashboard() {
                      <div className="space-y-3">
                         <div className="flex items-center gap-2">
                            <ShieldCheck size={16} className="text-primary" />
-                           <p className="text-xs font-black uppercase tracking-widest text-foreground">Justificatif de Domicile</p>
+                           <p className="text-xs font-black uppercase tracking-wider text-foreground">Justificatif de Domicile</p>
                         </div>
                         <div className="aspect-[21/9] relative rounded-[2rem] overflow-hidden border border-card-border bg-background group shadow-inner">
                            <img src={selectedKycUser.kycAddressProof} alt="Domicile" className="w-full h-full object-cover group-hover:object-contain transition-all duration-300" />
@@ -703,7 +703,7 @@ export default function AdminDashboard() {
                      <div className="space-y-3">
                         <div className="flex items-center gap-2">
                            <ShieldCheck size={16} className="text-primary" />
-                           <p className="text-xs font-black uppercase tracking-widest text-foreground">Pièce d'Identité ({selectedKycUser.idType === 'passport' ? 'Page Info' : 'Recto'})</p>
+                           <p className="text-xs font-black uppercase tracking-wider text-foreground">Pièce d'Identité ({selectedKycUser.idType === 'passport' ? 'Page Info' : 'Recto'})</p>
                         </div>
                         <div className="aspect-[16/10] relative rounded-[2rem] overflow-hidden border border-card-border bg-background group shadow-inner">
                            <img src={selectedKycUser.kycRecto} alt="Recto" className="w-full h-full object-cover group-hover:object-contain transition-all duration-300" />
@@ -729,17 +729,17 @@ export default function AdminDashboard() {
             
             <div className="space-y-2 border-b border-card-border pb-6">
                <h2 className="text-3xl font-black uppercase tracking-tighter text-foreground">Détails du Prêt</h2>
-               <p className="text-xs text-muted-text font-bold uppercase tracking-[0.2em]">Client: {selectedLoan.user.firstName} {selectedLoan.user.lastName} • {selectedLoan.user.email}</p>
+               <p className="text-xs text-muted-text font-bold uppercase tracking-wider">Client: {selectedLoan.user.firstName} {selectedLoan.user.lastName} • {selectedLoan.user.email}</p>
             </div>
 
             <div className="space-y-6">
                <div className="grid grid-cols-2 gap-4">
                   <div className="bg-background p-4 rounded-2xl border border-card-border shadow-inner">
-                     <p className="text-[9px] text-muted-text uppercase tracking-widest font-bold">Montant Demandé</p>
+                     <p className="text-[9px] text-muted-text uppercase tracking-wider font-bold">Montant Demandé</p>
                      <p className="text-2xl font-black text-primary">{selectedLoan.amount} €</p>
                   </div>
                   <div className="bg-background p-4 rounded-2xl border border-card-border shadow-inner">
-                     <p className="text-[9px] text-muted-text uppercase tracking-widest font-bold">Durée & Taux</p>
+                     <p className="text-[9px] text-muted-text uppercase tracking-wider font-bold">Durée & Taux</p>
                      <p className="text-lg font-black text-foreground">{selectedLoan.termMonths} mois <span className="text-xs text-muted-text font-medium">@ 3%</span></p>
                   </div>
                </div>
@@ -751,7 +751,7 @@ export default function AdminDashboard() {
                            await updateLoanStatus(selectedLoan.id, 'APPROVED');
                            setSelectedLoan(null);
                         }}
-                        className="flex-1 py-4 bg-green-500 text-white font-black rounded-2xl hover:bg-green-600 transition-all uppercase text-xs tracking-widest shadow-lg shadow-green-500/20 flex items-center justify-center gap-2"
+                        className="flex-1 py-4 bg-green-500 text-white font-black rounded-2xl hover:bg-green-600 transition-all uppercase text-xs tracking-wider shadow-lg shadow-green-500/20 flex items-center justify-center gap-2"
                      >
                         <CheckCircle2 size={18} /> Approuver
                      </button>
@@ -760,7 +760,7 @@ export default function AdminDashboard() {
                            await updateLoanStatus(selectedLoan.id, 'REJECTED');
                            setSelectedLoan(null);
                         }}
-                        className="flex-1 py-4 bg-red-500/10 text-red-500 border border-red-500/20 font-black rounded-2xl hover:bg-red-500 hover:text-white transition-all uppercase text-xs tracking-widest flex items-center justify-center gap-2"
+                        className="flex-1 py-4 bg-red-500/10 text-red-500 border border-red-500/20 font-black rounded-2xl hover:bg-red-500 hover:text-white transition-all uppercase text-xs tracking-wider flex items-center justify-center gap-2"
                      >
                         <XCircle size={18} /> Rejeter
                      </button>

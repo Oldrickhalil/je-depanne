@@ -71,7 +71,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
             </div>
             
             <div className="flex-1">
-              <p className="text-[11px] font-bold uppercase tracking-widest text-foreground leading-relaxed">
+              <p className="text-[11px] font-bold uppercase tracking-wider text-foreground leading-relaxed">
                 {toast.message}
               </p>
             </div>

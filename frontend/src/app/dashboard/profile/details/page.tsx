@@ -109,13 +109,13 @@ export default function ProfilePage() {
       {/* Header */}
       <section className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div className="space-y-1">
-          <Link href="/dashboard/profile" className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.3em] text-muted-text hover:text-foreground transition-colors mb-4">
+          <Link href="/dashboard/profile" className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.15em] text-muted-text hover:text-foreground transition-colors mb-4">
              <ArrowLeft size={12} /> Tableau de Bord
           </Link>
           <h1 className="text-4xl font-title font-bold tight-tracking uppercase leading-none">
             Mon <span className="text-primary">Compte</span>
           </h1>
-          <p className="text-muted-text font-bold uppercase tracking-[0.2em] text-[9px] flex items-center gap-2">
+          <p className="text-muted-text font-bold uppercase tracking-wider text-[9px] flex items-center gap-2">
             Gérez vos informations personnelles et votre sécurité
           </p>
         </div>
@@ -123,7 +123,7 @@ export default function ProfilePage() {
         <button 
           onClick={toggleEdit}
           disabled={isSaving}
-          className={`px-6 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-xl transition-all flex items-center gap-2 disabled:opacity-50 ${isEditing ? 'bg-primary text-white shadow-primary/20' : 'bg-white/5 border border-card-border text-white hover:bg-white/10'}`}
+          className={`px-6 py-3 rounded-2xl font-black text-[10px] uppercase tracking-wider shadow-xl transition-all flex items-center gap-2 disabled:opacity-50 ${isEditing ? 'bg-primary text-white shadow-primary/20' : 'bg-white/5 border border-card-border text-white hover:bg-white/10'}`}
         >
           {isSaving ? <Loader2 size={14} className="animate-spin" /> : <Edit3 size={14} />} {isEditing ? "Enregistrer" : "Modifier"}
         </button>
@@ -152,20 +152,20 @@ export default function ProfilePage() {
                </div>
 
                <h2 className="text-xl font-black uppercase tracking-tighter text-foreground">{`${profileData.firstName} ${profileData.lastName}`.trim() || "Utilisateur"}</h2>
-               <p className="text-[10px] text-muted-text font-bold uppercase tracking-widest mt-1">Membre Élite</p>
+               <p className="text-[10px] text-muted-text font-bold uppercase tracking-wider mt-1">Membre Élite</p>
                
                <div className="w-full h-px bg-white/5 my-6"></div>
 
                <div className="w-full space-y-4">
-                  <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest">
+                  <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-wider">
                      <span className="text-muted-text">Statut KYC</span>
                      <span className={profileData.kycVerified ? "text-green-500" : "text-amber-500"}>{profileData.kycVerified ? "Vérifié" : "En attente"}</span>
                   </div>
-                  <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest">
+                  <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-wider">
                      <span className="text-muted-text">Dépôt Initial</span>
                      <span className={profileData.hasDeposited ? "text-green-500" : "text-amber-500"}>{profileData.hasDeposited ? "Effectué" : "Requis"}</span>
                   </div>
-                  <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest">
+                  <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-wider">
                      <span className="text-muted-text">Application PWA</span>
                      <span className={profileData.isInstalled ? "text-green-500" : "text-muted-text"}>{profileData.isInstalled ? "Installée" : "Non installée"}</span>
                   </div>
@@ -178,12 +178,12 @@ export default function ProfilePage() {
             <div className="bg-card border border-card-border rounded-[2.5rem] p-8 space-y-8">
                <div className="flex items-center gap-3 border-b border-card-border pb-4">
                   <User size={18} className="text-primary" />
-                  <h3 className="font-title font-bold text-lg tracking-widest uppercase">Informations Personnelles</h3>
+                  <h3 className="font-title font-bold text-lg tracking-wider uppercase">Informations Personnelles</h3>
                </div>
                
                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                     <label className="text-[10px] font-black text-muted-text uppercase tracking-widest ml-1">Prénom</label>
+                     <label className="text-[10px] font-black text-muted-text uppercase tracking-wider ml-1">Prénom</label>
                      <input 
                         type="text" 
                         disabled={!isEditing}
@@ -193,7 +193,7 @@ export default function ProfilePage() {
                      />
                   </div>
                   <div className="space-y-2">
-                     <label className="text-[10px] font-black text-muted-text uppercase tracking-widest ml-1">Nom</label>
+                     <label className="text-[10px] font-black text-muted-text uppercase tracking-wider ml-1">Nom</label>
                      <input 
                         type="text" 
                         disabled={!isEditing}
@@ -203,7 +203,7 @@ export default function ProfilePage() {
                      />
                   </div>
                   <div className="space-y-2">
-                     <label className="text-[10px] font-black text-muted-text uppercase tracking-widest ml-1">Adresse Email</label>
+                     <label className="text-[10px] font-black text-muted-text uppercase tracking-wider ml-1">Adresse Email</label>
                      <input 
                         type="email" 
                         disabled={true} // Email should usually require a specific flow to change
@@ -212,7 +212,7 @@ export default function ProfilePage() {
                      />
                   </div>
                   <div className="space-y-2">
-                     <label className="text-[10px] font-black text-muted-text uppercase tracking-widest ml-1">Téléphone</label>
+                     <label className="text-[10px] font-black text-muted-text uppercase tracking-wider ml-1">Téléphone</label>
                      <input 
                         type="tel" 
                         disabled={!isEditing}
@@ -223,7 +223,7 @@ export default function ProfilePage() {
                      />
                   </div>
                   <div className="space-y-2 sm:col-span-2">
-                     <label className="text-[10px] font-black text-muted-text uppercase tracking-widest ml-1">Adresse Principale</label>
+                     <label className="text-[10px] font-black text-muted-text uppercase tracking-wider ml-1">Adresse Principale</label>
                      <input 
                         type="text" 
                         disabled={!isEditing}
@@ -239,12 +239,12 @@ export default function ProfilePage() {
             <div className="bg-card border border-card-border rounded-[2.5rem] p-8 space-y-8">
                <div className="flex items-center gap-3 border-b border-card-border pb-4">
                   <Wallet size={18} className="text-primary" />
-                  <h3 className="font-title font-bold text-lg tracking-widest uppercase">Coordonnées Bancaires</h3>
+                  <h3 className="font-title font-bold text-lg tracking-wider uppercase">Coordonnées Bancaires</h3>
                </div>
                
                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                     <label className="text-[10px] font-black text-muted-text uppercase tracking-widest ml-1">Nom de la Banque</label>
+                     <label className="text-[10px] font-black text-muted-text uppercase tracking-wider ml-1">Nom de la Banque</label>
                      <input 
                         type="text" 
                         disabled={true}
@@ -253,7 +253,7 @@ export default function ProfilePage() {
                      />
                   </div>
                   <div className="space-y-2">
-                     <label className="text-[10px] font-black text-muted-text uppercase tracking-widest ml-1">IBAN</label>
+                     <label className="text-[10px] font-black text-muted-text uppercase tracking-wider ml-1">IBAN</label>
                      <input 
                         type="text" 
                         disabled={true}
@@ -261,7 +261,7 @@ export default function ProfilePage() {
                         className="w-full bg-background border border-card-border rounded-2xl px-4 py-4 text-xs text-foreground/70 focus:outline-none transition-colors disabled:opacity-50 cursor-not-allowed uppercase"
                      />
                   </div>
-                  <p className="text-[9px] font-black text-muted-text uppercase tracking-widest sm:col-span-2">Ces informations sont mises à jour automatiquement lors de vos retraits.</p>
+                  <p className="text-[9px] font-black text-muted-text uppercase tracking-wider sm:col-span-2">Ces informations sont mises à jour automatiquement lors de vos retraits.</p>
                </div>
             </div>
          </div>
