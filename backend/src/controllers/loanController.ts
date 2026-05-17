@@ -86,6 +86,13 @@ export const createLoan = async (req: Request, res: Response) => {
           metadata: { amount, loanId: loan.id }
         }
       });
+
+      // Notify Admins
+      await notifyAdmins(
+        'Nouvelle Demande de Prêt',
+        `${user?.firstName} demande un prêt de ${amount}€.`,
+        '/admin/loans'
+      );
     } catch (actError) {
       console.error('Activity Log Error:', actError);
     }
