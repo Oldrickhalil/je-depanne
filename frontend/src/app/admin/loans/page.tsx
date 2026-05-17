@@ -336,7 +336,7 @@ export default function AdminDashboard() {
                                <p className="text-xs font-black text-foreground">{user.wallet?.balance || 0} €</p>
                             </div>
                             <button 
-                                onClick={() => setSelectedUserKyc(user)}
+                                onClick={() => setSelectedKycUser(user)}
                                 className={`px-4 py-2 text-[8px] font-black uppercase tracking-widest rounded-lg transition-all ${user.kycVerified ? 'bg-foreground/5 text-muted-text hover:bg-white/10 hover:text-foreground' : 'bg-amber-500/20 text-amber-500 hover:bg-amber-500 hover:text-white'}`}
                             >
                                 {user.kycVerified ? "Voir Docs" : "Examiner KYC"}
