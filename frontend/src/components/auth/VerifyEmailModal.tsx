@@ -40,15 +40,15 @@ export default function VerifyEmailModal({ isOpen, onClose, email }: VerifyEmail
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[200] bg-background/80 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-300 h-[100dvh] w-screen">
-      <div className="w-full max-w-sm bg-card border border-card-border rounded-[2.5rem] p-8 space-y-8 relative overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300 flex flex-col justify-center">
+    <div className="fixed inset-0 z-[200] bg-background flex items-center justify-center animate-in fade-in duration-300 h-[100dvh] w-screen">
+      <div className="w-full h-full max-w-none md:max-w-sm bg-card border-none md:border md:border-card-border md:rounded-[2.5rem] md:h-auto p-8 space-y-8 relative overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300 flex flex-col justify-center">
          <div className="absolute top-0 left-0 w-full h-2 bg-primary"></div>
          
          <button 
            onClick={onClose}
-           className="absolute top-6 right-6 text-muted-text hover:text-foreground transition-colors"
+           className="absolute top-8 right-8 text-muted-text hover:text-foreground transition-colors p-2"
          >
-           <X size={20} />
+           <X size={24} />
          </button>
 
          <div className="text-center space-y-6 pt-4">

@@ -50,9 +50,10 @@ export const register = async (req: Request, res: Response) => {
     try {
       const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
       const verificationLink = `${appUrl}/api/auth/verify-email?token=${verificationToken}`;
+      const fromEmail = process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev';
 
       await resend.emails.send({
-        from: 'Je Dépanne <noreply@je-depanne.com>',
+        from: `Je Dépanne <${fromEmail}>`,
         to: [email],
         subject: 'Vérifiez votre adresse e-mail - Je Dépanne',
         html: `
@@ -160,9 +161,10 @@ export const resendVerification = async (req: Request, res: Response) => {
     try {
       const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
       const verificationLink = `${appUrl}/api/auth/verify-email?token=${verificationToken}`;
+      const fromEmail = process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev';
 
       await resend.emails.send({
-        from: 'Je Dépanne <noreply@je-depanne.com>',
+        from: `Je Dépanne <${fromEmail}>`,
         to: [email],
         subject: 'Vérifiez votre adresse e-mail - Je Dépanne',
         html: `
