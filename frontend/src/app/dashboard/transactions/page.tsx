@@ -31,7 +31,40 @@ export default function TransactionsPage() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'ALL' | 'IN' | 'OUT'>('ALL');
 
-  // ... (fetch logic unchanged)
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      const userId = (session?.user as any)?.id;
+      if (!userId) return;
+
+      try {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+        const res = await fetch(`${apiUrl}/api/activity/transactions/${userId}`);
+        const data = await res.json();
+        if (res.ok) setTransactions(data);
+      } catch (err) {
+        console.error("Erreur récupération transactions:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (session) fetchTransactions();
+  }, [session]);
+
+  const getTransactionDetails = (type: string) => {
+    switch (type) {
+      case 'DEPOSIT':
+        return { label: 'Dépôt', icon: ArrowDownLeft, color: 'text-green-500', bg: 'bg-green-500/10', sign: '+' };
+      case 'LOAN_DISBURSEMENT':
+        return { label: 'Déblocage de Prêt', icon: Zap, color: 'text-primary', bg: 'bg-primary/10', sign: '+' };
+      case 'WITHDRAWAL':
+        return { label: 'Retrait', icon: ArrowUpRight, color: 'text-red-500', bg: 'bg-red-500/10', sign: '-' };
+      case 'REPAYMENT':
+        return { label: 'Remboursement', icon: RefreshCcw, color: 'text-amber-500', bg: 'bg-amber-500/10', sign: '-' };
+      default:
+        return { label: 'Transaction', icon: Wallet, color: 'text-muted-text', bg: 'bg-white/5', sign: '' };
+    }
+  };
 
   const filteredTransactions = transactions.filter(t => {
     const details = getTransactionDetails(t.type);
@@ -55,9 +88,9 @@ export default function TransactionsPage() {
       <section className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div className="space-y-1">
           <Link href="/dashboard" className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.15em] text-muted-text hover:text-foreground transition-colors mb-4">
-             <ArrowLeft size={12} /> Tableau de Bord
+             <ArrowLeft size={12} /> Retour
           </Link>
-          <h1 className="text-4xl font-title font-bold tight-tracking uppercase leading-none">
+          <h1 className="text-4xl font-title font-bold tight-tracking uppercase leading-none text-foreground">
             Historique <span className="text-primary">Financier</span>
           </h1>
           <p className="text-muted-text font-bold uppercase tracking-wider text-[9px] flex items-center gap-2">
@@ -99,7 +132,7 @@ export default function TransactionsPage() {
                  const details = getTransactionDetails(t.type);
                  const Icon = details.icon;
                  return (
-                    <div key={t.id} className="group flex items-center justify-between p-6 rounded-[2rem] bg-card border border-card-border hover:border-primary/20 transition-all duration-500">
+                    <div key={t.id} className="group flex items-center justify-between p-6 rounded-[2rem] bg-card border border-card-border hover:border-primary/20 transition-all duration-500 shadow-sm">
                         <div className="flex items-center gap-5">
                             <div className={`w-12 h-12 rounded-2xl ${details.bg} ${details.color} flex items-center justify-center shadow-inner`}>
                                 <Icon size={18} />
@@ -125,8 +158,8 @@ export default function TransactionsPage() {
                   <CreditCard size={24} />
                </div>
                <div className="text-center space-y-1">
-                  <p className="text-xs font-black uppercase tracking-wider text-foreground">Aucune transaction</p>
-                  <p className="text-[9px] font-bold text-muted-text uppercase tracking-wider">Votre historique est vide.</p>
+                  <p className="text-xs font-black uppercase tracking-wider text-foreground">Aucune transaction trouvée</p>
+                  <p className="text-[9px] font-bold text-muted-text uppercase tracking-wider">Essayez un autre mot-clé ou modifiez vos filtres.</p>
                </div>
             </div>
          )}
