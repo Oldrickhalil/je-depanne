@@ -15,6 +15,7 @@ export default function SettingsPage() {
   const [loading, setLoading] = useState(true);
   const [showPinModal, setShowPinModal] = useState(false);
   const [pendingAction, setPendingAction] = useState<string | null>(null);
+  const [isOpeningPortal, setIsOpeningPortal] = useState(false);
 
   // Mock states for toggles, will be updated by fetch
   const [notifications, setNotifications] = useState({
@@ -23,6 +24,28 @@ export default function SettingsPage() {
     sms: false,
     marketing: false
   });
+
+  const openStripePortal = async () => {
+    setIsOpeningPortal(true);
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+      const res = await fetch(`${apiUrl}/api/stripe/create-portal-session`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId }),
+      });
+      const data = await res.json();
+      if (res.ok && data.url) {
+        window.location.href = data.url;
+      } else {
+        addToast(data.error || "Impossible d'ouvrir le portail de paiement.", "ERROR");
+      }
+    } catch (err) {
+      addToast("Erreur de connexion au serveur.", "ERROR");
+    } finally {
+      setIsOpeningPortal(false);
+    }
+  };
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -95,23 +118,32 @@ export default function SettingsPage() {
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
          {/* Navigation Menu (Left) */}
          <div className="md:col-span-4 space-y-2">
-            {[
-               { icon: Bell, label: "Notifications", active: true },
-               { icon: ShieldAlert, label: "Confidentialité", active: false },
-               { icon: CreditCard, label: "Moyens de paiement", active: false },
-               { icon: Globe, label: "Langue & Région", active: false },
-               { icon: Smartphone, label: "Appareils connectés", active: false },
-            ].map((item, idx) => (
-               <button 
-                  key={idx}
-                  className={`w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-bold uppercase tracking-widest text-[10px] transition-all ${
-                     item.active ? 'bg-white/10 text-white' : 'text-muted-text hover:bg-white/5 hover:text-white'
-                  }`}
-               >
-                  <item.icon size={16} className={item.active ? "text-primary" : ""} />
-                  {item.label}
-               </button>
-            ))}
+            <button 
+               className="w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-bold uppercase tracking-widest text-[10px] transition-all bg-white/10 text-white"
+            >
+               <Bell size={16} className="text-primary" />
+               Notifications
+            </button>
+            <button 
+               onClick={openStripePortal}
+               disabled={isOpeningPortal}
+               className="w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-bold uppercase tracking-widest text-[10px] transition-all text-muted-text hover:bg-white/5 hover:text-white"
+            >
+               {isOpeningPortal ? <Loader2 size={16} className="animate-spin text-primary" /> : <CreditCard size={16} />}
+               Moyens de paiement
+            </button>
+            <button 
+               className="w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-bold uppercase tracking-widest text-[10px] transition-all text-muted-text hover:bg-white/5 hover:text-white"
+            >
+               <ShieldAlert size={16} />
+               Confidentialité
+            </button>
+            <button 
+               className="w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-bold uppercase tracking-widest text-[10px] transition-all text-muted-text hover:bg-white/5 hover:text-white"
+            >
+               <Globe size={16} />
+               Langue & Région
+            </button>
          </div>
 
          {/* Settings Content (Right) */}
