@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getTransactions, getNotifications, markNotificationsRead, getAllTransactions, updateTransactionStatus } from '../controllers/activityController.js';
+import { getTransactions, getNotifications, markNotificationsRead, getAllTransactions, updateTransactionStatus, getActivities } from '../controllers/activityController.js';
 
 const router = Router();
 

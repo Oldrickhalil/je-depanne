@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express';
 import prisma from '../utils/prisma.js';
 import stripe from '../utils/stripe.js';
-import { sendPushNotification } from '../utils/push.js';
+import { sendPushNotification, notifyAdmins } from '../utils/push.js';
 
 export const createLoan = async (req: Request, res: Response) => {
   try {
