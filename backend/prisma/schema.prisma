@@ -69,6 +69,15 @@ model PushSubscription {
   createdAt DateTime @default(now())
 }
 
+model SystemSettings {
+  id               String   @id @default("global")
+  interestRate     Float    @default(0.03) // 3%
+  welcomeBonus     Float    @default(80.0)
+  minDeposit       Float    @default(20.0)
+  maintenanceMode  Boolean  @default(false)
+  updatedAt        DateTime @updatedAt
+}
+
 model Notification {
   id        String   @id @default(cuid())
   userId    String

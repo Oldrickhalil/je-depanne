@@ -174,8 +174,19 @@ export const handleDeposit = async (req: Request, res: Response) => {
     const user = await prisma.user.findUnique({ where: { id: userId } });
     if (!user) return res.status(404).json({ message: 'Utilisateur non trouvé.' });
 
+    // Get dynamic settings
+    const settings = await prisma.systemSettings.upsert({
+      where: { id: 'global' },
+      update: {},
+      create: { id: 'global' }
+    });
+
+    if (settings.maintenanceMode) {
+      return res.status(503).json({ message: 'Le service est temporairement en maintenance.' });
+    }
+
     const isFirstDeposit = !user.hasDeposited;
-    const minAmount = isFirstDeposit ? 20 : 10;
+    const minAmount = isFirstDeposit ? settings.minDeposit : 10;
 
     if (parseFloat(amount) < minAmount) {
       return res.status(400).json({ message: `Un dépôt de ${minAmount} € minimum est requis.` });
@@ -184,7 +195,7 @@ export const handleDeposit = async (req: Request, res: Response) => {
     // Simulation Stripe Paylive
     console.log(`[Stripe Paylive] Dépôt de ${amount}€ pour l'utilisateur ${userId}`);
 
-    const BONUS_AMOUNT = isFirstDeposit ? 80 : 0;
+    const BONUS_AMOUNT = isFirstDeposit ? settings.welcomeBonus : 0;
 
     // Update user onboarding status if first time
     if (isFirstDeposit) {

@@ -28,7 +28,18 @@ export const createLoan = async (req: Request, res: Response) => {
         return res.status(400).json({ message: 'La durée maximum est de 5 ans (60 mois).' });
     }
 
-    const interestRate = 0.03; // 3% flat
+    // Get dynamic settings
+    const settings = await prisma.systemSettings.upsert({
+      where: { id: 'global' },
+      update: {},
+      create: { id: 'global' }
+    });
+
+    if (settings.maintenanceMode) {
+      return res.status(503).json({ message: 'Le service est temporairement en maintenance.' });
+    }
+
+    const interestRate = settings.interestRate;
 
     const loan: any = await prisma.loan.create({
       data: {

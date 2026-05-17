@@ -5,6 +5,7 @@ import authRoutes from './routes/authRoutes.js';
 import stripeRoutes from './routes/stripeRoutes.js';
 import loanRoutes from './routes/loanRoutes.js';
 import activityRoutes from './routes/activityRoutes.js';
+import settingsRoutes from './routes/settingsRoutes.js';
 
 dotenv.config();
 
@@ -20,6 +21,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/stripe', stripeRoutes);
 app.use('/api/loans', loanRoutes);
 app.use('/api/activity', activityRoutes);
+app.use('/api/settings', settingsRoutes);
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Je Dépanne API is running');

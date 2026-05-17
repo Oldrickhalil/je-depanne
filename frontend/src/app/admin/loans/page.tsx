@@ -17,6 +17,7 @@ import {
   ArrowUpRight,
   ArrowDownRight,
   Banknote,
+  Settings,
   LogOut,
   User
 } from "lucide-react";
@@ -81,12 +82,26 @@ type Loan = {
   };
 };
 
+type SystemSettings = {
+  interestRate: number;
+  welcomeBonus: number;
+  minDeposit: number;
+  maintenanceMode: boolean;
+};
+
 export default function AdminDashboard() {
-  const [view, setView] = useState<'loans' | 'users' | 'withdrawals'>('loans');
+  const [view, setView] = useState<'loans' | 'users' | 'withdrawals' | 'settings'>('loans');
   const [loans, setLoans] = useState<Loan[]>([]);
   const [users, setUsers] = useState<UserType[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [settings, setSystemSettings] = useState<SystemSettings>({
+    interestRate: 0.03,
+    welcomeBonus: 80,
+    minDeposit: 20,
+    maintenanceMode: false
+  });
   const [loading, setLoading] = useState(true);
+  const [updatingSettings, setUpdatingSettings] = useState(false);
   const [search, setSearch] = useState("");
   const [selectedKycUser, setSelectedKycUser] = useState<UserType | null>(null);
   const [selectedLoan, setSelectedLoan] = useState<Loan | null>(null);
@@ -96,18 +111,21 @@ export default function AdminDashboard() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const [loansRes, usersRes, transRes] = await Promise.all([
+      const [loansRes, usersRes, transRes, settingsRes] = await Promise.all([
         fetch(`${apiUrl}/api/loans/admin/all`),
         fetch(`${apiUrl}/api/auth/admin/users`),
-        fetch(`${apiUrl}/api/activity/admin/transactions`)
+        fetch(`${apiUrl}/api/activity/admin/transactions`),
+        fetch(`${apiUrl}/api/settings`)
       ]);
       const loansData = await loansRes.json();
       const usersData = await usersRes.json();
       const transData = await transRes.json();
+      const settingsData = await settingsRes.json();
       
       setLoans(loansData);
       setUsers(usersData);
       setTransactions(transData);
+      setSystemSettings(settingsData);
     } catch (err) {
       console.error("Fetch error:", err);
     } finally {
@@ -118,6 +136,27 @@ export default function AdminDashboard() {
   useEffect(() => {
     fetchData();
   }, []);
+
+  const handleUpdateSettings = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setUpdatingSettings(true);
+    try {
+      const res = await fetch(`${apiUrl}/api/settings`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(settings),
+      });
+      if (res.ok) {
+        alert("Paramètres mis à jour avec succès !");
+      } else {
+        alert("Erreur lors de la mise à jour.");
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setUpdatingSettings(false);
+    }
+  };
 
   const updateTransactionStatus = async (transactionId: string, newStatus: string) => {
     try {
@@ -221,6 +260,12 @@ export default function AdminDashboard() {
                 >
                   Utilisateurs
                 </button>
+                <button 
+                  onClick={() => setView('settings')}
+                  className={`px-4 py-2.5 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all shrink-0 ${view === 'settings' ? 'bg-amber-500 text-black shadow-lg shadow-amber-500/20' : 'text-muted-text hover:text-foreground'}`}
+                >
+                  Paramètres
+                </button>
               </div>
 
               <button 
@@ -254,17 +299,19 @@ export default function AdminDashboard() {
         <div className="space-y-6">
            <div className="flex items-center justify-between border-b border-card-border pb-6 gap-4">
               <h3 className="font-title font-bold text-lg tracking-widest uppercase shrink-0 text-foreground">
-                {view === 'loans' ? 'Demandes de Prêts' : (view === 'users' ? 'Base Utilisateurs' : 'Demandes de Retraits')}
+                {view === 'loans' ? 'Demandes de Prêts' : (view === 'users' ? 'Base Utilisateurs' : (view === 'withdrawals' ? 'Demandes de Retraits' : 'Configuration Système'))}
               </h3>
-              <div className="relative w-full max-w-xs">
-                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-text" size={14} />
-                 <input 
-                   value={search}
-                   onChange={(e) => setSearch(e.target.value)}
-                   placeholder="Rechercher..." 
-                   className="bg-card border border-card-border rounded-full py-2.5 pl-10 pr-6 text-[10px] font-bold uppercase tracking-widest focus:outline-none focus:ring-1 focus:ring-primary/50 transition-all w-full text-foreground"
-                 />
-              </div>
+              {view !== 'settings' && (
+                <div className="relative w-full max-w-xs">
+                   <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-text" size={14} />
+                   <input 
+                     value={search}
+                     onChange={(e) => setSearch(e.target.value)}
+                     placeholder="Rechercher..." 
+                     className="bg-card border border-card-border rounded-full py-2.5 pl-10 pr-6 text-[10px] font-bold uppercase tracking-widest focus:outline-none focus:ring-1 focus:ring-primary/50 transition-all w-full text-foreground"
+                   />
+                </div>
+              )}
            </div>
 
            {loading ? (
@@ -346,8 +393,7 @@ export default function AdminDashboard() {
                       </div>
                    </div>
                  ))
-               ) : (
-                 /* Withdrawals View */
+               ) : view === 'withdrawals' ? (
                  filteredWithdrawals.length > 0 ? (
                    filteredWithdrawals.map((tx) => (
                     <div key={tx.id} className="flex flex-col md:flex-row md:items-center justify-between p-6 rounded-[2.5rem] bg-card border border-card-border hover:border-primary/10 transition-all gap-6">
@@ -385,6 +431,74 @@ export default function AdminDashboard() {
                  ) : (
                    <div className="py-20 text-center text-muted-text uppercase text-[10px] font-black tracking-widest">Aucun retrait trouvé</div>
                  )
+               ) : (
+                 /* Settings View */
+                 <div className="max-w-2xl mx-auto animate-in slide-in-from-bottom-4 duration-500">
+                    <form onSubmit={handleUpdateSettings} className="space-y-6">
+                       <div className="bg-card border border-card-border rounded-[2.5rem] p-8 space-y-8">
+                          <div className="space-y-1 border-b border-card-border pb-6">
+                             <h3 className="font-title font-bold text-lg tracking-widest uppercase text-foreground">Configuration Système</h3>
+                             <p className="text-[10px] text-muted-text font-bold uppercase tracking-widest">Pilotez les règles de la plateforme</p>
+                          </div>
+
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                             <div className="space-y-2">
+                                <label className="text-[10px] font-black text-muted-text uppercase tracking-widest ml-1">Taux d'Intérêt (ex: 0.03 pour 3%)</label>
+                                <input 
+                                   type="number" 
+                                   step="0.01"
+                                   value={settings.interestRate}
+                                   onChange={(e) => setSystemSettings({...settings, interestRate: parseFloat(e.target.value)})}
+                                   className="w-full bg-background border border-card-border rounded-2xl px-4 py-4 text-sm font-bold text-foreground focus:outline-none focus:border-amber-500/50 transition-colors"
+                                />
+                             </div>
+                             <div className="space-y-2">
+                                <label className="text-[10px] font-black text-muted-text uppercase tracking-widest ml-1">Bonus de Bienvenue (€)</label>
+                                <input 
+                                   type="number" 
+                                   value={settings.welcomeBonus}
+                                   onChange={(e) => setSystemSettings({...settings, welcomeBonus: parseFloat(e.target.value)})}
+                                   className="w-full bg-background border border-card-border rounded-2xl px-4 py-4 text-sm font-bold text-foreground focus:outline-none focus:border-amber-500/50 transition-colors"
+                                />
+                             </div>
+                             <div className="space-y-2">
+                                <label className="text-[10px] font-black text-muted-text uppercase tracking-widest ml-1">Dépôt Minimum (€)</label>
+                                <input 
+                                   type="number" 
+                                   value={settings.minDeposit}
+                                   onChange={(e) => setSystemSettings({...settings, minDeposit: parseFloat(e.target.value)})}
+                                   className="w-full bg-background border border-card-border rounded-2xl px-4 py-4 text-sm font-bold text-foreground focus:outline-none focus:border-amber-500/50 transition-colors"
+                                />
+                             </div>
+                             <div className="flex items-center justify-between p-4 bg-background border border-card-border rounded-2xl">
+                                <div>
+                                   <p className="text-[10px] font-black text-muted-text uppercase tracking-widest">Mode Maintenance</p>
+                                   <p className="text-xs font-bold text-foreground">{settings.maintenanceMode ? 'Activé' : 'Désactivé'}</p>
+                                </div>
+                                <button 
+                                   type="button"
+                                   onClick={() => setSystemSettings({...settings, maintenanceMode: !settings.maintenanceMode})}
+                                   className={`w-12 h-6 rounded-full transition-colors relative ${settings.maintenanceMode ? 'bg-amber-500' : 'bg-gray-700'}`}
+                                >
+                                   <div className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${settings.maintenanceMode ? 'right-1' : 'left-1'}`}></div>
+                                </button>
+                             </div>
+                          </div>
+
+                          <button 
+                             type="submit"
+                             disabled={updatingSettings}
+                             className="w-full py-5 bg-amber-500 text-black font-black uppercase tracking-[0.2em] text-[11px] rounded-2xl shadow-xl shadow-amber-500/20 hover:bg-amber-400 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
+                          >
+                             {updatingSettings ? <Loader2 className="animate-spin" size={18} /> : (
+                               <>
+                                 Enregistrer les modifications <CheckCircle2 size={18} />
+                               </>
+                             )}
+                          </button>
+                       </div>
+                    </form>
+                 </div>
                )}
              </div>
            )}
