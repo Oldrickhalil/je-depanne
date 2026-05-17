@@ -27,26 +27,32 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [showIntro, setShowIntro] = useState(false);
   const [freshStatus, setFreshStatus] = useState<any>(null);
+  const [fetchError, setFetchError] = useState<boolean>(false);
   const [showActivationModal, setShowActivationModal] = useState<{show: boolean, action: string}>({show: false, action: ""});
   
+  const userId = (session?.user as any)?.id;
   const firstName = session?.user?.name?.split(" ")[0] || "Client";
 
   // Récupérer le statut réel en base de données pour assurer le dynamisme
   useEffect(() => {
     const fetchStatus = async () => {
-      const userId = (session?.user as any)?.id;
       if (!userId) return;
 
       try {
         const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
         const res = await fetch(`${apiUrl}/api/auth/status/${userId}`);
+        
+        if (!res.ok) throw new Error("Backend error");
+        
         const data = await res.json();
         setFreshStatus(data);
+        setFetchError(false);
 
         // Mettre à jour la session si discordance (onboarding fini par exemple)
+        // On évite la boucle infinie en vérifiant strictement les changements
         const user = session?.user as any;
         if (data.kycVerified !== user.kycVerified || data.hasDeposited !== user.hasDeposited || data.isInstalled !== user.isInstalled || data.hasPin !== user.hasPin) {
-           await updateSession({
+           updateSession({
              ...session,
              user: {
                ...session?.user,
@@ -59,42 +65,44 @@ export default function DashboardPage() {
            });
         }
 
-        // Logique d'affichage de l'intro : seulement si rien n'est fait
+        // Logique d'affichage de l'intro
         if (!data.kycVerified && !data.hasDeposited && !data.isInstalled) {
           const introSeen = sessionStorage.getItem("jd_onboarding_seen");
-          if (!introSeen) {
-            setShowIntro(true);
-          }
+          if (!introSeen) setShowIntro(true);
         } else {
           setShowIntro(false);
         }
       } catch (err) {
         console.error("Erreur récupération statut:", err);
+        setFetchError(true);
       }
     };
 
     if (session) fetchStatus();
-  }, [session, updateSession]);
+  }, [userId]); // Only depend on userId to avoid infinite loops when session object identity changes
 
   useEffect(() => {
     const fetchUserLoans = async () => {
-      const userId = (session?.user as any)?.id;
       if (!userId) return;
 
       try {
         const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
         const res = await fetch(`${apiUrl}/api/loans/user/${userId}`);
+        if (!res.ok) throw new Error("Backend error");
+        
         const data = await res.json();
         setLoans(data);
+        setFetchError(false);
       } catch (err) {
         console.error("Erreur récupération prêts:", err);
+        setFetchError(true);
       } finally {
         setLoading(false);
       }
     };
 
     if (session) fetchUserLoans();
-  }, [session]);
+  }, [userId]); // Only depend on userId
 
   const activeLoan = loans.length > 0 ? loans[0] : null;
   const hasObtainedCredit = loans.some(l => l.status === 'APPROVED' || l.status === 'PAID_BACK');
