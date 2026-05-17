@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
-import { Mail, Lock, User, Loader2, ArrowRight, ShieldCheck, AlertCircle, CheckCircle2, Eye, EyeOff } from "lucide-react";
+import { Mail, Lock, User, Loader2, ArrowRight, ShieldCheck, AlertCircle, CheckCircle2, Eye, EyeOff, Phone, Globe } from "lucide-react";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -18,7 +18,21 @@ export default function RegisterPage() {
     lastName: "",
     email: "",
     password: "",
+    phone: "",
+    country: "France",
   });
+
+  useEffect(() => {
+    // Try to guess the country via IP
+    fetch('https://ipapi.co/json/')
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.country_name) {
+          setFormData(prev => ({ ...prev, country: data.country_name }));
+        }
+      })
+      .catch(err => console.log('Geoloc error:', err));
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -109,6 +123,31 @@ export default function RegisterPage() {
                 value={formData.lastName}
                 onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                 className="w-full bg-card border border-card-border rounded-2xl py-4 px-6 text-[12px] font-medium tracking-wider text-foreground focus:outline-none focus:border-primary/50 transition-all placeholder:text-gray-700"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="relative group">
+               <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-text group-focus-within:text-primary transition-colors" size={16} />
+               <input
+                type="tel"
+                required
+                placeholder="Téléphone"
+                value={formData.phone}
+                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                className="w-full bg-card border border-card-border rounded-2xl py-4 pl-11 pr-4 text-[12px] font-medium tracking-wider text-foreground focus:outline-none focus:border-primary/50 transition-all placeholder:text-gray-700"
+              />
+            </div>
+            <div className="relative group">
+               <Globe className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-text group-focus-within:text-primary transition-colors" size={16} />
+               <input
+                type="text"
+                required
+                placeholder="Pays"
+                value={formData.country}
+                onChange={(e) => setFormData({ ...formData, country: e.target.value })}
+                className="w-full bg-card border border-card-border rounded-2xl py-4 pl-11 pr-6 text-[12px] font-medium tracking-wider text-foreground focus:outline-none focus:border-primary/50 transition-all placeholder:text-gray-700"
               />
             </div>
           </div>

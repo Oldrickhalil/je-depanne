@@ -1,12 +1,16 @@
 import type { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import crypto from 'crypto';
+import { Resend } from 'resend';
 import prisma from '../utils/prisma.js';
 import { sendPushNotification } from '../utils/push.js';
 
+const resend = new Resend(process.env.RESEND_API_KEY);
+
 export const register = async (req: Request, res: Response) => {
   try {
-    const { email, password, firstName, lastName } = req.body;
+    const { email, password, firstName, lastName, phone, country } = req.body;
 
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
@@ -15,12 +19,21 @@ export const register = async (req: Request, res: Response) => {
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
+    // Generate verification token (expires in 24h)
+    const verificationToken = crypto.randomBytes(32).toString('hex');
+    const verificationExpires = new Date(Date.now() + 24 * 60 * 60 * 1000);
+
     const user = await prisma.user.create({
       data: {
         email,
         password: hashedPassword,
         firstName,
         lastName,
+        phone,
+        country,
+        emailVerified: false,
+        verificationToken,
+        verificationExpires,
         wallet: {
           create: {
             balance: 0,
@@ -33,10 +46,83 @@ export const register = async (req: Request, res: Response) => {
       }
     });
 
-    res.status(201).json({ message: 'Utilisateur créé avec succès', userId: user.id });
+    // Send verification email via Resend
+    try {
+      const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+      const verificationLink = `${appUrl}/api/auth/verify-email?token=${verificationToken}`;
+
+      await resend.emails.send({
+        from: 'Je Dépanne <noreply@je-depanne.com>',
+        to: [email],
+        subject: 'Vérifiez votre adresse e-mail - Je Dépanne',
+        html: `
+          <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+            <h1 style="color: #5120B3; text-align: center;">Bienvenue chez Je Dépanne !</h1>
+            <p>Bonjour ${firstName},</p>
+            <p>Merci de vous être inscrit sur Je Dépanne. Pour activer votre compte et accéder à nos services de micro-crédit, veuillez vérifier votre adresse e-mail en cliquant sur le bouton ci-dessous :</p>
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="${verificationLink}" style="background-color: #5120B3; color: white; padding: 15px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">Vérifier mon e-mail</a>
+            </div>
+            <p style="font-size: 12px; color: #666;">Ce lien expirera dans 24 heures.</p>
+            <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;" />
+            <p style="font-size: 10px; color: #999; text-align: center;">&copy; 2026 Je Dépanne. Tous droits réservés.</p>
+          </div>
+        `
+      });
+    } catch (emailError) {
+      console.error('Failed to send verification email:', emailError);
+      // We still return success because user is created, they can resend later (logic not yet implemented)
+    }
+
+    res.status(201).json({ message: 'Utilisateur créé. Veuillez vérifier votre email.' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Erreur lors de l\'inscription.' });
+  }
+};
+
+export const verifyEmail = async (req: Request, res: Response) => {
+  try {
+    const { token } = req.query;
+
+    if (!token) {
+      return res.status(400).send('<h1>Erreur</h1><p>Jeton de vérification manquant.</p>');
+    }
+
+    const user = await prisma.user.findFirst({
+      where: {
+        verificationToken: token as string,
+        verificationExpires: {
+          gt: new Date()
+        }
+      }
+    });
+
+    if (!user) {
+      return res.status(400).send('<h1>Lien invalide</h1><p>Le lien de vérification est invalide ou a expiré.</p>');
+    }
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        emailVerified: true,
+        verificationToken: null,
+        verificationExpires: null
+      }
+    });
+
+    // Success response - Redirect to login
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    res.send(`
+      <div style="font-family: sans-serif; text-align: center; padding: 50px;">
+        <h1 style="color: #34A853;">E-mail vérifié avec succès !</h1>
+        <p>Votre compte est maintenant activé. Vous pouvez vous connecter à l'application.</p>
+        <a href="${appUrl}/login" style="background-color: #5120B3; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block; margin-top: 20px;">Aller à la connexion</a>
+      </div>
+    `);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('<h1>Erreur</h1><p>Une erreur est survenue lors de la vérification de l\'email.</p>');
   }
 };
 
@@ -52,6 +138,10 @@ export const login = async (req: Request, res: Response) => {
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
     if (!isPasswordCorrect) {
       return res.status(401).json({ message: 'Email ou mot de passe incorrect.' });
+    }
+
+    if (!user.emailVerified) {
+      return res.status(403).json({ message: 'Veuillez vérifier votre adresse e-mail avant de vous connecter.' });
     }
 
     const token = jwt.sign(

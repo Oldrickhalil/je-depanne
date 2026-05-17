@@ -39,10 +39,15 @@ const handler = NextAuth({
               creditLimit: data.user.creditLimit
             };
           }
+          
+          if (data.message) {
+             throw new Error(data.message);
+          }
+          
           return null;
-        } catch (error) {
+        } catch (error: any) {
           console.error("Auth error:", error);
-          return null;
+          throw error;
         }
       }
     }),

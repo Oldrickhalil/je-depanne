@@ -1,10 +1,11 @@
 import { Router } from 'express';
-import { login, register, verifyKyc, updateInstallationStatus, getAllUsers, updateKycStatus, getUserStatus, updateProfile, updateSettings, subscribePush, setPin, verifyPin } from '../controllers/authController.js';
+import { login, register, verifyEmail, verifyKyc, updateInstallationStatus, getAllUsers, updateKycStatus, getUserStatus, updateProfile, updateSettings, subscribePush, setPin, verifyPin } from '../controllers/authController.js';
 
 const router = Router();
 
 router.post('/register', register);
 router.post('/login', login);
+router.get('/verify-email', verifyEmail);
 router.post('/verify-kyc', verifyKyc);
 router.post('/update-installation', updateInstallationStatus);
 router.post('/push-subscribe', subscribePush);

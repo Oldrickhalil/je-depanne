@@ -34,6 +34,12 @@ model User {
   kycVerso         String?   @db.Text
   kycAddressProof  String?   @db.Text
   phone            String?
+  country          String?   @default("France")
+
+  // Email Verification
+  emailVerified    Boolean   @default(false)
+  verificationToken String?  @unique
+  verificationExpires DateTime?
 
   // Settings
   pinCode          String?

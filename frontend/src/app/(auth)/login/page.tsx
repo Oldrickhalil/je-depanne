@@ -30,7 +30,8 @@ export default function LoginPage() {
       });
 
       if (res?.error) {
-        setError("Email ou mot de passe incorrect.");
+        // NextAuth prefixes custom errors with "Error: "
+        setError(res.error.replace("Error: ", ""));
       } else {
         router.push("/dashboard");
       }
