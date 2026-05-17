@@ -32,6 +32,7 @@ export default function SettingsPage() {
   const [loading, setLoading] = useState(true);
   const [showAddCard, setShowAddCard] = useState(false);
   const [showPinModal, setShowPinModal] = useState(false);
+  const [pendingAction, setPendingAction] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'notifications' | 'payments' | 'security'>('notifications');
   
   const [savedCards, setSavedCards] = useState<PaymentMethod[]>([]);
