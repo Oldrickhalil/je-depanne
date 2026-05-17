@@ -73,7 +73,7 @@ export default function AdminLoginPage() {
             <div className="relative group">
                <UserCircle className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-600 group-focus-within:text-amber-500 transition-colors" size={18} />
                <input
-                type="email"
+                type="text"
                 required
                 placeholder="Identifiant Admin"
                 value={formData.email}
