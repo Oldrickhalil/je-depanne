@@ -13,6 +13,11 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(cors());
+
+// Special route for Stripe Webhook to receive raw body (MUST BE BEFORE express.json())
+import { stripeWebhook } from './controllers/stripeController.js';
+app.post('/api/stripe/webhook', express.raw({ type: 'application/json' }), stripeWebhook);
+
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
