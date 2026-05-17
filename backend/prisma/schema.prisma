@@ -42,6 +42,10 @@ model User {
   verificationToken String?  @unique
   verificationExpires DateTime?
 
+  // Password Reset
+  passwordResetToken String?   @unique
+  passwordResetExpires DateTime?
+
   // Settings
   pinCode          String?
   notifPush        Boolean   @default(true)

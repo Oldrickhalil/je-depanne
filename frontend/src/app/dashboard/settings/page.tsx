@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, Bell, CreditCard, Globe, Lock, Moon, ShieldAlert, Smartphone, Fingerprint, Trash2, Plus } from "lucide-react";
+import { ArrowLeft, Bell, CreditCard, Globe, Lock, Moon, ShieldAlert, Smartphone, Fingerprint, Trash2, Plus, Eye, EyeOff, ShieldCheck, X, Check } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
@@ -27,17 +27,24 @@ export default function SettingsPage() {
   const { data: session } = useSession();
   const { addToast } = useToast();
   const userId = (session?.user as any)?.id;
+  const userEmail = session?.user?.email;
+  
   const [loading, setLoading] = useState(true);
-  const [showPinModal, setShowPinModal] = useState(false);
-  const [pendingAction, setPendingAction] = useState<string | null>(null);
   const [showAddCard, setShowAddCard] = useState(false);
   const [activeTab, setActiveTab] = useState<'notifications' | 'payments' | 'security'>('notifications');
+  
   const [savedCards, setSavedCards] = useState<PaymentMethod[]>([]);
   const [loadingCards, setLoadingCards] = useState(false);
   const [deletingCard, setDeletingCard] = useState<string | null>(null);
   const [isOpeningPortal, setIsOpeningPortal] = useState(false);
 
-  // Mock states for toggles, will be updated by fetch
+  // Security States
+  const [isRequestingReset, setIsRequestingReset] = useState(false);
+  const [showPinChange, setShowPinChange] = useState(false);
+  const [pinChangeData, setPinChangeData] = useState({ password: "", newPin: "", confirmPin: "" });
+  const [isUpdatingPin, setIsUpdatingPin] = useState(false);
+  const [showPass, setShowPass] = useState(false);
+
   const [notifications, setNotifications] = useState({
     email: true,
     push: true,
@@ -60,6 +67,12 @@ export default function SettingsPage() {
     }
   };
 
+  const handleAddCardSuccess = () => {
+    setShowAddCard(false);
+    addToast("Votre carte a été enregistrée.", "SUCCESS");
+    fetchSavedCards();
+  };
+
   const deleteCard = async (pmId: string) => {
     setDeletingCard(pmId);
     try {
@@ -67,10 +80,10 @@ export default function SettingsPage() {
       const res = await fetch(`${apiUrl}/api/stripe/payment-methods/${pmId}`, { method: "DELETE" });
       if (res.ok) {
         setSavedCards(savedCards.filter(c => c.id !== pmId));
-        addToast("Carte supprimée avec succès.", "SUCCESS");
+        addToast("Carte supprimée.", "SUCCESS");
       }
     } catch (err) {
-      addToast("Erreur lors de la suppression.", "ERROR");
+      addToast("Erreur suppression.", "ERROR");
     } finally {
       setDeletingCard(null);
     }
@@ -98,10 +111,60 @@ export default function SettingsPage() {
     }
   };
 
-  const handleAddCardSuccess = () => {
-    setShowAddCard(false);
-    addToast("Votre carte a été enregistrée.", "SUCCESS");
-    fetchSavedCards();
+  const handlePasswordResetRequest = async () => {
+    setIsRequestingReset(true);
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+      const res = await fetch(`${apiUrl}/api/auth/password-reset-request`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: userEmail }),
+      });
+      if (res.ok) {
+        addToast("Lien de réinitialisation envoyé par e-mail.", "SUCCESS");
+      } else {
+        throw new Error();
+      }
+    } catch (err) {
+      addToast("Erreur lors de la demande.", "ERROR");
+    } finally {
+      setIsRequestingReset(false);
+    }
+  };
+
+  const handlePinChange = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (pinChangeData.newPin !== pinChangeData.confirmPin) {
+      addToast("Les codes PIN ne correspondent pas.", "ERROR");
+      return;
+    }
+    if (pinChangeData.newPin.length < 4) {
+        addToast("Le code PIN doit faire 4 chiffres.", "ERROR");
+        return;
+    }
+
+    setIsUpdatingPin(true);
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+      const res = await fetch(`${apiUrl}/api/auth/update-pin-secure`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId, password: pinChangeData.password, newPin: pinChangeData.newPin }),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        addToast("Code PIN mis à jour !", "SUCCESS");
+        setShowPinChange(false);
+        setPinChangeData({ password: "", newPin: "", confirmPin: "" });
+      } else {
+        addToast(data.message || "Erreur lors de la mise à jour.", "ERROR");
+      }
+    } catch (err) {
+      addToast("Erreur serveur.", "ERROR");
+    } finally {
+      setIsUpdatingPin(false);
+    }
   };
 
   useEffect(() => {
@@ -135,7 +198,6 @@ export default function SettingsPage() {
   const toggleNotification = async (key: 'email' | 'push' | 'sms' | 'marketing') => {
     const newNotifications = { ...notifications, [key]: !notifications[key] };
     setNotifications(newNotifications);
-
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
       await fetch(`${apiUrl}/api/auth/settings/${userId}`, {
@@ -156,6 +218,11 @@ export default function SettingsPage() {
   if (!session) return null;
   if (loading) return <div className="flex justify-center items-center h-[50vh]"><Loader2 className="animate-spin text-primary w-8 h-8" /></div>;
 
+  const pendingActionHandler = () => {
+    setShowPinModal(false);
+    if (pendingAction === 'password') handlePasswordResetRequest();
+  };
+
   return (
     <div className="max-w-4xl mx-auto space-y-10 animate-in fade-in duration-700 pb-20">
       
@@ -173,26 +240,20 @@ export default function SettingsPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
          <div className="md:col-span-4 space-y-2">
-            <button 
-               onClick={() => setActiveTab('notifications')}
-               className={`w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-bold uppercase tracking-wider text-[10px] transition-all ${activeTab === 'notifications' ? 'bg-white/10 text-white' : 'text-muted-text hover:bg-white/5'}`}
-            >
-               <Bell size={16} className={activeTab === 'notifications' ? "text-primary" : ""} />
-               Notifications
-            </button>
-            <button 
-               onClick={() => setActiveTab('payments')}
-               className={`w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-bold uppercase tracking-wider text-[10px] transition-all ${activeTab === 'payments' ? 'bg-white/10 text-white' : 'text-muted-text hover:bg-white/5'}`}
-            >
-               <CreditCard size={16} className={activeTab === 'payments' ? "text-primary" : ""} />
-               Moyens de paiement
-            </button>
-            <button 
-               className="w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-bold uppercase tracking-wider text-[10px] transition-all text-muted-text hover:bg-white/5"
-            >
-               <ShieldAlert size={16} />
-               Confidentialité
-            </button>
+            {[
+              { id: 'notifications', label: 'Notifications', icon: Bell },
+              { id: 'payments', label: 'Paiements', icon: CreditCard },
+              { id: 'security', label: 'Sécurité', icon: Lock }
+            ].map(tab => (
+              <button 
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id as any)}
+                className={`w-full flex items-center gap-4 px-6 py-4 rounded-2xl font-bold uppercase tracking-wider text-[10px] transition-all ${activeTab === tab.id ? 'bg-white/10 text-white' : 'text-muted-text hover:bg-white/5'}`}
+              >
+                <tab.icon size={16} className={activeTab === tab.id ? "text-primary" : ""} />
+                {tab.label}
+              </button>
+            ))}
          </div>
 
          <div className="md:col-span-8 space-y-6">
@@ -200,19 +261,19 @@ export default function SettingsPage() {
             {activeTab === 'notifications' && (
               <div className="bg-card border border-card-border rounded-[2.5rem] p-8 space-y-8 animate-in fade-in slide-in-from-right-4 duration-500 shadow-sm">
                  <div className="space-y-1 border-b border-card-border pb-6">
-                    <h3 className="font-title font-bold text-lg tracking-wider uppercase text-foreground">Alertes</h3>
-                    <p className="text-[10px] text-muted-text font-bold uppercase tracking-wider">Gérez vos canaux de communication</p>
+                    <h3 className="font-title font-bold text-lg tracking-widest uppercase text-foreground">Alertes</h3>
+                    <p className="text-[10px] text-muted-text font-bold uppercase tracking-widest">Gérez vos canaux de communication</p>
                  </div>
                  
                  <div className="space-y-6">
                     <div className="flex items-center justify-between">
-                       <p className="text-sm font-bold text-foreground uppercase tracking-tight">Notifications Push</p>
+                       <p className="text-sm font-bold text-foreground uppercase">Notifications Push</p>
                        <button onClick={() => toggleNotification('push')} className={`w-12 h-6 rounded-full relative transition-colors ${notifications.push ? 'bg-primary' : 'bg-white/10'}`}>
                           <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform ${notifications.push ? 'left-7' : 'left-1'}`}></div>
                        </button>
                     </div>
                     <div className="flex items-center justify-between">
-                       <p className="text-sm font-bold text-foreground uppercase tracking-tight">Emails Transactionnels</p>
+                       <p className="text-sm font-bold text-foreground uppercase">Emails Transactionnels</p>
                        <button onClick={() => toggleNotification('email')} className={`w-12 h-6 rounded-full relative transition-colors ${notifications.email ? 'bg-primary' : 'bg-white/10'}`}>
                           <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform ${notifications.email ? 'left-7' : 'left-1'}`}></div>
                        </button>
@@ -226,12 +287,12 @@ export default function SettingsPage() {
                   <div className="bg-card border border-card-border rounded-[2.5rem] p-8 space-y-8 shadow-sm">
                      <div className="flex items-center justify-between border-b border-card-border pb-6">
                         <div className="space-y-1">
-                           <h3 className="font-title font-bold text-lg tracking-wider uppercase text-foreground">Mes Cartes</h3>
-                           <p className="text-[10px] text-muted-text font-bold uppercase tracking-wider">Cartes sauvegardées via Stripe</p>
+                           <h3 className="font-title font-bold text-lg tracking-widest uppercase text-foreground">Mes Cartes</h3>
+                           <p className="text-[10px] text-muted-text font-bold uppercase tracking-widest">Cartes sauvegardées via Stripe</p>
                         </div>
                         <button 
                            onClick={() => setShowAddCard(true)}
-                           className="px-4 py-2 bg-primary text-white text-[8px] font-black uppercase tracking-wider rounded-xl hover:bg-primary/90 transition-all flex items-center gap-2 shadow-lg shadow-primary/20"
+                           className="px-4 py-2 bg-primary text-white text-[8px] font-black uppercase tracking-widest rounded-xl hover:bg-primary/90 transition-all flex items-center gap-2 shadow-lg shadow-primary/20"
                         >
                            <Plus size={12} /> Ajouter une carte
                         </button>
@@ -262,13 +323,13 @@ export default function SettingsPage() {
                               </div>
                            ))
                         ) : (
-                           <div className="py-10 text-center text-muted-text uppercase text-[10px] font-black tracking-wider">Aucune carte enregistrée</div>
+                           <div className="py-10 text-center text-muted-text uppercase text-[10px] font-black tracking-widest">Aucune carte enregistrée</div>
                         )}
                         
                         <button 
                            onClick={openStripePortal}
                            disabled={isOpeningPortal}
-                           className="w-full py-3 text-[8px] font-black text-muted-text uppercase tracking-wider hover:text-foreground transition-colors flex items-center justify-center gap-2"
+                           className="w-full py-3 text-[8px] font-black text-muted-text uppercase tracking-widest hover:text-foreground transition-colors flex items-center justify-center gap-2"
                         >
                            {isOpeningPortal && <Loader2 size={10} className="animate-spin" />} Accéder au portail de facturation Stripe
                         </button>
@@ -277,49 +338,130 @@ export default function SettingsPage() {
                </div>
             )}
 
+            {activeTab === 'security' && (
+              <div className="bg-card border border-card-border rounded-[2.5rem] p-8 space-y-8 animate-in fade-in slide-in-from-right-4 duration-500 shadow-sm">
+                 <div className="space-y-1 border-b border-card-border pb-6">
+                    <h3 className="font-title font-bold text-lg tracking-widest uppercase text-foreground">Sécurité & Accès</h3>
+                    <p className="text-[10px] text-muted-text font-bold uppercase tracking-widest">Gérez vos secrets de connexion</p>
+                 </div>
+                 
+                 <div className="space-y-6">
+                    <div className="flex items-center justify-between p-4 bg-background border border-card-border rounded-2xl">
+                       <div className="space-y-1">
+                          <p className="text-sm font-bold text-foreground uppercase tracking-tight">Mot de passe</p>
+                          <p className="text-[9px] text-muted-text uppercase font-bold">Un lien sera envoyé à {userEmail}</p>
+                       </div>
+                       <button 
+                         onClick={() => { setPendingAction("password"); setShowPinModal(true); }}
+                         className="px-6 py-3 bg-white/5 text-foreground text-[9px] font-black uppercase tracking-wider rounded-xl hover:bg-white/10 transition-all flex items-center gap-2"
+                       >
+                          Modifier
+                       </button>
+                    </div>
+
+                    <div className="flex items-center justify-between p-4 bg-background border border-card-border rounded-2xl">
+                       <div className="space-y-1">
+                          <p className="text-sm font-bold text-foreground uppercase tracking-tight">Code PIN</p>
+                          <p className="text-[9px] text-muted-text uppercase font-bold">Utilisé pour les actions sensibles</p>
+                       </div>
+                       <button 
+                         onClick={() => setShowPinChange(true)}
+                         className="px-6 py-3 bg-primary/10 text-primary text-[9px] font-black uppercase tracking-wider rounded-xl hover:bg-primary hover:text-white transition-all"
+                       >
+                          Changer mon PIN
+                       </button>
+                    </div>
+                 </div>
+              </div>
+            )}
+
             <div className="bg-card border border-card-border rounded-[2.5rem] p-8 space-y-8 shadow-sm">
                <div className="space-y-1 border-b border-card-border pb-6">
-                  <h3 className="font-title font-bold text-lg tracking-wider uppercase text-foreground">Sécurité</h3>
-                  <p className="text-[10px] text-muted-text font-bold uppercase tracking-wider">Accès et authentification</p>
-               </div>
-               <div className="space-y-6">
-                  <div className="flex items-center justify-between">
-                     <p className="text-sm font-bold text-foreground uppercase tracking-tight">Mot de passe</p>
-                     <button onClick={() => { setPendingAction("password"); setShowPinModal(true); }} className="px-4 py-2 bg-white/5 text-foreground text-[9px] font-black uppercase tracking-wider rounded-xl hover:bg-white/10 transition-colors">Modifier</button>
-                  </div>
-               </div>
-            </div>
-
-            <div className="bg-card border border-card-border rounded-[2.5rem] p-8 space-y-8">
-               <div className="space-y-1 border-b border-card-border pb-6">
-                  <h3 className="font-title font-bold text-lg tracking-wider uppercase text-foreground">Préférences</h3>
+                  <h3 className="font-title font-bold text-lg tracking-widest uppercase text-foreground">Préférences</h3>
                </div>
                <div className="flex items-center justify-between p-4 bg-background border border-card-border rounded-2xl">
                   <div className="flex items-center gap-4">
                      <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-foreground"><Moon size={18} /></div>
-                     <div><p className="text-sm font-bold text-foreground uppercase tracking-tight">Thème Sombre</p></div>
+                     <div><p className="text-sm font-bold text-foreground uppercase tracking-tight text-foreground">Thème Sombre</p></div>
                   </div>
                   <span className="text-[9px] font-black text-primary uppercase bg-primary/10 px-3 py-1.5 rounded-full">Activé par défaut</span>
                </div>
             </div>
 
             <div className="border border-red-500/20 rounded-[2.5rem] p-8 space-y-4">
-               <h3 className="text-red-500 font-black uppercase text-xs">Zone de Danger</h3>
-               <button className="px-6 py-3 bg-red-500/10 text-red-500 text-[9px] font-black uppercase rounded-xl hover:bg-red-500 hover:text-white transition-all">Supprimer mon compte</button>
+               <h3 className="text-red-500 font-black uppercase text-xs tracking-wider">Zone de Danger</h3>
+               <button className="px-6 py-3 bg-red-500/10 text-red-500 text-[9px] font-black uppercase tracking-wider rounded-xl hover:bg-red-500 hover:text-white transition-all">Supprimer mon compte</button>
             </div>
          </div>
       </div>
-      
+
       <PinVerificationModal 
          isOpen={showPinModal} 
          onClose={() => setShowPinModal(false)} 
-         onSuccess={() => {
-           setShowPinModal(false);
-           if (pendingAction === 'password') addToast("Redirection vers la modification.", "SUCCESS");
-         }} 
+         onSuccess={pendingActionHandler} 
          title="Vérification"
          description="Saisissez votre code PIN"
       />
+
+      {showPinChange && (
+        <div className="fixed inset-0 z-[200] bg-background/95 backdrop-blur-xl flex items-center justify-center p-4 h-[100dvh] w-screen animate-in fade-in duration-300">
+           <div className="w-full max-w-sm bg-card border border-card-border rounded-[2.5rem] p-8 space-y-8 relative shadow-2xl overflow-hidden text-center">
+              <div className="absolute top-0 left-0 w-full h-1 bg-primary"></div>
+              <button onClick={() => setShowPinChange(false)} className="absolute top-6 right-6 text-muted-text hover:text-white transition-colors"><X size={20} /></button>
+
+              <div className="space-y-2">
+                 <h2 className="text-2xl font-black uppercase tracking-tighter text-white">Nouveau Code PIN</h2>
+                 <p className="text-[10px] text-muted-text font-bold uppercase tracking-widest px-4">Vérifiez votre identité pour continuer.</p>
+              </div>
+
+              <form onSubmit={handlePinChange} className="space-y-5">
+                 <div className="space-y-4">
+                    <div className="space-y-1.5 text-left">
+                       <label className="text-[9px] font-black text-muted-text uppercase tracking-widest ml-1">Mot de passe du compte</label>
+                       <div className="relative">
+                          <input 
+                            type={showPass ? "text" : "password"} required
+                            value={pinChangeData.password}
+                            onChange={(e) => setPinChangeData({...pinChangeData, password: e.target.value})}
+                            className="w-full bg-background border border-card-border rounded-xl py-4 px-5 text-xs font-bold text-white focus:outline-none focus:border-primary/50"
+                          />
+                          <button type="button" onClick={() => setShowPass(!showPass)} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-700 hover:text-white">
+                             {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
+                          </button>
+                       </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4 text-left">
+                       <div className="space-y-1.5">
+                          <label className="text-[9px] font-black text-muted-text uppercase tracking-widest ml-1">Nouveau PIN</label>
+                          <input 
+                            type="password" maxLength={4} required
+                            value={pinChangeData.newPin}
+                            onChange={(e) => setPinChangeData({...pinChangeData, newPin: e.target.value.replace(/\D/g, '')})}
+                            className="w-full bg-background border border-card-border rounded-xl py-4 px-5 text-center text-xl font-black tracking-[0.5em] text-white focus:outline-none focus:border-primary/50"
+                          />
+                       </div>
+                       <div className="space-y-1.5">
+                          <label className="text-[9px] font-black text-muted-text uppercase tracking-widest ml-1">Confirmer</label>
+                          <input 
+                            type="password" maxLength={4} required
+                            value={pinChangeData.confirmPin}
+                            onChange={(e) => setPinChangeData({...pinChangeData, confirmPin: e.target.value.replace(/\D/g, '')})}
+                            className="w-full bg-background border border-card-border rounded-xl py-4 px-5 text-center text-xl font-black tracking-[0.5em] text-white focus:outline-none focus:border-primary/50"
+                          />
+                       </div>
+                    </div>
+                 </div>
+
+                 <button 
+                   type="submit" disabled={isUpdatingPin}
+                   className="w-full py-5 bg-primary text-white font-black text-xs uppercase tracking-[0.2em] rounded-2xl shadow-xl hover:opacity-90 disabled:opacity-50 flex items-center justify-center gap-3"
+                 >
+                    {isUpdatingPin ? <Loader2 className="animate-spin" size={18} /> : <>Valider le changement <Check size={18} /></>}
+                 </button>
+              </form>
+           </div>
+        </div>
+      )}
 
       {showAddCard && (
         <Elements stripe={stripePromise}>

@@ -504,3 +504,113 @@ export const verifyPin = async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Erreur serveur.' });
   }
 };
+
+export const requestPasswordReset = async (req: Request, res: Response) => {
+  try {
+    const { email } = req.body;
+    const user = await prisma.user.findUnique({ where: { email } });
+
+    if (!user) {
+      // Pour des raisons de sécurité, ne pas confirmer si l'email existe ou non
+      return res.status(200).json({ message: 'Si cet e-mail existe, un lien de réinitialisation a été envoyé.' });
+    }
+
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const resetExpires = new Date(Date.now() + 3600000); // 1 heure
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        passwordResetToken: resetToken,
+        passwordResetExpires: resetExpires
+      }
+    });
+
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    const resetLink = `${appUrl}/reset-password?token=${resetToken}`;
+    const fromEmail = process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev';
+
+    await resend.emails.send({
+      from: `Je Dépanne <${fromEmail}>`,
+      to: [email],
+      subject: 'Réinitialisation de votre mot de passe - Je Dépanne',
+      html: `
+        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+          <h1 style="color: #5120B3; text-align: center;">Changement de mot de passe</h1>
+          <p>Bonjour ${user.firstName},</p>
+          <p>Vous avez demandé à changer votre mot de passe. Cliquez sur le bouton ci-dessous pour définir un nouveau mot de passe :</p>
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="${resetLink}" style="background-color: #5120B3; color: white; padding: 15px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">Définir un nouveau mot de passe</a>
+          </div>
+          <p style="font-size: 12px; color: #666;">Ce lien expirera dans 1 heure. Si vous n'êtes pas à l'origine de cette demande, ignorez cet e-mail.</p>
+          <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;" />
+          <p style="font-size: 10px; color: #999; text-align: center;">&copy; 2026 Je Dépanne. Tous droits réservés.</p>
+        </div>
+      `
+    });
+
+    res.status(200).json({ message: 'Lien de réinitialisation envoyé.' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Erreur lors de la demande de réinitialisation.' });
+  }
+};
+
+export const resetPassword = async (req: Request, res: Response) => {
+  try {
+    const { token, newPassword } = req.body;
+
+    const user = await prisma.user.findFirst({
+      where: {
+        passwordResetToken: token,
+        passwordResetExpires: { gt: new Date() }
+      }
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: 'Lien invalide ou expiré.' });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 12);
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        password: hashedPassword,
+        passwordResetToken: null,
+        passwordResetExpires: null
+      }
+    });
+
+    res.status(200).json({ message: 'Mot de passe mis à jour avec succès.' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Erreur lors de la mise à jour du mot de passe.' });
+  }
+};
+
+export const updatePinWithPassword = async (req: Request, res: Response) => {
+  try {
+    const { userId, password, newPin } = req.body;
+
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) return res.status(404).json({ message: 'Utilisateur non trouvé.' });
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Mot de passe incorrect.' });
+    }
+
+    const hashedPin = await bcrypt.hash(newPin, 10);
+
+    await prisma.user.update({
+      where: { id: userId },
+      data: { pinCode: hashedPin } as any
+    });
+
+    res.status(200).json({ message: 'Code PIN mis à jour avec succès.' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Erreur lors de la mise à jour du PIN.' });
+  }
+};
