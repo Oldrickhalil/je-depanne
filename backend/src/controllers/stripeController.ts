@@ -148,7 +148,9 @@ export const payWithSavedCard = async (req: Request, res: Response) => {
 export const listPaymentMethods = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
-    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!userId) return res.status(400).json({ message: 'User ID requis.' });
+
+    const user = await prisma.user.findUnique({ where: { id: userId as string } });
     if (!user || !user.stripeCustomerId) return res.status(200).json([]);
 
     const paymentMethods = await stripe.paymentMethods.list({
@@ -168,7 +170,9 @@ export const listPaymentMethods = async (req: Request, res: Response) => {
 export const deletePaymentMethod = async (req: Request, res: Response) => {
   try {
     const { pmId } = req.params;
-    await stripe.paymentMethods.detach(pmId);
+    if (!pmId) return res.status(400).json({ message: 'PM ID requis.' });
+
+    await stripe.paymentMethods.detach(pmId as string);
     res.status(200).json({ message: 'Carte supprimée.' });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
@@ -216,7 +220,7 @@ export const stripeWebhook = async (req: Request, res: Response) => {
         // En mode dev sans secret, on peut tester manuellement ou via stripe listen
         event = req.body;
     } else {
-        event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
+        event = stripe.webhooks.constructEvent(req.body, sig as string, endpointSecret);
     }
   } catch (err: any) {
     console.error(`Webhook Error: ${err.message}`);
