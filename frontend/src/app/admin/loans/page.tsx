@@ -13,9 +13,11 @@ import {
   Users,
   Wallet,
   FileText,
-  AlertCircle
+  AlertCircle,
+  LogOut
 } from "lucide-react";
 import Link from "next/link";
+import { signOut } from "next-auth/react";
 
 type User = {
   id: string;
