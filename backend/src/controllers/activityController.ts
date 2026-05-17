@@ -97,8 +97,8 @@ export const updateTransactionStatus = async (req: Request, res: Response) => {
       return res.status(400).json({ message: 'Statut invalide.' });
     }
 
-    const transaction = await prisma.transaction.findUnique({
-      where: { id: transactionId },
+    const transaction: any = await prisma.transaction.findUnique({
+      where: { id: transactionId as string },
       include: { 
         wallet: { 
           include: { user: true } 
@@ -144,7 +144,7 @@ export const updateTransactionStatus = async (req: Request, res: Response) => {
     }
 
     const updatedTransaction = await prisma.transaction.update({
-      where: { id: transactionId },
+      where: { id: transactionId as string },
       data: { status }
     });
 
