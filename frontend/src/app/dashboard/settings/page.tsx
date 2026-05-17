@@ -7,6 +7,11 @@ import { useSession } from "next-auth/react";
 import { Loader2 } from "lucide-react";
 import PinVerificationModal from "@/components/dashboard/PinVerificationModal";
 import { useToast } from "@/components/ui/ToastProvider";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+import AddCardForm from "../deposit/AddCardForm";
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY || "pk_test_placeholder");
 
 type PaymentMethod = {
   id: string;
@@ -17,12 +22,6 @@ type PaymentMethod = {
     exp_year: number;
   };
 };
-
-import { loadStripe } from "@stripe/stripe-js";
-import { Elements } from "@stripe/react-stripe-js";
-import AddCardForm from "../deposit/AddCardForm";
-
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY || "pk_test_placeholder");
 
 export default function SettingsPage() {
   const { data: session } = useSession();
@@ -36,8 +35,68 @@ export default function SettingsPage() {
   const [savedCards, setSavedCards] = useState<PaymentMethod[]>([]);
   const [loadingCards, setLoadingCards] = useState(false);
   const [deletingCard, setDeletingCard] = useState<string | null>(null);
+  const [isOpeningPortal, setIsOpeningPortal] = useState(false);
 
-  // ... (notifications state and toggle logic unchanged)
+  // Mock states for toggles, will be updated by fetch
+  const [notifications, setNotifications] = useState({
+    email: true,
+    push: true,
+    sms: false,
+    marketing: false
+  });
+
+  const fetchSavedCards = async () => {
+    if (!userId) return;
+    setLoadingCards(true);
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+      const res = await fetch(`${apiUrl}/api/stripe/payment-methods/${userId}`);
+      const data = await res.json();
+      setSavedCards(data || []);
+    } catch (err) {
+      console.error("Error fetching cards:", err);
+    } finally {
+      setLoadingCards(false);
+    }
+  };
+
+  const deleteCard = async (pmId: string) => {
+    setDeletingCard(pmId);
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+      const res = await fetch(`${apiUrl}/api/stripe/payment-methods/${pmId}`, { method: "DELETE" });
+      if (res.ok) {
+        setSavedCards(savedCards.filter(c => c.id !== pmId));
+        addToast("Carte supprimée avec succès.", "SUCCESS");
+      }
+    } catch (err) {
+      addToast("Erreur lors de la suppression.", "ERROR");
+    } finally {
+      setDeletingCard(null);
+    }
+  };
+
+  const openStripePortal = async () => {
+    setIsOpeningPortal(true);
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+      const res = await fetch(`${apiUrl}/api/stripe/create-portal-session`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId }),
+      });
+      const data = await res.json();
+      if (res.ok && data.url) {
+        window.location.href = data.url;
+      } else {
+        addToast(data.error || "Impossible d'ouvrir le portail.", "ERROR");
+      }
+    } catch (err) {
+      addToast("Erreur serveur.", "ERROR");
+    } finally {
+      setIsOpeningPortal(false);
+    }
+  };
 
   const handleAddCardSuccess = () => {
     setShowAddCard(false);
@@ -45,12 +104,9 @@ export default function SettingsPage() {
     fetchSavedCards();
   };
 
-  // Replace openStripePortal with setShowAddCard(true) 
-  // and remove the function itself if no longer needed elsewhere.
-
   useEffect(() => {
     if (activeTab === 'payments') fetchSavedCards();
-  }, [activeTab]);
+  }, [activeTab, userId]);
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -103,13 +159,12 @@ export default function SettingsPage() {
   return (
     <div className="max-w-4xl mx-auto space-y-10 animate-in fade-in duration-700 pb-20">
       
-      {/* Header */}
       <section className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div className="space-y-1">
           <Link href="/dashboard/profile" className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.3em] text-muted-text hover:text-foreground transition-colors mb-4">
              <ArrowLeft size={12} /> Retour
           </Link>
-          <h1 className="text-4xl font-title font-bold tight-tracking uppercase leading-none">
+          <h1 className="text-4xl font-title font-bold tight-tracking uppercase leading-none text-foreground">
             Paramètres
           </h1>
           <p className="text-muted-text font-bold uppercase tracking-[0.2em] text-[9px]">Gérez vos préférences et votre sécurité</p>
@@ -150,15 +205,14 @@ export default function SettingsPage() {
                  </div>
                  
                  <div className="space-y-6">
-                    {/* (Toggles logic unchanged) */}
                     <div className="flex items-center justify-between">
-                       <p className="text-sm font-bold text-foreground uppercase">Notifications Push</p>
+                       <p className="text-sm font-bold text-foreground uppercase tracking-tight">Notifications Push</p>
                        <button onClick={() => toggleNotification('push')} className={`w-12 h-6 rounded-full relative transition-colors ${notifications.push ? 'bg-primary' : 'bg-white/10'}`}>
                           <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform ${notifications.push ? 'left-7' : 'left-1'}`}></div>
                        </button>
                     </div>
                     <div className="flex items-center justify-between">
-                       <p className="text-sm font-bold text-foreground uppercase">Emails Transactionnels</p>
+                       <p className="text-sm font-bold text-foreground uppercase tracking-tight">Emails Transactionnels</p>
                        <button onClick={() => toggleNotification('email')} className={`w-12 h-6 rounded-full relative transition-colors ${notifications.email ? 'bg-primary' : 'bg-white/10'}`}>
                           <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform ${notifications.email ? 'left-7' : 'left-1'}`}></div>
                        </button>
@@ -213,25 +267,24 @@ export default function SettingsPage() {
                         
                         <button 
                            onClick={openStripePortal}
-                           className="w-full py-3 text-[8px] font-black text-muted-text uppercase tracking-widest hover:text-foreground transition-colors"
+                           disabled={isOpeningPortal}
+                           className="w-full py-3 text-[8px] font-black text-muted-text uppercase tracking-widest hover:text-foreground transition-colors flex items-center justify-center gap-2"
                         >
-                           Accéder au portail de facturation Stripe
+                           {isOpeningPortal && <Loader2 size={10} className="animate-spin" />} Accéder au portail de facturation Stripe
                         </button>
                      </div>
                   </div>
                </div>
             )}
 
-            {/* Always show Security and Danger zone below active tab or just for main settings */}
             <div className="bg-card border border-card-border rounded-[2.5rem] p-8 space-y-8 shadow-sm">
                <div className="space-y-1 border-b border-card-border pb-6">
                   <h3 className="font-title font-bold text-lg tracking-widest uppercase text-foreground">Sécurité</h3>
                   <p className="text-[10px] text-muted-text font-bold uppercase tracking-widest">Accès et authentification</p>
                </div>
-               {/* (Security buttons unchanged) */}
                <div className="space-y-6">
                   <div className="flex items-center justify-between">
-                     <p className="text-sm font-bold text-foreground uppercase">Mot de passe</p>
+                     <p className="text-sm font-bold text-foreground uppercase tracking-tight">Mot de passe</p>
                      <button onClick={() => { setPendingAction("password"); setShowPinModal(true); }} className="px-4 py-2 bg-white/5 text-foreground text-[9px] font-black uppercase tracking-widest rounded-xl hover:bg-white/10 transition-colors">Modifier</button>
                   </div>
                </div>
@@ -241,11 +294,10 @@ export default function SettingsPage() {
                <div className="space-y-1 border-b border-card-border pb-6">
                   <h3 className="font-title font-bold text-lg tracking-widest uppercase text-foreground">Préférences</h3>
                </div>
-               {/* (Theme selector logic) */}
                <div className="flex items-center justify-between p-4 bg-background border border-card-border rounded-2xl">
                   <div className="flex items-center gap-4">
                      <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-foreground"><Moon size={18} /></div>
-                     <div><p className="text-sm font-bold text-foreground uppercase">Thème Sombre</p></div>
+                     <div><p className="text-sm font-bold text-foreground uppercase tracking-tight">Thème Sombre</p></div>
                   </div>
                   <span className="text-[9px] font-black text-primary uppercase bg-primary/10 px-3 py-1.5 rounded-full">Activé par défaut</span>
                </div>
