@@ -36,7 +36,7 @@ export const createPortalSession = async (req: Request, res: Response) => {
  */
 export const createPaymentIntent = async (req: Request, res: Response) => {
   try {
-    const { userId, amount } = req.body;
+    const { userId, amount, saveCard } = req.body;
 
     if (!userId || !amount) {
       return res.status(400).json({ message: 'User ID et montant requis.' });
@@ -48,7 +48,6 @@ export const createPaymentIntent = async (req: Request, res: Response) => {
     });
     if (!user) return res.status(404).json({ message: 'Utilisateur non trouvé.' });
 
-    // Récupérer les paramètres système (pour le dépôt min)
     const settings = await prisma.systemSettings.upsert({
         where: { id: 'global' },
         update: {},
@@ -62,7 +61,6 @@ export const createPaymentIntent = async (req: Request, res: Response) => {
       return res.status(400).json({ message: `Un dépôt de ${minAmount} € minimum est requis.` });
     }
 
-    // Créer ou récupérer le Customer Stripe
     let stripeCustomerId = user.stripeCustomerId;
     if (!stripeCustomerId) {
       const customer = await stripe.customers.create({
@@ -79,9 +77,10 @@ export const createPaymentIntent = async (req: Request, res: Response) => {
 
     // Créer le PaymentIntent
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: Math.round(parseFloat(amount) * 100), // Stripe utilise les centimes
+      amount: Math.round(parseFloat(amount) * 100),
       currency: 'eur',
       customer: stripeCustomerId,
+      setup_future_usage: saveCard ? 'off_session' : undefined,
       metadata: {
         userId: user.id,
         type: 'DEPOSIT',
@@ -100,6 +99,107 @@ export const createPaymentIntent = async (req: Request, res: Response) => {
     console.error('PI Error:', error);
     res.status(500).json({ message: error.message });
   }
+};
+
+/**
+ * Payer avec une carte sauvegardée
+ */
+export const payWithSavedCard = async (req: Request, res: Response) => {
+  try {
+    const { userId, amount, paymentMethodId } = req.body;
+
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user || !user.stripeCustomerId) return res.status(404).json({ message: 'Client non trouvé.' });
+
+    const isFirstDeposit = !user.hasDeposited;
+
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: Math.round(parseFloat(amount) * 100),
+      currency: 'eur',
+      customer: user.stripeCustomerId,
+      payment_method: paymentMethodId,
+      off_session: true,
+      confirm: true,
+      metadata: {
+        userId: user.id,
+        type: 'DEPOSIT',
+        isFirstDeposit: isFirstDeposit.toString()
+      }
+    });
+
+    res.status(200).json(paymentIntent);
+  } catch (error: any) {
+    console.error('Saved Card Pay Error:', error);
+    if (error.code === 'authentication_required') {
+      // Need 3DS
+      res.status(402).json({ 
+        message: 'Confirmation 3D Secure requise.',
+        clientSecret: error.raw.payment_intent.client_secret 
+      });
+    } else {
+      res.status(500).json({ message: error.message });
+    }
+  }
+};
+
+/**
+ * Lister les moyens de paiement sauvegardés
+ */
+export const listPaymentMethods = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user || !user.stripeCustomerId) return res.status(200).json([]);
+
+    const paymentMethods = await stripe.paymentMethods.list({
+      customer: user.stripeCustomerId,
+      type: 'card',
+    });
+
+    res.status(200).json(paymentMethods.data);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+/**
+ * Supprimer un moyen de paiement
+ */
+export const deletePaymentMethod = async (req: Request, res: Response) => {
+  try {
+    const { pmId } = req.params;
+    await stripe.paymentMethods.detach(pmId);
+    res.status(200).json({ message: 'Carte supprimée.' });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+/**
+ * Créer un SetupIntent pour ajouter une carte sans payer
+ */
+export const createSetupIntent = async (req: Request, res: Response) => {
+    try {
+      const { userId } = req.body;
+      const user = await prisma.user.findUnique({ where: { id: userId } });
+      if (!user) return res.status(404).json({ message: 'Utilisateur non trouvé.' });
+  
+      let stripeCustomerId = user.stripeCustomerId;
+      if (!stripeCustomerId) {
+        const customer = await stripe.customers.create({ email: user.email });
+        stripeCustomerId = customer.id;
+        await prisma.user.update({ where: { id: userId }, data: { stripeCustomerId } });
+      }
+  
+      const setupIntent = await stripe.setupIntents.create({
+        customer: stripeCustomerId,
+        payment_method_types: ['card'],
+      });
+  
+      res.status(200).json({ clientSecret: setupIntent.client_secret });
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
 };
 
 /**

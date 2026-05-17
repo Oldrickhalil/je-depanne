@@ -29,6 +29,7 @@ export default function CardForm({ amount, userId, onSuccess }: { amount: number
   const [error, setError] = useState<string | null>(null);
   const [cardBrand, setCardBrand] = useState<string>("unknown");
   const [name, setName] = useState("");
+  const [saveCard, setSaveCard] = useState(true);
 
   const handleCardChange = (event: any) => {
     if (event.brand) {
@@ -51,17 +52,17 @@ export default function CardForm({ amount, userId, onSuccess }: { amount: number
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
       
-      // 1. Créer le PaymentIntent sur le backend
+      // 1. Créer le PaymentIntent sur le backend (avec option sauvegarde)
       const res = await fetch(`${apiUrl}/api/stripe/deposit`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId, amount }),
+        body: JSON.stringify({ userId, amount, saveCard }),
       });
 
       const { clientSecret, message } = await res.json();
       if (!res.ok) throw new Error(message || "Erreur lors de l'initialisation.");
 
-      // 2. Confirmer le paiement avec Stripe (gère le 3DS automatiquement)
+      // 2. Confirmer le paiement avec Stripe
       const result = await stripe.confirmCardPayment(clientSecret, {
         payment_method: {
           card: elements.getElement(CardNumberElement)!,
@@ -114,8 +115,8 @@ export default function CardForm({ amount, userId, onSuccess }: { amount: number
                   <CardNumberElement options={CARD_ELEMENT_OPTIONS} onChange={handleCardChange} />
                </div>
                <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
-                  {cardBrand === 'visa' && <span className="text-[10px] font-black text-blue-500 bg-blue-500/10 px-2 py-1 rounded">VISA</span>}
-                  {cardBrand === 'mastercard' && <span className="text-[10px] font-black text-amber-500 bg-amber-500/10 px-2 py-1 rounded">MASTERCARD</span>}
+                  {cardBrand === 'visa' && <img src="/images/visa.svg" alt="Visa" className="h-4" />}
+                  {cardBrand === 'mastercard' && <img src="/images/mastercard.svg" alt="Mastercard" className="h-5" />}
                   {cardBrand === 'unknown' && <CreditCard size={18} className="text-gray-700" />}
                </div>
             </div>
@@ -133,6 +134,17 @@ export default function CardForm({ amount, userId, onSuccess }: { amount: number
                <div className="w-full bg-background border border-card-border rounded-xl py-4 px-5 focus-within:border-primary/50 transition-all shadow-inner">
                   <CardCvcElement options={CARD_ELEMENT_OPTIONS} />
                </div>
+            </div>
+         </div>
+
+         {/* Save Card Checkbox */}
+         <div className="flex items-center gap-3 p-4 bg-primary/5 border border-primary/10 rounded-2xl cursor-pointer" onClick={() => setSaveCard(!saveCard)}>
+            <div className={`w-5 h-5 rounded-md border flex items-center justify-center transition-all ${saveCard ? 'bg-primary border-primary' : 'border-card-border'}`}>
+               {saveCard && <div className="w-2.5 h-2.5 bg-white rounded-sm"></div>}
+            </div>
+            <div className="space-y-0.5">
+               <p className="text-[10px] font-black uppercase text-foreground">Sauvegarder cette carte</p>
+               <p className="text-[8px] text-muted-text uppercase font-bold tracking-tight">Pour vos prochains dépôts en un clic</p>
             </div>
          </div>
       </div>

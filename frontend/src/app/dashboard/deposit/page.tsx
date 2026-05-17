@@ -3,9 +3,10 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { Wallet, ShieldCheck, CheckCircle2, Loader2, ArrowLeft } from "lucide-react";
+import { Wallet, ShieldCheck, CheckCircle2, Loader2, ArrowLeft, ArrowRight, AlertCircle } from "lucide-react";
 import Link from "next/link";
 import StripePayment from "./StripePayment";
+import SavedCards from "./SavedCards";
 
 export default function DepositPage() {
   const { data: session, update } = useSession();
@@ -14,6 +15,10 @@ export default function DepositPage() {
   const [amount, setAmount] = useState("50");
   const [freshStatus, setFreshStatus] = useState<any>(null);
   const [isFetchingStatus, setIsFetchingStatus] = useState(true);
+  const [mode, setMode] = useState<'selection' | 'new_card'>('selection');
+  const [selectedPmId, setSelectedPmId] = useState<string | null>(null);
+  const [paying, setPaying] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   
   const user = session?.user as any;
   const userId = user?.id;
@@ -45,12 +50,47 @@ export default function DepositPage() {
   const isFirstDeposit = freshStatus ? !freshStatus.hasDeposited : !user?.hasDeposited;
 
   const handleSuccess = async () => {
-    // Force session update to reflect new balance and status
     await update(); 
     setSuccess(true);
     setTimeout(() => {
       router.push("/dashboard");
     }, 4000);
+  };
+
+  const handleSavedCardPay = async () => {
+    if (!selectedPmId || !userId) return;
+    setPaying(true);
+    setError(null);
+
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+      const res = await fetch(`${apiUrl}/api/stripe/deposit/saved-card`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId,
+          amount: parseFloat(amount),
+          paymentMethodId: selectedPmId
+        }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        handleSuccess();
+      } else if (res.status === 402 && data.clientSecret) {
+         // 3DS Required for saved card
+         // We would need to load Stripe here and confirm the payment.
+         // For now, let's just show an error or redirect to new card.
+         setError("Une vérification 3D Secure est requise pour cette carte. Veuillez utiliser l'option 'Nouvelle Carte' pour ce dépôt.");
+      } else {
+        setError(data.message || "Échec du paiement.");
+      }
+    } catch (err) {
+      setError("Erreur de connexion.");
+    } finally {
+      setPaying(false);
+    }
   };
 
   if (isFetchingStatus) {
@@ -86,10 +126,10 @@ export default function DepositPage() {
 
   return (
     <div className="min-h-[80vh] flex flex-col items-center justify-center p-4">
-      <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+      <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-12 items-start pt-10 pb-20">
         
         {/* Left Side: Info */}
-        <div className="space-y-8">
+        <div className="space-y-8 md:sticky md:top-24">
            <div className="space-y-4">
               <Link href="/dashboard" className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.3em] text-muted-text hover:text-foreground transition-colors mb-4">
                  <ArrowLeft size={12} /> Retour
@@ -142,16 +182,55 @@ export default function DepositPage() {
 
           <div className="w-full h-px bg-card-border"></div>
 
-          {userId ? (
-            <StripePayment 
-              amount={parseFloat(amount) || 0} 
-              userId={userId} 
-              onSuccess={handleSuccess} 
-            />
-          ) : (
-            <div className="flex justify-center py-10"><Loader2 className="animate-spin text-primary" /></div>
+          {error && (
+            <div className="bg-red-500/10 border border-red-500/20 p-4 rounded-2xl flex items-start gap-3 animate-in shake duration-500">
+               <AlertCircle className="text-red-500 shrink-0 mt-0.5" size={16} />
+               <p className="text-[10px] text-red-500 font-bold uppercase tracking-tight leading-relaxed">{error}</p>
+            </div>
+          )}
+
+          {userId && (
+            mode === 'selection' ? (
+              <div className="space-y-6">
+                <label className="block text-[9px] font-black text-muted-text uppercase tracking-[0.2em] ml-1">Choisir une carte</label>
+                <SavedCards 
+                  userId={userId} 
+                  selectedId={selectedPmId} 
+                  onSelect={setSelectedPmId} 
+                  onAddNew={() => setMode('new_card')} 
+                />
+                
+                <button
+                  onClick={handleSavedCardPay}
+                  disabled={!selectedPmId || paying || parseFloat(amount) < (isFirstDeposit ? 20 : 10)}
+                  className="w-full py-5 bg-white text-black font-black text-xs uppercase tracking-[0.4em] rounded-[2rem] hover:bg-gray-200 transition-all disabled:opacity-50 flex items-center justify-center gap-3 shadow-xl active:scale-95"
+                >
+                  {paying ? <Loader2 className="animate-spin" size={18} /> : (
+                    <>
+                      Payer avec cette carte <ArrowRight size={18} />
+                    </>
+                  )}
+                </button>
+              </div>
+            ) : (
+              <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                   <label className="block text-[9px] font-black text-muted-text uppercase tracking-[0.2em] ml-1">Nouvelle Carte</label>
+                   <button onClick={() => setMode('selection')} className="text-[9px] font-black text-primary uppercase tracking-widest hover:underline">Voir mes cartes</button>
+                </div>
+                <StripePayment 
+                  amount={parseFloat(amount) || 0} 
+                  userId={userId} 
+                  onSuccess={handleSuccess} 
+                />
+              </div>
+            )
           )}
           
+          <div className="flex items-center justify-center gap-2 text-[8px] text-gray-700 font-bold uppercase tracking-widest">
+            <ShieldCheck size={12} className="text-green-500" />
+            <span>Cryptage SSL 256-bit sécurisé par Stripe</span>
+          </div>
         </div>
       </div>
     </div>
