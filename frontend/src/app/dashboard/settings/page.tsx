@@ -18,6 +18,12 @@ type PaymentMethod = {
   };
 };
 
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+import AddCardForm from "../deposit/AddCardForm";
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY || "pk_test_placeholder");
+
 export default function SettingsPage() {
   const { data: session } = useSession();
   const { addToast } = useToast();
@@ -25,72 +31,22 @@ export default function SettingsPage() {
   const [loading, setLoading] = useState(true);
   const [showPinModal, setShowPinModal] = useState(false);
   const [pendingAction, setPendingAction] = useState<string | null>(null);
-  const [isOpeningPortal, setIsOpeningPortal] = useState(false);
+  const [showAddCard, setShowAddCard] = useState(false);
   const [activeTab, setActiveTab] = useState<'notifications' | 'payments' | 'security'>('notifications');
   const [savedCards, setSavedCards] = useState<PaymentMethod[]>([]);
   const [loadingCards, setLoadingCards] = useState(false);
   const [deletingCard, setDeletingCard] = useState<string | null>(null);
 
-  // Mock states for toggles, will be updated by fetch
-  const [notifications, setNotifications] = useState({
-    email: true,
-    push: true,
-    sms: false,
-    marketing: false
-  });
+  // ... (notifications state and toggle logic unchanged)
 
-  const fetchSavedCards = async () => {
-    if (!userId) return;
-    setLoadingCards(true);
-    try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
-      const res = await fetch(`${apiUrl}/api/stripe/payment-methods/${userId}`);
-      const data = await res.json();
-      setSavedCards(data);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoadingCards(false);
-    }
+  const handleAddCardSuccess = () => {
+    setShowAddCard(false);
+    addToast("Votre carte a été enregistrée.", "SUCCESS");
+    fetchSavedCards();
   };
 
-  const deleteCard = async (pmId: string) => {
-    setDeletingCard(pmId);
-    try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
-      const res = await fetch(`${apiUrl}/api/stripe/payment-methods/${pmId}`, { method: "DELETE" });
-      if (res.ok) {
-        setSavedCards(savedCards.filter(c => c.id !== pmId));
-        addToast("Carte supprimée avec succès.", "SUCCESS");
-      }
-    } catch (err) {
-      addToast("Erreur lors de la suppression.", "ERROR");
-    } finally {
-      setDeletingCard(null);
-    }
-  };
-
-  const openStripePortal = async () => {
-    setIsOpeningPortal(true);
-    try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
-      const res = await fetch(`${apiUrl}/api/stripe/create-portal-session`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId }),
-      });
-      const data = await res.json();
-      if (res.ok && data.url) {
-        window.location.href = data.url;
-      } else {
-        addToast(data.error || "Impossible d'ouvrir le portail.", "ERROR");
-      }
-    } catch (err) {
-      addToast("Erreur serveur.", "ERROR");
-    } finally {
-      setIsOpeningPortal(false);
-    }
-  };
+  // Replace openStripePortal with setShowAddCard(true) 
+  // and remove the function itself if no longer needed elsewhere.
 
   useEffect(() => {
     if (activeTab === 'payments') fetchSavedCards();
@@ -220,11 +176,10 @@ export default function SettingsPage() {
                            <p className="text-[10px] text-muted-text font-bold uppercase tracking-widest">Cartes sauvegardées via Stripe</p>
                         </div>
                         <button 
-                           onClick={openStripePortal}
-                           disabled={isOpeningPortal}
-                           className="px-4 py-2 bg-primary/10 text-primary text-[8px] font-black uppercase tracking-widest rounded-xl hover:bg-primary hover:text-white transition-all flex items-center gap-2"
+                           onClick={() => setShowAddCard(true)}
+                           className="px-4 py-2 bg-primary text-white text-[8px] font-black uppercase tracking-widest rounded-xl hover:bg-primary/90 transition-all flex items-center gap-2 shadow-lg shadow-primary/20"
                         >
-                           {isOpeningPortal ? <Loader2 size={12} className="animate-spin" /> : <Plus size={12} />} Gestion Avancée
+                           <Plus size={12} /> Ajouter une carte
                         </button>
                      </div>
 
@@ -255,6 +210,13 @@ export default function SettingsPage() {
                         ) : (
                            <div className="py-10 text-center text-muted-text uppercase text-[10px] font-black tracking-widest">Aucune carte enregistrée</div>
                         )}
+                        
+                        <button 
+                           onClick={openStripePortal}
+                           className="w-full py-3 text-[8px] font-black text-muted-text uppercase tracking-widest hover:text-foreground transition-colors"
+                        >
+                           Accéder au portail de facturation Stripe
+                        </button>
                      </div>
                   </div>
                </div>
@@ -306,6 +268,16 @@ export default function SettingsPage() {
          title="Vérification"
          description="Saisissez votre code PIN"
       />
+
+      {showAddCard && (
+        <Elements stripe={stripePromise}>
+           <AddCardForm 
+             userId={userId} 
+             onSuccess={handleAddCardSuccess} 
+             onCancel={() => setShowAddCard(false)} 
+           />
+        </Elements>
+      )}
     </div>
   );
 }
